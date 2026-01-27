@@ -220,8 +220,8 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
     unfolding πComp
     unfolding sumToComp
     unfolding πSum
-    leftInv∘πSum : (compToSum ∘cr sumToComp) ∘cr πSum ≡ πSum
-    leftInv∘πSum = 
+    ret∘πSum : (compToSum ∘cr sumToComp) ∘cr πSum ≡ πSum
+    ret∘πSum = 
       (compToSum ∘cr sumToComp) ∘cr πSum 
        ≡⟨ CommRingHom≡ refl ⟩ 
       compToSum ∘cr sumToComp ∘cr πSum 
@@ -240,8 +240,8 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
     unfolding πSum
     unfolding πComp
     unfolding compToSum
-    rightInv∘πComp : (sumToComp ∘cr compToSum) ∘cr πComp ≡ πComp 
-    rightInv∘πComp = (sumToComp ∘cr compToSum) ∘cr πComp 
+    sec∘πComp : (sumToComp ∘cr compToSum) ∘cr πComp ≡ πComp 
+    sec∘πComp = (sumToComp ∘cr compToSum) ∘cr πComp 
                         ≡⟨ CommRingHom≡ refl ⟩
                      sumToComp ∘cr 
                      (IQ.inducedHom A/f ginA/f (IQ.inducedHom A f πSum πSum0Onf) compToSumHelper ∘cr ( (IQ.quotientImageHom A/f _)) )
@@ -258,28 +258,28 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
                         ∎
 
   opaque 
-    leftInv' : (compToSum ∘cr sumToComp) ∘cr πSum ≡ idCommRingHom A/f+g ∘cr πSum
-    leftInv' = leftInv∘πSum ∙ (sym $ idCompCommRingHom πSum)
+    ret' : (compToSum ∘cr sumToComp) ∘cr πSum ≡ idCommRingHom A/f+g ∘cr πSum
+    ret' = ret∘πSum ∙ (sym $ idCompCommRingHom πSum)
   
   opaque
     unfolding πSum
-    leftInv : (compToSum ∘cr sumToComp) ≡ idCommRingHom A/f+g
-    leftInv = IQ.quotientImageHomEpi A leftInv' 
+    ret : (compToSum ∘cr sumToComp) ≡ idCommRingHom A/f+g
+    ret = IQ.quotientImageHomEpi A ret' 
   
   opaque
     unfolding A/f/πg
     unfolding A/f+g
     unfolding πComp
-    rightInv' : (sumToComp ∘cr compToSum) ∘cr πComp ≡ idCommRingHom A/f/πg ∘cr πComp
-    rightInv' = rightInv∘πComp ∙ (sym $ idCompCommRingHom πComp)
+    sec' : (sumToComp ∘cr compToSum) ∘cr πComp ≡ idCommRingHom A/f/πg ∘cr πComp
+    sec' = sec∘πComp ∙ (sym $ idCompCommRingHom πComp)
   opaque
     unfolding πComp
-    rightInv'' : (((sumToComp ∘cr compToSum) ∘cr πg) ∘cr (IQ.quotientImageHom A f)) ≡ 
+    sec'' : (((sumToComp ∘cr compToSum) ∘cr πg) ∘cr (IQ.quotientImageHom A f)) ≡ 
                  (idCommRingHom A/f/πg ∘cr πg) ∘cr IQ.quotientImageHom A f
-    rightInv'' = (CommRingHom≡ refl) ∙ rightInv' ∙ (CommRingHom≡ refl)
+    sec'' = (CommRingHom≡ refl) ∙ sec' ∙ (CommRingHom≡ refl)
   opaque 
-    rightInv''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ idCommRingHom A/f/πg ∘cr πg
-    rightInv''' = IQ.quotientImageHomEpi A rightInv'' 
+    sec''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ idCommRingHom A/f/πg ∘cr πg
+    sec''' = IQ.quotientImageHomEpi A sec'' 
 --  opaque 
 --    unfolding πg
 --    unfolding ginA/f
@@ -289,21 +289,21 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
 --    unfolding πSum
 --    -- Learned fact : unfolding doesn't work for "top-level types", 
 --    -- as those can leak out of the definition. 
---    rightInv'''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ 
+--    sec'''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ 
 --                   (idCommRingHom A/f/πg) ∘cr (IQ.quotientImageHom A/f ginA/f)
---    rightInv'''' = ? -- rightInv'''
+--    sec'''' = ? -- sec'''
   opaque
     unfolding πg
-    rightInv : sumToComp ∘cr compToSum ≡ idCommRingHom A/f/πg
-    rightInv = IQ.quotientImageHomEpi A/f rightInv''' 
+    sec : sumToComp ∘cr compToSum ≡ idCommRingHom A/f/πg
+    sec = IQ.quotientImageHomEpi A/f sec''' 
 --    where
---      rightInv'''' : 
+--      sec'''' : 
 --        (sumToComp ∘cr compToSum) ∘cr (IQ.quotientImageHom A/f ginA/f) ≡ 
 --        (idCommRingHom A/f/πg)    ∘cr (IQ.quotientImageHom A/f ginA/f)
---      rightInv'''' = rightInv'''
+--      sec'''' = sec'''
   opaque 
     conclusion : CommRingEquiv A/f+g A/f/πg
-    conclusion = isoHomToCommRingEquiv sumToComp compToSum rightInv leftInv 
+    conclusion = isoHomToCommRingEquiv sumToComp compToSum sec ret 
 
 opaque
   unfolding sum.conclusion

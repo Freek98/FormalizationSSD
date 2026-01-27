@@ -310,7 +310,7 @@ module adjunctionFact
       ηconjugationIso : Iso (C [ (G ∘F F ∘F H) ⟅ x ⟆ , (G ∘F F ∘F H) ⟅ y ⟆ ]) (C [ H ⟅ x ⟆  , H ⟅ y ⟆ ])
       ηconjugationIso .Iso.fun      = ηconjugation
       ηconjugationIso .Iso.inv      = ηconjugationInv
-      ηconjugationIso .Iso.rightInv g = 
+      ηconjugationIso .Iso.sec g = 
         ηconjugation (ηconjugationInv g) 
           ≡⟨ solveCat! C ⟩ 
         (η ⟦ H ⟅ x ⟆ ⟧ ⋆⟨ C ⟩ inv (ηIsoOnHImage x)) ⋆⟨ C ⟩ 
@@ -320,7 +320,7 @@ module adjunctionFact
         C .id ⋆⟨ C ⟩ g ⋆⟨ C ⟩ C .id
           ≡⟨ C .⋆IdR _ ∙ C .⋆IdL _ ⟩ 
         g ∎
-      ηconjugationIso .Iso.leftInv  g = 
+      ηconjugationIso .Iso.ret  g = 
         ηconjugationInv (ηconjugation g) 
           ≡⟨ solveCat! C ⟩ 
         (inv (ηIsoOnHImage x) ⋆⟨ C ⟩ η ⟦ H ⟅ x ⟆ ⟧) ⋆⟨ C ⟩ 
@@ -463,8 +463,8 @@ module _ (B C : BooleanRing ℓ-zero)  where
   BAIso≅BAEquiv .Iso.inv ((f , fEqu) , fHom) .snd .inv .snd = invIsHom B C (f , fHom) (IsoToIsIso (equivToIso (f , fEqu)))
   BAIso≅BAEquiv .Iso.inv ((f , fEqu) , fHom) .snd .sec = CommRingHom≡ $ cong fst (invEquiv-is-linv (f , fEqu))
   BAIso≅BAEquiv .Iso.inv ((f , fEqu) , fHom) .snd .ret = CommRingHom≡ $ cong fst (invEquiv-is-rinv (f , fEqu))
-  BAIso≅BAEquiv .Iso.rightInv e = BooleanRingEquiv≡ B C _ e refl
-  BAIso≅BAEquiv .Iso.leftInv  e = CatIso≡ _ e refl 
+  BAIso≅BAEquiv .Iso.sec e = BooleanRingEquiv≡ B C _ e refl
+  BAIso≅BAEquiv .Iso.ret  e = CatIso≡ _ e refl 
   
   pathToIsoDecomp : (B ≡ C) ≃ (CatIso BACat B C)
   pathToIsoDecomp = compEquiv (invEquiv $ BoolRingPath B C) (isoToEquiv (invIso BAIso≅BAEquiv)) 

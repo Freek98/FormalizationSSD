@@ -114,8 +114,8 @@ module _ {ℓ ℓ' ℓ'' ℓ''' : Level} {A : Type ℓ} {B : Type ℓ'}
   IsoΣ : Iso (Σ A AP) (Σ B BP) 
   IsoΣ .fun (a , ap) = fun iso a , AP→BP a ap
   IsoΣ .inv (b , bp) = inv iso b , BP→AP b bp
-  IsoΣ .rightInv (b , bp) = Σ≡Prop BPprop (rightInv iso b)
-  IsoΣ .leftInv  (a , ap) = Σ≡Prop APprop (leftInv  iso a) 
+  IsoΣ .sec (b , bp) = Σ≡Prop BPprop (sec iso b)
+  IsoΣ .ret  (a , ap) = Σ≡Prop APprop (ret  iso a) 
 
 module _ where
   open BooleanRingStr
@@ -171,8 +171,8 @@ EquivalentBooleanRingEquiv : {ℓ ℓ' : Level} → (A : BooleanRing ℓ) → (B
                              Iso (Σ[ f ∈ BoolHom A B ] (isEquiv (fst f))) (BooleanRingEquiv A B)
 EquivalentBooleanRingEquiv A B .Iso.fun ((f , fHom) , fequ) = (f , fequ) , fHom
 EquivalentBooleanRingEquiv A B .Iso.inv ((f , fequ) , fHom) = (f , fHom) , fequ
-EquivalentBooleanRingEquiv A B .Iso.rightInv e = refl
-EquivalentBooleanRingEquiv A B .Iso.leftInv  e = refl 
+EquivalentBooleanRingEquiv A B .Iso.sec e = refl
+EquivalentBooleanRingEquiv A B .Iso.ret  e = refl 
 
 equivalencesPreservedByEquivalences : {ℓ ℓ' : Level} → (A : BooleanRing ℓ) → (B : BooleanRing ℓ) → 
                                       (F : {ℓ'' : Level} → BooleanRing ℓ'' → Type ℓ'') → 
@@ -181,8 +181,8 @@ equivalencesPreservedByEquivalences : {ℓ ℓ' : Level} → (A : BooleanRing �
 equivalencesPreservedByEquivalences A B F is .Iso.fun ((f , fHom) , fequ) .fst = is .Iso.fun (f , fHom)
 equivalencesPreservedByEquivalences A B F is .Iso.fun ((f , fHom) , fequ) .snd .equiv-proof y = {! !}
 equivalencesPreservedByEquivalences A B F is .Iso.inv    = {! !}
-equivalencesPreservedByEquivalences A B F is .Iso.rightInv = {! !}
-equivalencesPreservedByEquivalences A B F is .Iso.leftInv = {! !} 
+equivalencesPreservedByEquivalences A B F is .Iso.sec = {! !}
+equivalencesPreservedByEquivalences A B F is .Iso.ret = {! !} 
 
 module _ {ℓ ℓ' : Level} (A : BooleanRing ℓ) (B : BooleanRing ℓ') (f : BoolHom A B) (fIso : isIso (fst f)) where
   private 
@@ -237,16 +237,16 @@ module _ {ℓ ℓ' ℓ'' : Level  } (A : BooleanRing ℓ)
   composeLWithBoolEquivIsIso : Iso (BoolHom C A) (BoolHom C B)
   composeLWithBoolEquivIsIso .Iso.fun g      = BooleanEquivToHom A B f ∘cr g
   composeLWithBoolEquivIsIso .Iso.inv g      = (BooleanEquivToHom B A $ invBooleanRingEquiv A B f) ∘cr g
-  composeLWithBoolEquivIsIso .Iso.rightInv g = CommRingHom≡ $ funExt λ c → 
+  composeLWithBoolEquivIsIso .Iso.sec g = CommRingHom≡ $ funExt λ c → 
       cong (λ h → (h ∘ fst g) c) $ cong fst $ BooleanEquivRightInv A B f
-  composeLWithBoolEquivIsIso .Iso.leftInv  g = CommRingHom≡ $ funExt λ c → 
+  composeLWithBoolEquivIsIso .Iso.ret  g = CommRingHom≡ $ funExt λ c → 
       cong (λ h → (h ∘ fst g) c) $ cong fst $ BooleanEquivLeftInv A B f
 
 --  composeRWithBoolEquivIsIso : Iso (BoolHom B C) (BoolHom A C)
 --  composeRWithBoolEquivIsIso .Iso.fun = {! g !}
 --  composeRWithBoolEquivIsIso .Iso.inv = {! !}
---  composeRWithBoolEquivIsIso .Iso.rightInv = {! !}
---  composeRWithBoolEquivIsIso .Iso.leftInv = {! !} 
+--  composeRWithBoolEquivIsIso .Iso.sec = {! !}
+--  composeRWithBoolEquivIsIso .Iso.ret = {! !} 
 --
 
   {-

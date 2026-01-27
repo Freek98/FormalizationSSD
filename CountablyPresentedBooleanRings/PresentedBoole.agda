@@ -110,11 +110,11 @@ module _ {ℓ ℓ' : Level} (A : BooleanRing ℓ) (B : BooleanRing ℓ') (f : Bo
 
   BooleanEquivLeftInv : BooleanEquivToHomInv ∘cr BooleanEquivToHom ≡ idBoolHom A
   BooleanEquivLeftInv = idFunGivesIdBoolHom A (BooleanEquivToHomInv ∘cr BooleanEquivToHom) 
-     (funExt $ equivToIso (fst f) .Iso.leftInv) 
+     (funExt $ equivToIso (fst f) .Iso.ret) 
   
   BooleanEquivRightInv : BooleanEquivToHom ∘cr BooleanEquivToHomInv ≡ idBoolHom B
   BooleanEquivRightInv = idFunGivesIdBoolHom B (BooleanEquivToHom ∘cr BooleanEquivToHomInv) 
-     (funExt $ equivToIso (fst f) .Iso.rightInv) 
+     (funExt $ equivToIso (fst f) .Iso.sec) 
 
 _is-presented-by_/_ : {ℓ : Level} → (B : BooleanRing ℓ) → 
   (A : Type ℓ) → {X : Type ℓ} → (f : X → ⟨ freeBA A ⟩) → Type ℓ 
@@ -127,8 +127,8 @@ countℕ : has-Countability-structure ℕ
 countℕ .fst _ = true
 countℕ .snd .Iso.fun n       = n , refl
 countℕ .snd .Iso.inv (n , _) = n
-countℕ .snd .Iso.rightInv b  = Σ≡Prop (λ _ → isSetBool _ _) refl
-countℕ .snd .Iso.leftInv  n  = refl 
+countℕ .snd .Iso.sec b  = Σ≡Prop (λ _ → isSetBool _ _) refl
+countℕ .snd .Iso.ret  n  = refl 
 
 has-Boole-ω : (B : BooleanRing ℓ-zero) → Type (ℓ-suc ℓ-zero) 
 has-Boole-ω B = Σ[ A ∈ Type ] ( (has-Countability-structure A) × 

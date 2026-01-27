@@ -68,7 +68,7 @@ module _ {ℓ ℓ' : Level} (C : Category ℓ ℓ') {x y : C .ob} (e : C [ x , y
   composeWithIsoLIso : Iso (C [ y , z ]) (C [ x , z ])
   composeWithIsoLIso .Iso.fun f = e        ⋆⟨ C ⟩ f 
   composeWithIsoLIso .Iso.inv g = inv eIso ⋆⟨ C ⟩ g
-  composeWithIsoLIso .Iso.rightInv g = 
+  composeWithIsoLIso .Iso.sec g = 
     e ⋆⟨ C ⟩ (inv eIso ⋆⟨ C ⟩ g) 
        ≡⟨ (sym $ C .⋆Assoc _ _ _) ⟩ 
     (e ⋆⟨ C ⟩ inv eIso) ⋆⟨ C ⟩ g
@@ -76,7 +76,7 @@ module _ {ℓ ℓ' : Level} (C : Category ℓ ℓ') {x y : C .ob} (e : C [ x , y
     C .id ⋆⟨ C ⟩ g
        ≡⟨ C .⋆IdL g ⟩ 
     g  ∎
-  composeWithIsoLIso .Iso.leftInv  f = 
+  composeWithIsoLIso .Iso.ret  f = 
     inv eIso ⋆⟨ C ⟩ (e ⋆⟨ C ⟩ f) 
        ≡⟨ (sym $ C .⋆Assoc _ _ _) ⟩ 
     (inv eIso ⋆⟨ C ⟩ e) ⋆⟨ C ⟩ f
@@ -87,7 +87,7 @@ module _ {ℓ ℓ' : Level} (C : Category ℓ ℓ') {x y : C .ob} (e : C [ x , y
   composeWithIsoRIso : Iso (C [ z , x ]) (C [ z , y ])
   composeWithIsoRIso .Iso.fun f = f ⋆⟨ C ⟩ e
   composeWithIsoRIso .Iso.inv g = g ⋆⟨ C ⟩ inv eIso
-  composeWithIsoRIso .Iso.rightInv g = 
+  composeWithIsoRIso .Iso.sec g = 
     g ⋆⟨ C ⟩ inv eIso ⋆⟨ C ⟩ e 
       ≡⟨ C .⋆Assoc _ _ _ ⟩ 
     g ⋆⟨ C ⟩ (inv eIso ⋆⟨ C ⟩ e)
@@ -95,7 +95,7 @@ module _ {ℓ ℓ' : Level} (C : Category ℓ ℓ') {x y : C .ob} (e : C [ x , y
     g ⋆⟨ C ⟩ C .id
       ≡⟨ C .⋆IdR g ⟩ 
     g ∎ 
-  composeWithIsoRIso .Iso.leftInv f =
+  composeWithIsoRIso .Iso.ret f =
     f ⋆⟨ C ⟩ e ⋆⟨ C ⟩ inv eIso
       ≡⟨ C .⋆Assoc _ _ _ ⟩ 
     f ⋆⟨ C ⟩ (e ⋆⟨ C ⟩ inv eIso)
