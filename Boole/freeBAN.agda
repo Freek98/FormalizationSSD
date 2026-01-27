@@ -49,7 +49,7 @@ open import Cubical.Tactics.CommRingSolver
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty as UP
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import WLPO
-open import EmptyQuotient
+open import CommRingQuotients.EmptyQuotient
 open import Boole.PresentedBoole
 
 opaque

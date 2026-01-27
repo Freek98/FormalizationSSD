@@ -41,7 +41,7 @@ open import Cubical.Tactics.CommRingSolver
 
 open import WLPO 
 
-import MarkovRuns as MR
+import CommRingQuotients.MarkovRuns as MR
 
 MP : Type _
 MP = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true

@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module MarkovRuns where 
+module CommRingQuotients.MarkovRuns where 
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
@@ -15,8 +15,6 @@ open import Cubical.Foundations.Function
 open import Cubical.Foundations.Powerset
 
 open import Cubical.Algebra.CommRing
-open import Cubical.Algebra.BooleanRing
-open import Cubical.Algebra.BooleanRing.Instances.Bool
 open import Cubical.Relation.Nullary
 
 open import Cubical.HITs.PropositionalTruncation as PT

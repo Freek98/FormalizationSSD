@@ -38,7 +38,7 @@ open import Cubical.Tactics.CommRingSolver
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty as UP
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import WLPO
-open import EmptyQuotient
+open import CommRingQuotients.EmptyQuotient
 module _ {ℓ : Level}  (R : CommRing ℓ) {X : Type ℓ} {f : X → ⟨ R ⟩}
          {S : CommRing ℓ} {g : CommRingHom R S} 
          {gfx=0 : ∀ (x : X) → g $cr (f x) ≡ CommRingStr.0r (snd S)} where

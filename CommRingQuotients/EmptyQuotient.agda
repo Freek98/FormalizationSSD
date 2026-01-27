@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module EmptyQuotient where
+module CommRingQuotients.EmptyQuotient where
 open import Cubical.Foundations.Prelude 
 open import Cubical.Foundations.Structure
 open import Cubical.Functions.Surjection
@@ -17,7 +17,7 @@ open import Cubical.HITs.SetQuotients
 open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Algebra.CommRing.Ideal.Base 
 open import MarkovTest
-open import MarkovRuns
+open import CommRingQuotients.MarkovRuns
 
 
 open import Cubical.Data.Empty renaming (rec* to empty-func)

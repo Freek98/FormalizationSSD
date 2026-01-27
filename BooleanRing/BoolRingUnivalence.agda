@@ -1,6 +1,11 @@
 {-# OPTIONS --cubical --guardedness #-}
 
 module BooleanRing.BoolRingUnivalence where
+{- 
+-- Introduces the proper notions of morphisms and equivalences of Boolean rings. 
+-- Uses Evan's cool technology to deduce univalence for this notion of equivalences. 
+-- -}
+
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
@@ -41,6 +46,9 @@ IsBoolRingEquiv : {A : Type ℓ} → {B : Type ℓ'} → (Astr : BooleanRingStr 
 IsBoolRingEquiv Astr e Bstr = 
   IsBoolRingHom Astr (fst e) Bstr
 
+BoolRingEquiv : {ℓ ℓ' : Level} (A : BooleanRing ℓ) (B : BooleanRing ℓ') → Type _
+BoolRingEquiv A B = Σ[ e ∈ ⟨ A ⟩ ≃ ⟨ B ⟩ ] IsBoolRingEquiv (snd A) e (snd B)
+
 unquoteDecl IsBooleanRingIsoΣ = declareRecordIsoΣ IsBooleanRingIsoΣ (quote IsBooleanRing)
 
 isPropIsBooleanRing : {B : Type ℓ} → 
@@ -76,9 +84,6 @@ isPropIsBooleanRing {B = B} {_·_ = _·h_} = isOfHLevelRetractFromIso 1 IsBoolea
   
   null = autoDUARel (𝒮-Univ _) (λ a → a)
   bin  = autoDUARel (𝒮-Univ _) (λ a → a → a → a)
-
-BoolRingEquiv : {ℓ ℓ' : Level} (A : BooleanRing ℓ) (B : BooleanRing ℓ') → Type _
-BoolRingEquiv A B = Σ[ e ∈ ⟨ A ⟩ ≃ ⟨ B ⟩ ] IsBoolRingEquiv (snd A) e (snd B)
 
 opaque 
   BoolRingPath : (R S : BooleanRing ℓ) → BoolRingEquiv R S ≃ (R ≡ S)
