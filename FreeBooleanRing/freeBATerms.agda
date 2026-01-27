@@ -1,6 +1,8 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module freeBATerms where
+module FreeBooleanRing.freeBATerms where
+{- This file shows that the terms of a freely generated Boolean ring have a surjection into that freely generated Boolean ring. -}
+
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Structure
@@ -22,8 +24,8 @@ open import Cubical.Data.Bool
 open import Cubical.Data.Sigma
 import Cubical.HITs.PropositionalTruncation as PT
 
-open import SurjectiveTerms
-open import FreeBool
+open import FreeBooleanRing.SurjectiveTerms
+open import FreeBooleanRing.FreeBool
 
 freeBATerms : {ℓ : Level} → Type ℓ → Type ℓ
 freeBATerms A = TermsOf BoolCR [ A ]
@@ -52,6 +54,7 @@ module _ {ℓ : Level} {A : Type} (B : BooleanRing ℓ) (f g : BoolHom (freeBA A
                                        snd includeBATermsSurj x where
       π : freeBATerms A → ⟨ freeBA A ⟩
       π = fst includeBATermsSurj
+
       agreeOnTerms : (t : freeBATerms A) → f $cr fst includeBATermsSurj t ≡ g $cr fst includeBATermsSurj t
       agreeOnTerms (Tvar g)       = agreeOnGens g
       agreeOnTerms (Tconst false) = pres0 (snd f) ∙ (sym $ pres0 (snd g))

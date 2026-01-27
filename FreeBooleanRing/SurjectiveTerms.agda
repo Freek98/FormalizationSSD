@@ -1,6 +1,14 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module SurjectiveTerms where 
+module FreeBooleanRing.SurjectiveTerms where 
+{- 
+-- In general, it should be true that for a higher inductive type X, 
+-- the type of it's terms X_0 should have a surjection to X. 
+-- In this file, we show that for the higher inductive type R[I}, as defined in the first import. 
+-}
+open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
+import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base as TV
+
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Structure
@@ -27,8 +35,6 @@ import Cubical.HITs.SetQuotients.Properties as SQ
 open import Cubical.Algebra.CommRing.Ideal
 open import Cubical.Algebra.CommRing.Quotient.Base
 
-open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
-import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base as TV
 
 data TermsOf_[_] {ℓ ℓ' : Level} (R : CommRing ℓ) (I : Type ℓ') : Type (ℓ-max ℓ ℓ') where
     Tvar   : I     → TermsOf R [ I ]

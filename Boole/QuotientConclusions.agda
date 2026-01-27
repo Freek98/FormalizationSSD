@@ -27,11 +27,11 @@ open import Cubical.Relation.Nullary
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import FreeBool
-import FreeBool as FB
+open import FreeBooleanRing.FreeBool
+import FreeBooleanRing.FreeBool as FB
 
-open import SurjectiveTerms
-open import freeBATerms
+open import FreeBooleanRing.SurjectiveTerms
+open import FreeBooleanRing.freeBATerms
 
 open import QuotientBool as QB
 import Cubical.HITs.SetQuotients as SQ

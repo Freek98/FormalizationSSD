@@ -1,6 +1,8 @@
 {-# OPTIONS --cubical --guardedness #-}
 
 module QuotientBool where
+{- This module restricts the quotients of commutative rings to quotients of Boolean rings -}
+
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Structure

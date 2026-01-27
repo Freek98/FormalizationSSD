@@ -22,9 +22,6 @@ open import Cubical.Relation.Nullary
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import FreeBool
-import FreeBool as FB
-
 open import QuotientBool as QB
 import Cubical.HITs.SetQuotients as SQ
 import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
