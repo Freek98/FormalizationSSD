@@ -1,6 +1,8 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module CommRingQuotients.MarkovRuns where 
+module CommRingQuotients.TrivialIdeal where 
+{- This file shows for a Ring R and Ideal I, that if R/I is trivial, then 1 ∈ I -}
+
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)

@@ -1,7 +1,7 @@
 {-# OPTIONS --cubical --guardedness --allow-unsolved-metas #-}
 module QuickFixes where
 -- Idea : this was necessary but shouldn't be in any particularly file where they're used. 
-open import Boole.PresentedBoole
+open import CountablyPresentedBooleanRings.PresentedBoole
 open import BooleanRing.BoolRingUnivalence
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
@@ -36,7 +36,7 @@ open import Cubical.Algebra.CommRing.Instances.Bool
 open import Cubical.Relation.Nullary
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import Boole.Bool
+open import CountablyPresentedBooleanRings.Examples.Bool
 
 module _ {ℓ ℓ' : Level} {A : Type ℓ} (P : A → Type ℓ') (Pprop : (a : A) → isProp (P a)) where
   private 

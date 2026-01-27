@@ -30,11 +30,11 @@ open import Cubical.Relation.Nullary
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import FreeBooleanRing.FreeBool
-import FreeBooleanRing.FreeBool as FB
+open  import BooleanRing.FreeBooleanRing.FreeBool
+import BooleanRing.FreeBooleanRing.FreeBool as FB
 
-open import FreeBooleanRing.SurjectiveTerms
-open import FreeBooleanRing.freeBATerms
+open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
+open  import BooleanRing.FreeBooleanRing.freeBATerms
 
 open import QuotientBool as QB
 --open import NaturalNumbersProperties.NBijection
@@ -50,7 +50,7 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty a
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import WLPO
 open import CommRingQuotients.EmptyQuotient
-open import Boole.PresentedBoole
+open import CountablyPresentedBooleanRings.PresentedBoole
 
 opaque
   unfolding _/Im_

@@ -1,6 +1,8 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module Boole.QuotientConclusions where 
+module BooleanRing.BooleanRingQuotients.QuotientConclusions  where 
+{- We show that the quotient of a Boolean Ring agrees with that of the underlying commutative Ring -}
+
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
@@ -27,11 +29,11 @@ open import Cubical.Relation.Nullary
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import FreeBooleanRing.FreeBool
-import FreeBooleanRing.FreeBool as FB
+open  import BooleanRing.FreeBooleanRing.FreeBool
+import BooleanRing.FreeBooleanRing.FreeBool as FB
 
-open import FreeBooleanRing.SurjectiveTerms
-open import FreeBooleanRing.freeBATerms
+open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
+open  import BooleanRing.FreeBooleanRing.freeBATerms
 
 open import QuotientBool as QB
 import Cubical.HITs.SetQuotients as SQ
@@ -48,12 +50,12 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty a
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import WLPO
 open import CommRingQuotients.EmptyQuotient
-open import Boole.PresentedBoole
+open import CountablyPresentedBooleanRings.PresentedBoole
 open import Cubical.Algebra.CommRing.Univalence 
 
-open import Boole.FreeCase 
+open import CountablyPresentedBooleanRings.Examples.FreeCase 
 open import Boole.EquivHelper
-open import Boole.QuotientCase
+open import BooleanRing.BooleanRingQuotients.QuotientCase 
 
 opaque
   unfolding QB._/Im_
@@ -80,27 +82,16 @@ opaque
     BooleanRing→CommRing (A QB./Im (⊎.rec f g)) ≡
     BooleanRing→CommRing ((A QB./Im f) QB./Im (fst QB.quotientImageHom ∘ g))
   BoolQuotientEquiv A f g =  
---    BooleanRing→CommRing (A QB./Im (⊎.rec f g)) 
---      ≡⟨ (sym $ quotientCheck A (⊎.rec f g)) ⟩ 
---    (BooleanRing→CommRing A) IQ./Im (⊎.rec f g)
---      ≡⟨ (uaCommRing $ quotientConclusion (BooleanRing→CommRing A) f g) ⟩ 
---    ((BooleanRing→CommRing A) IQ./Im f) IQ./Im ((fst $ IQ.quotientImageHom (BooleanRing→CommRing A) f)∘ g)
---      ≡⟨⟩ 
---    ((BooleanRing→CommRing A) IQ./Im f) IQ./Im ((fst $ QB.quotientImageHom {B = A} {f = f})∘ g)
---      ≡⟨ ? ⟩ -- ⟨ cong (λ B → B IQ./Im  ((fst $ QB.quotientImageHom {B = A} {f = f}) ∘ g)) (quotientCheck A f) ⟩
---    (BooleanRing→CommRing (A QB./Im f)) IQ./Im ((fst $ QB.quotientImageHom {B = A} {f = f})∘ g)
---      ≡⟨ {!  !} ⟩ 
---    BooleanRing→CommRing ((A QB./Im f) QB./Im ( (fst $ QB.quotientImageHom {B = A} {f = f}) ∘ g)) ∎ 
     BooleanRing→CommRing (A QB./Im (⊎.rec f g)) 
       ≡⟨⟩ 
     (BooleanRing→CommRing A) IQ./Im (⊎.rec f g)
       ≡⟨ (uaCommRing $ quotientConclusion (BooleanRing→CommRing A) f g) ⟩ 
     ((BooleanRing→CommRing A) IQ./Im f) IQ./Im ((fst $ IQ.quotientImageHom (BooleanRing→CommRing A) f)∘ g)
       ≡⟨⟩ 
-    ((BooleanRing→CommRing A) IQ./Im f) IQ./Im ((fst $ QB.quotientImageHom {B = A} {f = f})∘ g)
-      ≡⟨⟩ -- ⟨ cong (λ B → B IQ./Im  ((fst $ QB.quotientImageHom {B = A} {f = f}) ∘ g)) (quotientCheck A f) ⟩
-    (BooleanRing→CommRing (A QB./Im f)) IQ./Im ((fst $ QB.quotientImageHom {B = A} {f = f})∘ g)
-      ≡⟨⟩ 
+--    ((BooleanRing→CommRing A) IQ./Im f) IQ./Im ((fst $ QB.quotientImageHom {B = A} {f = f})∘ g)
+--      ≡⟨⟩ -- ⟨ cong (λ B → B IQ./Im  ((fst $ QB.quotientImageHom {B = A} {f = f}) ∘ g)) (quotientCheck A f) ⟩
+--    (BooleanRing→CommRing (A QB./Im f)) IQ./Im ((fst $ QB.quotientImageHom {B = A} {f = f})∘ g)
+--      ≡⟨⟩ 
     BooleanRing→CommRing ((A QB./Im f) QB./Im ( (fst $ QB.quotientImageHom {B = A} {f = f}) ∘ g)) ∎ 
 
 

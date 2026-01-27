@@ -1,6 +1,9 @@
 {-# OPTIONS --cubical --guardedness #-}
 
 module CommRingQuotients.EmptyQuotient where
+
+{- We show that quotienting over the empty function does not change the ring -}
+
 open import Cubical.Foundations.Prelude 
 open import Cubical.Foundations.Structure
 open import Cubical.Functions.Surjection
@@ -16,8 +19,8 @@ open import Cubical.Algebra.CommRing.Quotient.ImageQuotient
 open import Cubical.HITs.SetQuotients 
 open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Algebra.CommRing.Ideal.Base 
-open import MarkovTest
-open import CommRingQuotients.MarkovRuns
+open import CommRingQuotients.IdealTerms
+open import CommRingQuotients.TrivialIdeal
 
 
 open import Cubical.Data.Empty renaming (rec* to empty-func)

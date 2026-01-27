@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module FreeBooleanRing.freeBATerms where
+module BooleanRing.FreeBooleanRing.freeBATerms where
 {- This file shows that the terms of a freely generated Boolean ring have a surjection into that freely generated Boolean ring. -}
 
 
@@ -24,8 +24,8 @@ open import Cubical.Data.Bool
 open import Cubical.Data.Sigma
 import Cubical.HITs.PropositionalTruncation as PT
 
-open import FreeBooleanRing.SurjectiveTerms
-open import FreeBooleanRing.FreeBool
+open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
+open  import BooleanRing.FreeBooleanRing.FreeBool
 
 freeBATerms : {ℓ : Level} → Type ℓ → Type ℓ
 freeBATerms A = TermsOf BoolCR [ A ]

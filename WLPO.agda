@@ -22,10 +22,10 @@ open import Cubical.Algebra.BooleanRing.Instances.Bool
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import FreeBooleanRing.FreeBool
+open  import BooleanRing.FreeBooleanRing.FreeBool
 
-open import FreeBooleanRing.SurjectiveTerms
-open import FreeBooleanRing.freeBATerms
+open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
+open  import BooleanRing.FreeBooleanRing.freeBATerms
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base as TV
 
 binarySequence : Type 

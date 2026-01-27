@@ -1,5 +1,5 @@
 {-# OPTIONS --cubical --guardedness #-}
-module StoneDuality where
+module Axioms.StoneDuality where
 --TODO check whether Voevodsky agrees with the name univalent category as 
 --opposed to use precategory for the cubical category definition
 --and category for the univalent version. 
@@ -17,7 +17,7 @@ module StoneDuality where
 
 --import Cat.Functor.Adjoint.Reflective
 --Naim advised me to use --no-load-primitives
-open import Boole.PresentedBoole 
+open import CountablyPresentedBooleanRings.PresentedBoole 
 open import Cubical.Data.Sigma
 open import Cubical.Foundations.Univalence
 open import Cubical.Data.Sum
@@ -54,7 +54,7 @@ open import Cubical.Relation.Nullary hiding (⟪_⟫)
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import Boole.Bool
+open import CountablyPresentedBooleanRings.Examples.Bool
 open import QuickFixes
 
 open import BooleanRing.BoolRingUnivalence

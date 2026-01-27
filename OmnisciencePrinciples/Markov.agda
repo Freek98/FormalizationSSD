@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical -WnoUselessAbstract  -WnoUnsupportedIndexedMatch -WnoInteractionMetaBoundaries --guardedness #-}
 
-module MarkovTest where 
+module OmnisciencePrinciples.Markov where 
 
 open import Cubical.Functions.Fixpoint
 
@@ -25,10 +25,10 @@ open import Cubical.Relation.Nullary
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open import FreeBooleanRing.FreeBool
+open  import BooleanRing.FreeBooleanRing.FreeBool
 
-open import FreeBooleanRing.SurjectiveTerms
-open import FreeBooleanRing.freeBATerms
+open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
+open  import BooleanRing.FreeBooleanRing.freeBATerms
 
 open import QuotientBool
 import Cubical.HITs.SetQuotients as SQ
@@ -38,21 +38,18 @@ import Cubical.Algebra.CommRing.Kernel as CK
 open import Cubical.Algebra.Ring.Kernel as RK
 open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Tactics.CommRingSolver
+open import CommRingQuotients.IdealTerms
 
 open import WLPO 
 
-import CommRingQuotients.MarkovRuns as MR
-
 MP : Type _
 MP = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true
-
 
 module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
   2/α : BooleanRing _
   2/α = BoolBR /Im α 
  
   module _ (f : BoolHom 2/α BoolBR) where
-
     open BooleanRingStr (snd 2/α)
     
     open IsCommRingHom
@@ -62,8 +59,6 @@ module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
 
     παn=0 : (n : ℕ) → (quotientImageHom $cr (α n)) ≡ 𝟘 
     παn=0 n = zeroOnImage n 
-    -- problem : this is very slow and I need to keep letting agda infer BooleanRing→CommRing
-    -- Maybe I should move this stuff to Boolean quotients 
 
     f'αn=0 : (n : ℕ) → f' $cr (α n) ≡ false
     f'αn=0 n =  f' $cr (α n) ≡⟨⟩ 
@@ -80,34 +75,9 @@ module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
 
     emptySp : ⊥
     emptySp = α≠0 αn=0 
-   
---    emptySp : ¬ BoolHom 2/α BoolBR 
---    emptySp f = α≠0 λ { n → {! !} } where
-
---    0=1 : 𝟘 ≡ 𝟙 
---    0=1 = {! !} 
     
 
-module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  where
-  open CommRingStr ⦃...⦄
-  instance 
-   _ = (snd R) 
-  data isInIdeal : (r : ⟨ R ⟩) → Type ℓ where
-        isImage  : (r : ⟨ R ⟩) → (x : X) → (f x ≡ r) → isInIdeal r
-        iszero   : (r : ⟨ R ⟩) → (0r ≡ r) → isInIdeal r
-        isSum    : (r : ⟨ R ⟩) → (s t : ⟨ R ⟩) → (r ≡ s + t) → isInIdeal s → isInIdeal t → isInIdeal r
-        isMul    : (r : ⟨ R ⟩) → (s t : ⟨ R ⟩) → (r ≡ s · t) →               isInIdeal t → isInIdeal r
-
-  idealDecomp : ( r : ⟨ R ⟩ ) → IQ.generatedIdeal R f r → ∥ isInIdeal r ∥₁
-  idealDecomp .(f x)   (IQ.single x)                    = ∣ isImage (f x) x refl ∣₁
-  idealDecomp .(0r)     IQ.zero                         = ∣ iszero 0r refl ∣₁
-  idealDecomp .(s + t) (IQ.add {x = s} {y = t} s∈I t∈I) = PT.map2 (isSum (s + t) s t refl) (idealDecomp s s∈I) (idealDecomp t t∈I)
-  idealDecomp .(s · t) (IQ.mul {r = s} {x = t} t∈I )    = PT.map  (isMul (s · t) s t refl) (idealDecomp t t∈I)
-  idealDecomp r        (IQ.squash r∈I r∈I' i)           = ∥∥-isPropDep isInIdeal 
-                                                          (idealDecomp r r∈I) (idealDecomp r r∈I') refl i 
-
 module _ (α : binarySequence)  where
-  
   t∈I→αn : isInIdeal BoolCR α true → Σ[ n ∈ ℕ ] α n ≡ true
   t∈I→αn (isImage .true n αn=true)          = n , αn=true
   t∈I→αn (iszero  .true f=t)                = ex-falso (false≢true f=t)

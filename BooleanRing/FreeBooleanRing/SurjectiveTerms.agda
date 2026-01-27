@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module FreeBooleanRing.SurjectiveTerms where 
+module BooleanRing.FreeBooleanRing.SurjectiveTerms where 
 {- 
 -- In general, it should be true that for a higher inductive type X, 
 -- the type of it's terms X_0 should have a surjection to X. 

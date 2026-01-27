@@ -6,3 +6,6 @@ In the original repo we had only 3 folders
 - A folder called "Category", where the goal was to generalize some immediate conseqeuences of Stone duality to general consequences of an adjunction being an iso. I think this effort should be shelved for now, as we focus on formalizing some results from the paper. 
 
 The main result I wanted to aim for is the classification of closeds in a Stone, but it turns out this was maybe overambitious. Instead, I wish to complete the proofs of the omniscience principles first. 
+
+**TO CHANGE**
+- WLPO contains the definition of binary sequences
