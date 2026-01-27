@@ -122,6 +122,7 @@ module _ {ℓ : Level} (A : Type ℓ) (B : BooleanRing ℓ) (f : A → ⟨ B ⟩
     _ = str 2[A]
   opaque
     unfolding freeBA
+    unfolding IQ.inducedHom
     inducedBAHom : BoolHom (freeBA A) B
     inducedBAHom = IQ.inducedHom 2[A] idem 2[A]→B 2[A]→BRespIdem 
 
@@ -129,6 +130,7 @@ module _ {ℓ : Level} (A : Type ℓ) (B : BooleanRing ℓ) (f : A → ⟨ B ⟩
     unfolding freeBA 
     unfolding generator
     unfolding inducedBAHom
+    unfolding IQ.inducedHom
     inducedBAHomUnique : (g : BoolHom (freeBA A) B) →
                          ((fst g) ∘ generator ≡ f)  →
                          inducedBAHom ≡ g
@@ -145,6 +147,7 @@ module _ {ℓ : Level} (A : Type ℓ) (B : BooleanRing ℓ) (f : A → ⟨ B ⟩
   opaque 
     unfolding generator 
     unfolding inducedBAHom
+    unfolding IQ.inducedHom
     evalBAInduce : fst (inducedBAHom A B f) ∘ generator ≡ f
     evalBAInduce = TV.evalInduce _ _ f
 
