@@ -54,7 +54,7 @@ open import WLPO
 open import EmptyQuotient
 open import Boole.PresentedBoole
 open import Boole.FreeCase
-open import Boole.BoolRingUnivalence
+open import BooleanRing.BoolRingUnivalence
 
 open import Cubical.Algebra.CommRing.Univalence 
 

@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module Boole.BoolRingUnivalence where
+module BooleanRing.BoolRingUnivalence where
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
@@ -49,9 +49,6 @@ isPropIsBooleanRing : {B : Type ℓ} →
 
 isPropIsBooleanRing {B = B} {_·_ = _·h_} = isOfHLevelRetractFromIso 1 IsBooleanRingIsoΣ 
   (isPropΣ (isPropIsCommRing _ _ _ _ _) f) where 
-  -- TODO clean this up, look at how isPropRing works, it's shorter
---  (λ ring → isPropΠ2 (λ _ _ → is-set ring _ _)))
---  However, is-set is apparently part of the IsRing, but not of isCommRing
     open CommRingStr 
     f : IsCommRing _ _ _ _·h_ _ → isProp ((x : B) → (x ·h x) ≡ x) 
     f isCR p q = funExt λ x → is-set CRstr (x ·h x) x (p x) (q x) where
@@ -94,41 +91,3 @@ opaque
   uaBoolRing {A = A} {B = B} = equivFun (BoolRingPath A B)
 
 
-{-
-open Iso
---isPropIsCommRing : {R : Type ℓ} (0r 1r : R) (_+_ _·_ : R → R → R) (-_ : R → R)
---             → isProp (IsCommRing 0r 1r _+_ _·_ -_)
---isPropIsCommRing 0r 1r _+_ _·_ -_ =
---  isOfHLevelRetractFromIso 1 IsCommRingIsoΣ
---  (isPropΣ (isPropIsRing 0r 1r _+_ _·_ (-_))
---  (λ ring → isPropΠ2 (λ _ _ → is-set ring _ _)))
---  where
---  open IsRing
-
-
-
-
---  (λ ring → isPropΠ2 (λ _ _ → is-set ring _ _)))
-extendEquiv : (A B : BooleanRing ℓ) → CommRingEquiv (BooleanRing→CommRing A) (BooleanRing→CommRing B) ≡ BooleanRingEquiv A B
-extendEquiv A B = refl 
-
-extendEquality : (A B : BooleanRing ℓ) → ((BooleanRing→CommRing A) ≡ (BooleanRing→CommRing B)) → A ≡ B
-extendEquality A B x = ΣPathP (cong fst x , f) where
-  open BooleanRingStr
-  f : PathP (λ i → BooleanRingStr ( fst (x i))) (snd A) (snd B)
-  f i .𝟘 = _
-  f i .𝟙 = _
-  f i ._+_ = _
-  f i ._·_ = _
-  - f i = _
-  f i .isBooleanRing = isPropIsBooleanRing {! isBooleanRing $ snd A !} {! isBooleanRing $ snd B !} i
-
-
---ΣPathP
-BooleanRingPath : (R S : BooleanRing ℓ) → BooleanRingEquiv R S ≃ (R ≡ S)
-BooleanRingPath R S = subst (λ P → P ≃ (R ≡ S)) (extendEquiv R S) 
-  ({! fst $ CommRingPath (BooleanRing→CommRing R) (BooleanRing→CommRing S) !} , {! !})
-
-uaBooleanRing : {A B : BooleanRing ℓ} → BooleanRingEquiv A B → A ≡ B
-uaBooleanRing {A = A} {B = B} = equivFun (BooleanRingPath A B)
--}

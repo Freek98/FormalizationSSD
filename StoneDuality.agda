@@ -57,7 +57,7 @@ open import Cubical.HITs.PropositionalTruncation as PT
 open import Boole.Bool
 open import QuickFixes
 
-open import Boole.BoolRingUnivalence
+open import BooleanRing.BoolRingUnivalence
 
 open import Cubical.Categories.Category.Base 
 open import Cubical.Categories.Category 

@@ -49,7 +49,7 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import WLPO
 open import EmptyQuotient
 open import Boole.Shouldhave
-open import Boole.BoolRingUnivalence
+open import BooleanRing.BoolRingUnivalence
 
 {- I freeA'≃freeA to define what is a countably presented BA before I can define what a Stone space is.
 --

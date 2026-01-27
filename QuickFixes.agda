@@ -2,7 +2,7 @@
 module QuickFixes where
 -- Idea : this was necessary but shouldn't be in any particularly file where they're used. 
 open import Boole.PresentedBoole
-open import Boole.BoolRingUnivalence
+open import BooleanRing.BoolRingUnivalence
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
 open import Cubical.Foundations.HLevels
