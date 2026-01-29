@@ -16,7 +16,7 @@ module _ {ℓ ℓ' : Level} {A : CommRing ℓ} {B : CommRing ℓ'}
          (hom : CommRingHom A B)
          (inv : ⟨ B ⟩ → ⟨ A ⟩ )
          (sec : section (fst hom) (inv))
-         (ret  : retract (fst hom) (inv)) where
+         (ret : retract (fst hom) (inv)) where
   open CommRingStr (snd B)
   opaque 
     isoToCommRingEquiv : CommRingEquiv A B

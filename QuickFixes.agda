@@ -180,7 +180,7 @@ equivalencesPreservedByEquivalences : {ℓ ℓ' : Level} → (A : BooleanRing �
                                       Iso (Σ[ f ∈ BoolHom A B ] (isEquiv (fst f))) ((F B) ≃ (F A))
 equivalencesPreservedByEquivalences A B F is .Iso.fun ((f , fHom) , fequ) .fst = is .Iso.fun (f , fHom)
 equivalencesPreservedByEquivalences A B F is .Iso.fun ((f , fHom) , fequ) .snd .equiv-proof y = {! !}
-equivalencesPreservedByEquivalences A B F is .Iso.inv    = {! !}
+equivalencesPreservedByEquivalences A B F is .Iso.inv = {! !}
 equivalencesPreservedByEquivalences A B F is .Iso.sec = {! !}
 equivalencesPreservedByEquivalences A B F is .Iso.ret = {! !} 
 
