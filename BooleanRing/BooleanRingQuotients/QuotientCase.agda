@@ -122,10 +122,10 @@ module expand {γ : binarySequence} {ℓ : Level} (A : BooleanRing ℓ-zero) whe
     A/f→A/g = QB.inducedHom A/g QB.quotientImageHom gZeroOnF 
     
     A/f→A/g∘qf=qg : A/f→A/g ∘cr (QB.quotientImageHom {f = f}) ≡ QB.quotientImageHom {f = g} 
-    A/f→A/g∘qf=qg = QB.evalInduce A/g 
+    A/f→A/g∘qf=qg = QB.evalInduce A/g _ _ 
 
     A/g→A/f∘qg=qf : A/g→A/f ∘cr (QB.quotientImageHom {f = g}) ≡ QB.quotientImageHom {f = f} 
-    A/g→A/f∘qg=qf = QB.evalInduce A/f  
+    A/g→A/f∘qg=qf = QB.evalInduce A/f _ _ 
 
     A/g∘q=q : A/f→A/g ∘cr A/g→A/f ∘cr QB.quotientImageHom {f = g} ≡ QB.quotientImageHom {f = g} 
     A/g∘q=q = cong (λ h → A/f→A/g ∘cr h) A/g→A/f∘qg=qf ∙ A/f→A/g∘qf=qg
@@ -215,26 +215,32 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
     compToSum : CommRingHom A/f/πg A/f+g 
     compToSum = IQ.inducedHom A/f ginA/f (IQ.inducedHom A f πSum πSum0Onf) 
       compToSumHelper
+     
   opaque
     unfolding compToSum
     unfolding πComp
+    --πComp = πg ∘cr IQ.quotientImageHom A f
     unfolding sumToComp
+    --sumToComp = IQ.inducedHom A f+g πComp λ { (inl n) → πComp0Onf n
+    --                                        ; (inr n) → πComp0Ong n } 
     unfolding πSum
+    --πSum = IQ.quotientImageHom A f+g 
+    πCompdeComp : sumToComp ∘cr πSum ≡ πComp
+    πCompdeComp = IQ.evalInduce A f+g πComp _ 
     ret∘πSum : (compToSum ∘cr sumToComp) ∘cr πSum ≡ πSum
     ret∘πSum = 
       (compToSum ∘cr sumToComp) ∘cr πSum 
        ≡⟨ CommRingHom≡ refl ⟩ 
-      compToSum ∘cr sumToComp ∘cr πSum 
-       ≡⟨ cong (λ h → compToSum ∘cr h) $ IQ.evalInduce A ⟩ 
-      compToSum ∘cr πComp
+      compToSum ∘cr (sumToComp ∘cr πSum)
+       ≡⟨ cong (λ h → compToSum ∘cr h) πCompdeComp ⟩ 
+      compToSum ∘cr πComp 
        ≡⟨ CommRingHom≡ refl ⟩ 
       (compToSum ∘cr IQ.quotientImageHom A/f _) ∘cr IQ.quotientImageHom A f 
-       ≡⟨ cong (λ h → h ∘cr IQ.quotientImageHom A f) $ IQ.evalInduce A/f ⟩ 
-      IQ.inducedHom A f πSum πSum0Onf ∘cr IQ.quotientImageHom A f
-       ≡⟨ IQ.evalInduce A ⟩ 
+       ≡⟨ (cong (λ h → h ∘cr IQ.quotientImageHom A f) $ IQ.evalInduce A/f ginA/f (IQ.inducedHom A f πSum πSum0Onf) compToSumHelper) ⟩ 
+      IQ.inducedHom A f πSum πSum0Onf ∘cr IQ.quotientImageHom A f 
+       ≡⟨ IQ.evalInduce A f πSum πSum0Onf ⟩ 
       πSum 
        ∎     
-
   opaque 
     unfolding sumToComp
     unfolding πSum
@@ -247,16 +253,17 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
                      (IQ.inducedHom A/f ginA/f (IQ.inducedHom A f πSum πSum0Onf) compToSumHelper ∘cr ( (IQ.quotientImageHom A/f _)) )
                      ∘cr IQ.quotientImageHom A f
                         ≡⟨ cong (λ h → sumToComp ∘cr h ∘cr IQ.quotientImageHom A f) 
-                           $ IQ.evalInduce A/f ⟩ 
-                     sumToComp ∘cr (IQ.inducedHom A f πSum πSum0Onf) ∘cr IQ.quotientImageHom A f
+                           $ IQ.evalInduce A/f ginA/f _ compToSumHelper ⟩ 
+                     sumToComp ∘cr (IQ.inducedHom A f πSum πSum0Onf) 
+                               ∘cr IQ.quotientImageHom A f
                         ≡⟨ CommRingHom≡ refl ⟩ 
                      sumToComp ∘cr (IQ.inducedHom A f πSum πSum0Onf ∘cr IQ.quotientImageHom A f)
-                        ≡⟨ cong (λ h → sumToComp ∘cr h) $ IQ.evalInduce A ⟩ 
+                        ≡⟨ cong (λ h → sumToComp ∘cr h) $ 
+                           IQ.evalInduce A f _ _  ⟩ 
                      sumToComp ∘cr πSum
-                        ≡⟨ IQ.evalInduce A ⟩ 
+                        ≡⟨ IQ.evalInduce A f+g πComp _ ⟩ 
                      πComp
                         ∎
-
   opaque 
     ret' : (compToSum ∘cr sumToComp) ∘cr πSum ≡ idCommRingHom A/f+g ∘cr πSum
     ret' = ret∘πSum ∙ (sym $ idCompCommRingHom πSum)
@@ -280,27 +287,10 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
   opaque 
     sec''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ idCommRingHom A/f/πg ∘cr πg
     sec''' = IQ.quotientImageHomEpi A sec'' 
---  opaque 
---    unfolding πg
---    unfolding ginA/f
---    unfolding A/f
---    unfolding A/f/πg
---    unfolding IQ._/Im_
---    unfolding πSum
---    -- Learned fact : unfolding doesn't work for "top-level types", 
---    -- as those can leak out of the definition. 
---    sec'''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ 
---                   (idCommRingHom A/f/πg) ∘cr (IQ.quotientImageHom A/f ginA/f)
---    sec'''' = ? -- sec'''
   opaque
     unfolding πg
     sec : sumToComp ∘cr compToSum ≡ idCommRingHom A/f/πg
     sec = IQ.quotientImageHomEpi A/f sec''' 
---    where
---      sec'''' : 
---        (sumToComp ∘cr compToSum) ∘cr (IQ.quotientImageHom A/f ginA/f) ≡ 
---        (idCommRingHom A/f/πg)    ∘cr (IQ.quotientImageHom A/f ginA/f)
---      sec'''' = sec'''
   opaque 
     conclusion : CommRingEquiv A/f+g A/f/πg
     conclusion = isoHomToCommRingEquiv sumToComp compToSum sec ret 
@@ -314,4 +304,3 @@ opaque
     (A IQ./Im (⊎.rec f g)) 
     ((A IQ./Im f) IQ./Im ((fst (IQ.quotientImageHom A f)) ∘ g))
   quotientConclusion A f g = sum.conclusion A f g 
-
