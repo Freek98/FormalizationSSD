@@ -640,7 +640,7 @@ module _ (SD : StoneDualityAxiom) where
 
   SpEmbedding : isEmbedding Sp 
   SpEmbedding = snd $ compEmbedding 
-                    (fst , fstEmbedding isSet λ A → isPropIsSet {A = A}) 
+                    (ΣpropEmbedding isSet λ A → isPropIsSet {A = A})
                     (SpFunctor .F-ob , SpEmbeddingIntoSets) 
 
 hasStoneStr : Type ℓ-zero → Type (ℓ-suc ℓ-zero) 
