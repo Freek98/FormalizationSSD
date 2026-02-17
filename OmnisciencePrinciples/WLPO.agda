@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-module WLPO where 
+module OmnisciencePrinciples.WLPO where 
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)

@@ -46,7 +46,7 @@ open import Cubical.Tactics.CommRingSolver
 
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty as UP
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
-open import WLPO
+open import OmnisciencePrinciples.WLPO
 open import CommRingQuotients.EmptyQuotient
 open import BooleanRing.BoolRingUnivalence
 
