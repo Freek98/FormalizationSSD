@@ -17,7 +17,6 @@ open import Cubical.Data.Nat.Bijections.Sum
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
-open import Cubical.Functions.Surjection
 open import Cubical.Functions.Embedding
 open import Cubical.Foundations.Powerset
 open import Cubical.Foundations.Isomorphism renaming (isIso to isRealIso ; compIso to compRealIso)
@@ -633,8 +632,8 @@ module _ (SD : StoneDualityAxiom) where
   isPropHasStoneStr : (S : Set) → isProp (hasStoneStr S)
   isPropHasStoneStr S = isEmbedding→hasPropFibers (SpEmbedding SD) S 
 
---StoneCat : Category (ℓ-suc ℓ-zero) ℓ-zero 
---StoneCat = ImageFunctor.Image SpFunctor  
+StoneCat : Category (ℓ-suc ℓ-zero) ℓ-zero 
+StoneCat = ImageFunctor.Image SpFunctor  
 
 Stone : Type (ℓ-suc ℓ-zero)
 Stone = TypeWithStr ℓ-zero hasStoneStr

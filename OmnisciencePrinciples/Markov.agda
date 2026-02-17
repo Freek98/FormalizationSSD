@@ -2,8 +2,10 @@
 
 module OmnisciencePrinciples.Markov where 
 
-open import Cubical.Functions.Fixpoint
+open import Axioms.StoneDuality
+open import AntiEquivalence
 
+open import Cubical.Functions.Fixpoint
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
@@ -30,7 +32,7 @@ open  import BooleanRing.FreeBooleanRing.FreeBool
 open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
 open  import BooleanRing.FreeBooleanRing.freeBATerms
 
-open import QuotientBool
+open import QuotientBool as QB
 import Cubical.HITs.SetQuotients as SQ
 import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
 open import Cubical.Algebra.CommRing.Ideal
@@ -39,7 +41,6 @@ open import Cubical.Algebra.Ring.Kernel as RK
 open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Tactics.CommRingSolver
 open import CommRingQuotients.IdealTerms
-
 open import OmnisciencePrinciples.WLPO 
 
 MP : Type _
@@ -51,18 +52,14 @@ module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
  
   module _ (f : BoolHom 2/α BoolBR) where
     open BooleanRingStr (snd 2/α)
-    
     open IsCommRingHom
     
     f' : BoolHom BoolBR BoolBR
     f' = f ∘cr quotientImageHom
 
-    παn=0 : (n : ℕ) → (quotientImageHom $cr (α n)) ≡ 𝟘 
-    παn=0 n = zeroOnImage n 
-
     f'αn=0 : (n : ℕ) → f' $cr (α n) ≡ false
     f'αn=0 n =  f' $cr (α n) ≡⟨⟩ 
-                fst f (quotientImageHom $cr (α n)) ≡⟨ cong (fst f) (παn=0 n) ⟩ 
+                fst f (quotientImageHom $cr (α n)) ≡⟨ cong (fst f) (zeroOnImage n) ⟩ 
                 fst f 𝟘 ≡⟨ pres0 (snd f)⟩ 
                 false ∎ 
 
@@ -75,7 +72,6 @@ module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
 
     emptySp : ⊥
     emptySp = α≠0 αn=0 
-    
 
 module _ (α : binarySequence)  where
   t∈I→αn : isInIdeal BoolCR α true → Σ[ n ∈ ℕ ] α n ≡ true
@@ -92,54 +88,50 @@ module _ (α : binarySequence)  where
   
   ∃αn : αI true → ∃[ n ∈ ℕ ] α n ≡ true 
   ∃αn x = PT.map t∈I→αn (idealDecomp BoolCR α true x) 
-  
-  {- As pointed out by Jonas, the fact that if we have a decidable property of ℕ, 
-  -- ∃ implies Σ by finding the smallest number, is somewhere in Egebert Rijke's intro to HoTT.
-  -- This should be a seperate function 
-  -}
-  first : Type
-  first = (Σ[ m ∈ ℕ ] ((α m ≡ true) × ((k : ℕ) → k < m → α k ≡ false)))
 
-  firstSeen : ℕ → Type
-  firstSeen n = (Σ[ m ∈ ℕ ] ((m < n) × (α m ≡ true) × ((k : ℕ) → k < m → α k ≡ false)))
-  
-  <help : {m n k : ℕ} → (m < n ) → n < suc k → m < k 
-  <help {m} {n} {k} m<n n<Sk = pred-≤-pred (suc (suc m) ≤⟨ suc-≤-suc m<n ⟩ suc n ≤≡⟨ n<Sk ⟩ suc k ∎) 
-  
-  pred¬firstSeen : (n : ℕ) → (¬ firstSeen (suc n) ) → ¬ firstSeen n
-  pred¬firstSeen n nothingBeforeSn (m , m<n , αm , notbeforem) = nothingBeforeSn (m , ≤-suc m<n , αm , notbeforem) 
+module extractFirstHitInBinarySequence (α : binarySequence) where
+  is-first-hit : (n : ℕ) → Type
+  is-first-hit m = (α m ≡ true) × ((k : ℕ) → k < m → α k ≡ false)
+    
+  first-hit : Type
+  first-hit = Σ[ m ∈ ℕ ] is-first-hit m
 
-  spot : (n : ℕ) → firstSeen n → first
-  spot n (m , _ , αm , mfirst) = m , αm , mfirst 
+  firstSeenBefore : ℕ → Type
+  firstSeenBefore n = (Σ[ m ∈ ℕ ] (m < n) × is-first-hit m)
   
-  propFun : { A : Type} { B : A → Type} → ((a : A)  → isProp (B a)) → isProp ( (a : A) → B a)
-  propFun Bprop f g = funExt {f = f} {g = g} λ { x → Bprop x (f x) (g x) } 
-  propFun₂ : {A : Type} {B : A → Type} {C : (a : A) → (b : B a) → Type} → 
-     ((a : A) → (b : B a) → isProp (C a b)) → 
-     isProp ( (a : A) → (b : B a) → C a b) 
-  propFun₂ Cprop f g = propFun (λ a → propFun λ b → Cprop a b) f g 
+  pred¬firstSeenBefore : (n : ℕ) → (¬ firstSeenBefore (suc n) ) → ¬ firstSeenBefore n
+  pred¬firstSeenBefore n nothingBeforeSn (m , m<n , αm , notbeforem) = nothingBeforeSn (m , ≤-suc m<n , αm , notbeforem) 
 
-  prophelp : (n : ℕ) → isProp ( α n ≡ true) 
-  prophelp n x y = isSetBool (α n) true x y
-
-  propHelp : (n : ℕ) → isProp (( α n ≡ true) × ((k : ℕ) → k < n → α k ≡ false))
+  propHelp : (n : ℕ) → isProp (is-first-hit n)
   propHelp n (p , nF) (p' , nF') = Σ≡Prop 
-                                    (λ αn → propFun₂ λ n _ → isSetBool (α n) false) 
-                                    (prophelp n p p') 
+    (λ αn → propFun₂ λ n _ → isSetBool (α n) false) 
+    (prophelp n p p') where
 
-  firstProp : isProp first 
+    propFun : { A : Type} { B : A → Type} → ((a : A)  → isProp (B a)) → isProp ((a : A) → B a)
+    propFun Bprop f g = funExt {f = f} {g = g} λ { x → Bprop x (f x) (g x) } 
+  
+    propFun₂ : {A : Type} {B : A → Type} {C : (a : A) → (b : B a) → Type} → 
+       ((a : A) → (b : B a) → isProp (C a b)) → 
+       isProp ( (a : A) → (b : B a) → C a b) 
+    propFun₂ Cprop f g = propFun (λ a → propFun λ b → Cprop a b) f g 
+  
+    prophelp : (n : ℕ) → isProp ( α n ≡ true) 
+    prophelp n x y = isSetBool (α n) true x y
+
+  firstProp : isProp first-hit
   firstProp (m , αm , mFirst) (n , αn , nFirst ) with (m ≟ n ) 
   ... | lt m<n = ex-falso (true≢false (sym αm ∙ nFirst m m<n))
   ... | eq m=n = Σ≡Prop (λ n → propHelp n) m=n
   ... | gt n<m = ex-falso (true≢false (sym αn ∙ mFirst n n<m )) 
 
-
-  need : (n : ℕ) → ¬ firstSeen n → (k : ℕ)  →  k < n → α k ≡ false 
+  need : (n : ℕ) → ¬ firstSeenBefore n → (k : ℕ) → k < n → α k ≡ false 
   need zero _ _ k<0            = ex-falso $ ¬-<-zero k<0
   need (suc n) noBefore k k<Sn = ¬true→false (α k) λ { αk → noBefore 
-    (k , k<Sn , αk , λ { l l<k → need n (pred¬firstSeen n noBefore) l (<help l<k k<Sn) }) } 
+    (k , k<Sn , αk , λ { l l<k → need n (pred¬firstSeenBefore n noBefore) l (<help l<k k<Sn) }) }  where
+      <help : {m n k : ℕ} → (m < n) → n < suc k → m < k 
+      <help {m} {n} {k} m<n n<Sk = pred-≤-pred (suc (suc m) ≤⟨ suc-≤-suc m<n ⟩ suc n ≤≡⟨ n<Sk ⟩ suc k ∎) 
 
-  decidableFirst : (n : ℕ ) → Dec (firstSeen n)
+  decidableFirst : (n : ℕ ) → Dec (firstSeenBefore n)
   decidableFirst zero    = no λ { ( _ , m<0 , _) → ¬-<-zero m<0 }
   decidableFirst (suc n) with (decidableFirst n)
   ... | yes (m , m<n , first) = yes (m , (m <⟨ m<n ⟩ n <≡⟨ 0 , refl ⟩ suc n ∎) , first)
@@ -147,24 +139,45 @@ module _ (α : binarySequence)  where
   ...     | yes αn = yes 
                (n , (0 , refl) , αn , need n noEarlierFirst )
   ...     | no ¬αn = no caseSplit where
-             caseSplit : firstSeen (suc n)  → ⊥ 
+             caseSplit : firstSeenBefore (suc n)  → ⊥ 
              caseSplit (m , m<Sn , αm , x) with <-split m<Sn 
              ... | inl m<n = noEarlierFirst (m , m<n , αm , x)
              ... | inr m=n = ¬αn (cong α (sym m=n) ∙ αm)  
 
-  FindFirst : (n : ℕ) → α n ≡ true → firstSeen (suc n)
+  FindFirst : (n : ℕ) → α n ≡ true → firstSeenBefore (suc n)
   FindFirst n αn with decidableFirst (suc n) 
   ... | yes p = p
-  ... | no ¬p = ex-falso (¬p (n , (0 , refl) , αn , (need n $ pred¬firstSeen n ¬p)))
+  ... | no ¬p = ex-falso (¬p (n , (0 , refl) , αn , (need n $ pred¬firstSeenBefore n ¬p)))
   
-  goback : (n : ℕ) → α n ≡ true → first 
-  goback n αn = spot (suc n) (FindFirst n αn) 
+  extract : ∃[ n ∈ ℕ ] α n ≡ true → first-hit
+  extract = PT.rec firstProp (uncurry goback) where
+   
+    spot : (n : ℕ) → firstSeenBefore n → first-hit
+    spot n (m , _ , αm , mfirst) = m , αm , mfirst 
 
-  extract : ∃[ n ∈ ℕ ] α n ≡ true → first
-  extract = PT.rec firstProp (uncurry goback) 
+    goback : (n : ℕ) → α n ≡ true → first-hit
+    goback n αn = spot (suc n) (FindFirst n αn) 
   
-  first→Hit : first → Σ[ n ∈ ℕ ] α n ≡ true
+  first→Hit : first-hit → Σ[ n ∈ ℕ ] α n ≡ true
   first→Hit (n , αn , _ ) = n , αn 
 
   extract' : ∃[ n ∈ ℕ ] (α n ≡ true)  → Σ[ n ∈ ℕ ] (α n ≡ true) 
   extract' = first→Hit ∘ extract 
+
+MarkovPrinciple : Type₀
+MarkovPrinciple = (α : binarySequence) → ¬ ((n : ℕ) → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true
+
+--mp-from-SD : StoneDualityAxiom → MarkovPrinciple
+--mp-from-SD SD α α≠0 = extract' α (∃αn α (trivialQuotient→1∈I BoolCR (IQ.genIdeal BoolCR α) (sym 0≡1-CR)))
+--  where
+--  open import Axioms.StoneDuality using (evaluationMap)
+--  open import CommRingQuotients.TrivialIdeal using (trivialQuotient→1∈I)
+--  import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
+--
+--  0≡1-BR : BooleanRingStr.𝟘 (snd (BoolBR QB./Im α)) ≡ BooleanRingStr.𝟙 (snd (BoolBR QB./Im α))
+--  0≡1-BR = SpectrumEmptyImpliesTrivial.0≡1-in-B SD (2/α-Booleω α) (MarkovLib.emptySp α α≠0)
+--  open import QuotientBool using (_/Im_)
+--  opaque
+--    unfolding _/Im_
+--    0≡1-CR : CommRingStr.0r (snd (BoolCR IQ./Im α)) ≡ CommRingStr.1r (snd (BoolCR IQ./Im α))
+--    0≡1-CR = 0≡1-BR
