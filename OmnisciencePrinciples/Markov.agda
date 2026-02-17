@@ -40,7 +40,7 @@ open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Tactics.CommRingSolver
 open import CommRingQuotients.IdealTerms
 
-open import WLPO 
+open import OmnisciencePrinciples.WLPO 
 
 MP : Type _
 MP = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true
