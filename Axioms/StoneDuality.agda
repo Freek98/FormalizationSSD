@@ -1,22 +1,5 @@
 {-# OPTIONS --cubical --guardedness #-}
 module Axioms.StoneDuality where
---TODO check whether Voevodsky agrees with the name univalent category as 
---opposed to use precategory for the cubical category definition
---and category for the univalent version. 
-
--- Also todo : - finish 2^ restricted as Functor Stone → Booleω
---             - Sp is embedding 
---             - Stone agrees with the image of Booleω 
---             - All of this in general version. 
---             - Finish ¬ WLPO, MP
---              
---              check chech cohomology of our paper and Hugo
---  Also look what it means given finite approximation (coboundary, cocycle)
---  Look up cyclic cohomology
---  Felix' lecture notes on some German course (Thierry will send mail). 
-
---import Cat.Functor.Adjoint.Reflective
---Naim advised me to use --no-load-primitives
 open import CountablyPresentedBooleanRings.PresentedBoole 
 open import Cubical.Data.Sigma
 open import Cubical.Foundations.Univalence

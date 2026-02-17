@@ -62,9 +62,7 @@ negOpenWitnessIsClosedWitness P (α , P→Σα , Σα→P) =
     true ≡⟨ sym αn=t ⟩ α n ≡⟨ ∀n¬αn n ⟩ false ∎
 
 negOpenIsClosed : (P : hProp ℓ-zero) → isOpenProp P → isClosedProp (¬ P)
-negOpenIsClosed P = PT.rec (isPropIsClosedProp {P = ¬ P}) 
-  λ PopenW → ∣ negOpenWitnessIsClosedWitness P PopenW ∣₁ 
-
+negOpenIsClosed P = PT.map (negOpenWitnessIsClosedWitness P)
 
 decIsOpen : (P : hProp ℓ-zero) → Dec ⟨ P ⟩ → isOpenProp P
 decIsOpen P (yes p) = ∣ (λ _ → true) , (λ _ → 0 , refl) , (λ _ → p) ∣₁
