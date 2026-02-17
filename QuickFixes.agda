@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness --allow-unsolved-metas #-}
+{-# OPTIONS --cubical --guardedness #-}
 module QuickFixes where
 -- Idea : this was necessary but shouldn't be in any particularly file where they're used. 
 open import CountablyPresentedBooleanRings.PresentedBoole
@@ -20,7 +20,6 @@ open import Cubical.Algebra.Ring.Base
 open import Cubical.Algebra.AbGroup
 open import Cubical.Algebra.Group
 open import Cubical.Algebra.BooleanRing
-
 
 module invEquivFact {ℓ ℓ' : Level} {A : Type ℓ} {B : Type ℓ'} 
                     (f : A ≃ B ) where
@@ -75,10 +74,9 @@ module 2/3 {ℓ ℓ' ℓ'' : Level} {A : Type ℓ} {B : Type ℓ'} { C : Type �
 module _ {ℓ ℓ' : Level} {A : Type ℓ} (P : A → Type ℓ') (Pprop : (a : A) → isProp (P a)) where
   fstEmbedding : isEmbedding (fst :> (Σ A P → A))
   fstEmbedding _ _ = isEmbeddingFstΣProp Pprop 
+
   ΣpropEmbedding : Σ A P ↪ A
   ΣpropEmbedding = fst , λ _ _ → isEmbeddingFstΣProp Pprop 
-
-
 
 module _ {ℓ ℓ' ℓ'' ℓ''' : Level} {A : Type ℓ} {B : Type ℓ'} 
         (iso : Iso A B) (AP : A → Type ℓ'') (BP : B → Type ℓ''') 
