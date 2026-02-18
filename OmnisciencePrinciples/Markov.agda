@@ -43,8 +43,12 @@ open import Cubical.Tactics.CommRingSolver
 open import CommRingQuotients.IdealTerms
 open import OmnisciencePrinciples.WLPO 
 
-MP : Type _
-MP = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true
+MarkovPrinciple : Type₀ 
+MarkovPrinciple = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true
+
+weakMarkovPrinciple : Type₀ 
+weakMarkovPrinciple = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → ∃[ n ∈ ℕ ] α n ≡ true
+
 
 module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
   2/α : BooleanRing _
@@ -149,8 +153,8 @@ module extractFirstHitInBinarySequence (α : binarySequence) where
   ... | yes p = p
   ... | no ¬p = ex-falso (¬p (n , (0 , refl) , αn , (need n $ pred¬firstSeenBefore n ¬p)))
   
-  extract : ∃[ n ∈ ℕ ] α n ≡ true → first-hit
-  extract = PT.rec firstProp (uncurry goback) where
+  extractFirst : ∃[ n ∈ ℕ ] α n ≡ true → first-hit
+  extractFirst = PT.rec firstProp (uncurry goback) where
    
     spot : (n : ℕ) → firstSeenBefore n → first-hit
     spot n (m , _ , αm , mfirst) = m , αm , mfirst 
@@ -161,14 +165,15 @@ module extractFirstHitInBinarySequence (α : binarySequence) where
   first→Hit : first-hit → Σ[ n ∈ ℕ ] α n ≡ true
   first→Hit (n , αn , _ ) = n , αn 
 
-  extract' : ∃[ n ∈ ℕ ] (α n ≡ true)  → Σ[ n ∈ ℕ ] (α n ≡ true) 
-  extract' = first→Hit ∘ extract 
+  extract : ∃[ n ∈ ℕ ] (α n ≡ true)  → Σ[ n ∈ ℕ ] (α n ≡ true) 
+  extract = first→Hit ∘ extractFirst
 
-MarkovPrinciple : Type₀
-MarkovPrinciple = (α : binarySequence) → ¬ ((n : ℕ) → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true
+weakMP→MP : weakMarkovPrinciple → MarkovPrinciple
+weakMP→MP wMP α = extractFirstHitInBinarySequence.extract α ∘ wMP α
+
 
 --mp-from-SD : StoneDualityAxiom → MarkovPrinciple
---mp-from-SD SD α α≠0 = extract' α (∃αn α (trivialQuotient→1∈I BoolCR (IQ.genIdeal BoolCR α) (sym 0≡1-CR)))
+--mp-from-SD SD α α≠0 = extractFirst α (∃αn α (trivialQuotient→1∈I BoolCR (IQ.genIdeal BoolCR α) (sym 0≡1-CR)))
 --  where
 --  open import Axioms.StoneDuality using (evaluationMap)
 --  open import CommRingQuotients.TrivialIdeal using (trivialQuotient→1∈I)

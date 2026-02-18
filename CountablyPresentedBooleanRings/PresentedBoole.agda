@@ -140,4 +140,3 @@ has-Boole-ω' B = Σ[ f ∈ (ℕ → ⟨ freeBA ℕ ⟩) ] (B is-presented-by �
 has-Boole'→ : (B : BooleanRing ℓ-zero) → has-Boole-ω' B → has-Boole-ω B
 has-Boole'→ B x = ℕ , countℕ , ℕ , countℕ , x
 
-

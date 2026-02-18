@@ -1,0 +1,5 @@
+* Re-organizing the repo so the dependency structure (what imports what makes more sense). 
+- Lots of stuff imports WLPO just because binary sequences are defined there, and StoneDuality as countability is defined there. This feels wrong, as these definitions don't relly on axioms at all, while those files suggest they do. 
+- Proving that countably presented Boolean rings are closed under countable quotients (outsourced to AI). This is needed to give a comprehensive proof that 2/\alpha is countably presented, which is needed for all sort of stuff. 
+- Proving that the two definitions of countably presented Boolean algebras are equivalent. (remark 1.4) (we only have one direction now). This is related to the previous point. 
+- 
