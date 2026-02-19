@@ -55,7 +55,7 @@ open import CountablyPresentedBooleanRings.PresentedBoole
 open import Cubical.Algebra.CommRing.Univalence 
 
 open import CountablyPresentedBooleanRings.Examples.FreeCase 
-open import Boole.EquivHelper
+open import BooleanRing.EquivHelper
 
 module equ {ℓ : Level} (A : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ A ⟩) where
   mapsOutOfX : (C : CommRing ℓ) → Type ℓ 

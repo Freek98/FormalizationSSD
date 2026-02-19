@@ -32,7 +32,7 @@ open import CountablyPresentedBooleanRings.PresentedBoole
 open import Cubical.Algebra.CommRing.Univalence 
 
 open import CountablyPresentedBooleanRings.Examples.FreeCase 
-open import Boole.EquivHelper
+open import BooleanRing.EquivHelper
 open import CommRingQuotients.RepeatedQuotient
 
 opaque
