@@ -33,7 +33,7 @@ open import Cubical.Algebra.CommRing.Univalence
 
 open import CountablyPresentedBooleanRings.Examples.FreeCase 
 open import Boole.EquivHelper
-open import BooleanRing.BooleanRingQuotients.QuotientCase 
+open import CommRingQuotients.RepeatedQuotient
 
 opaque
   unfolding QB._/Im_
