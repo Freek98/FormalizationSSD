@@ -46,7 +46,7 @@ open import Cubical.Tactics.CommRingSolver
 
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty as UP
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
-open import OmnisciencePrinciples.WLPO
+open import BasicDefinitions
 open import CommRingQuotients.EmptyQuotient
 open import BooleanRing.BoolRingUnivalence
 
@@ -118,9 +118,6 @@ module _ {ℓ ℓ' : Level} (A : BooleanRing ℓ) (B : BooleanRing ℓ') (f : Bo
 _is-presented-by_/_ : {ℓ : Level} → (B : BooleanRing ℓ) → 
   (A : Type ℓ) → {X : Type ℓ} → (f : X → ⟨ freeBA A ⟩) → Type ℓ 
 B is-presented-by A / f = BooleanRingEquiv B (freeBA A /Im f)
-
-has-Countability-structure : {ℓ : Level} → (A : Type ℓ) → Type ℓ
-has-Countability-structure A = Σ[ α ∈ binarySequence ] Iso A (Σ[ n ∈ ℕ ] α n ≡ true)
 
 countℕ : has-Countability-structure ℕ
 countℕ .fst _ = true

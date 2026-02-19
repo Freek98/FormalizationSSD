@@ -41,7 +41,7 @@ open import Cubical.Algebra.Ring.Kernel as RK
 open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Tactics.CommRingSolver
 open import CommRingQuotients.IdealTerms
-open import OmnisciencePrinciples.WLPO 
+open import BasicDefinitions 
 
 MarkovPrinciple : Type₀ 
 MarkovPrinciple = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true

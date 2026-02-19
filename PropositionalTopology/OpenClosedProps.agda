@@ -20,8 +20,7 @@ open import Cubical.HITs.PropositionalTruncation as PT
 
 open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.BooleanRing
-open import OmnisciencePrinciples.WLPO
-
+open import BasicDefinitions
 
 import QuotientBool as QB
 import Cubical.Data.Sum as ⊎

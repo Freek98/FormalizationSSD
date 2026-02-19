@@ -2,7 +2,7 @@
 
 module Axioms.SurjectionsAreFormalSurjections where
 
-open import OmnisciencePrinciples.WLPO
+open import BasicDefinitions
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Function
 

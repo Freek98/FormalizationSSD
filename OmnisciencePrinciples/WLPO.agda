@@ -8,9 +8,7 @@ open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Nat
 open import Cubical.Data.Nat.Order 
 open <-Reasoning
-
-_↔_ : Type → Type → Type 
-A ↔ B = (A → B) × (B → A)
+open import BasicDefinitions
 
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
@@ -27,9 +25,6 @@ open  import BooleanRing.FreeBooleanRing.FreeBool
 open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
 open  import BooleanRing.FreeBooleanRing.freeBATerms
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base as TV
-
-binarySequence : Type 
-binarySequence = ℕ → Bool
 
 zeroSequence : binarySequence 
 zeroSequence _ = false
