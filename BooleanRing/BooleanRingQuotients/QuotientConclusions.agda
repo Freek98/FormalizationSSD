@@ -4,7 +4,6 @@ module BooleanRing.BooleanRingQuotients.QuotientConclusions  where
 {- We show that the quotient of a Boolean Ring agrees with that of the underlying commutative Ring -}
 
 
-open import Cubical.Data.Sum
 import Cubical.Data.Sum as ⊎
 
 open import Cubical.Foundations.Structure
@@ -32,10 +31,11 @@ open import CountablyPresentedBooleanRings.PresentedBoole
 open import Cubical.Algebra.CommRing.Univalence 
 
 open import CountablyPresentedBooleanRings.Examples.FreeCase 
-open import BooleanRing.EquivHelper
+open import CommRingQuotients.EquivHelper
 open import CommRingQuotients.RepeatedQuotient
+open import BooleanRing.BoolRingUnivalence
 
-opaque
+private opaque
   unfolding QB._/Im_
   quotientCheck : {ℓ : Level} (A : BooleanRing ℓ) → {X : Type ℓ} → (f : X → ⟨ A ⟩ ) → 
     (BooleanRing→CommRing A) IQ./Im f ≡ BooleanRing→CommRing (A QB./Im f)
@@ -44,13 +44,13 @@ opaque
   sameUnderlyingSet : (A : BooleanRing ℓ-zero) → (fst A) ≡ fst (BooleanRing→CommRing A)
   sameUnderlyingSet A = refl
 
-opaque
+private opaque
   unfolding QB.quotientImageHom
   unfolding QB._/Im_
-  BoolQuotientEquiv : (A : BooleanRing ℓ-zero) {X : Type} (f g : X → ⟨ A ⟩) → 
+  sumWhenRestricted : {ℓ : Level} (A : BooleanRing ℓ) {X : Type ℓ} (f g : X → ⟨ A ⟩) → 
     BooleanRing→CommRing (A QB./Im (⊎.rec f g)) ≡
     BooleanRing→CommRing ((A QB./Im f) QB./Im (fst QB.quotientImageHom ∘ g))
-  BoolQuotientEquiv A f g =  
+  sumWhenRestricted A f g =  
     BooleanRing→CommRing (A QB./Im (⊎.rec f g)) 
       ≡⟨ quotientCheck A (⊎.rec f g) ⟩ 
     (BooleanRing→CommRing A) IQ./Im (⊎.rec f g)
@@ -58,3 +58,9 @@ opaque
     ((BooleanRing→CommRing A) IQ./Im f) IQ./Im ((fst $ IQ.quotientImageHom (BooleanRing→CommRing A) f)∘ g)
       ≡⟨ quotientCheck (A QB./Im f) ((fst (IQ.quotientImageHom (BooleanRing→CommRing A) f)) ∘ g)⟩ 
     BooleanRing→CommRing ((A QB./Im f) QB./Im ( (fst $ QB.quotientImageHom {B = A} {f = f}) ∘ g)) ∎ 
+
+quotientEquivBool : {ℓ : Level} {X : Type ℓ} (A : BooleanRing ℓ) (f g : X → ⟨ A ⟩ ) →
+  A QB./Im (⊎.rec f g) ≡
+  (A QB./Im f) QB./Im (fst QB.quotientImageHom ∘ g)
+quotientEquivBool A f g = uaBoolRing
+  (invEq (CommRingPath _ _) (sumWhenRestricted A f g))

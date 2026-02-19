@@ -1,5 +1,5 @@
 {-# OPTIONS --cubical --guardedness #-}
-module BooleanRing.EquivHelper where 
+module CommRingQuotients.EquivHelper where 
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum

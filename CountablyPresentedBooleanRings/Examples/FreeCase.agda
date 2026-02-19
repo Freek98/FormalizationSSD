@@ -49,7 +49,7 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import BasicDefinitions
 open import CommRingQuotients.EmptyQuotient
 open import CountablyPresentedBooleanRings.PresentedBoole
-open import BooleanRing.EquivHelper 
+open import CommRingQuotients.EquivHelper 
 
 module _ (α : binarySequence) where
   private 
