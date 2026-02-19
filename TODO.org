@@ -1,4 +1,4 @@
 * Re-organizing the repo so the dependency structure (what imports what makes more sense). 
 - Proving that countably presented Boolean rings are closed under countable quotients (outsourced to AI). This is needed to give a comprehensive proof that 2/\alpha is countably presented, which is needed for all sort of stuff. 
 - Proving that the two definitions of countably presented Boolean algebras are equivalent. (remark 1.4) (we only have one direction now). This is related to the previous point. 
-- Ik kijk nu naar QuotientCase. Dit gaat over commutatieve ringen, dit kan mss beter in een andere map staan. 
+- Ik kijk nu naar QuotientCase. Dat gaat deels over commutatieve ringen, en voor een ander deel over het bovenstaande outsourcen aan AI gedoe. 

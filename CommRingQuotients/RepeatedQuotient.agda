@@ -143,22 +143,19 @@ module expand {γ : binarySequence} {ℓ : Level} (A : BooleanRing ℓ-zero) whe
     claim : BooleanRingEquiv A/g A/f
     claim = isoToCommRingEquiv A/g→A/f (fst A/f→A/g) (funExt⁻ $ cong fst A/f=id) (funExt⁻ $ cong fst A/g=id) 
 
-module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
+module sum {ℓ : Level} (A : CommRing ℓ) {X : Type ℓ} (f g : X → ⟨ A ⟩) where
   -- goal show that ((A / f) / π∘g ) ≡ ((A / g ) / π∘f) ≡ A/f+g
-  -- Remark: None of this requires you to use ℕ. You could replace the domains of f , g 
-  -- by any type you want
-  -- Then I think you could also throw these results into ImageQuotient. 
-  f+g : ℕ ⊎ ℕ → ⟨ A ⟩
+  f+g : X ⊎ X → ⟨ A ⟩
   f+g = ⊎.rec f g 
   
-  A/f : CommRing ℓ-zero
+  A/f : CommRing ℓ
   A/f    = A IQ./Im f 
   opaque
-    ginA/f : ℕ → ⟨ A/f ⟩
+    ginA/f : X → ⟨ A/f ⟩
     ginA/f = (fst $ IQ.quotientImageHom A f) ∘ g
 
   opaque
-    A/f/πg : CommRing ℓ-zero
+    A/f/πg : CommRing ℓ
     A/f/πg = A/f IQ./Im ginA/f
     πg : CommRingHom A/f A/f/πg
     πg = IQ.quotientImageHom A/f ginA/f
@@ -175,20 +172,20 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
     unfolding πComp
     unfolding ginA/f
     unfolding πg
-    πComp0Ong : (n : ℕ) → πComp $cr (g n) ≡ 0r 
-    πComp0Ong n = IQ.zeroOnImage _ _ n
+    πComp0Ong : (x : X) → πComp $cr (g x) ≡ 0r 
+    πComp0Ong x = IQ.zeroOnImage _ _ x
     
-    πComp0Onf : (n : ℕ) → πComp $cr (f n) ≡ 0r 
-    πComp0Onf n = (cong (fst (IQ.quotientImageHom A/f ginA/f)) 
-                  (IQ.zeroOnImage A f n)) ∙ pres0 
+    πComp0Onf : (x : X) → πComp $cr (f x) ≡ 0r 
+    πComp0Onf x = (cong (fst (IQ.quotientImageHom A/f ginA/f)) 
+                  (IQ.zeroOnImage A f x)) ∙ pres0 
   opaque 
-    A/f+g : CommRing ℓ-zero
+    A/f+g : CommRing ℓ
     A/f+g = A IQ./Im f+g
   opaque
     unfolding A/f+g
     sumToComp : CommRingHom A/f+g A/f/πg
-    sumToComp = IQ.inducedHom A f+g πComp λ { (inl n) → πComp0Onf n
-                                            ; (inr n) → πComp0Ong n } 
+    sumToComp = IQ.inducedHom A f+g πComp λ { (inl x) → πComp0Onf x
+                                            ; (inr x) → πComp0Ong x } 
   opaque
     unfolding A/f+g
     πSum : CommRingHom A A/f+g
@@ -198,18 +195,18 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
     _ = snd A/f+g
   opaque
     unfolding πSum
-    πSum0Onf : (n : ℕ) → πSum $cr f n ≡ 0r
-    πSum0Onf n = IQ.zeroOnImage A f+g (inl n) 
+    πSum0Onf : (x : X) → πSum $cr f x ≡ 0r
+    πSum0Onf x = IQ.zeroOnImage A f+g (inl x) 
     
-    πSum0Ong : (n : ℕ) → πSum $cr g n ≡ 0r
-    πSum0Ong n = IQ.zeroOnImage A f+g (inr n) 
+    πSum0Ong : (x : X) → πSum $cr g x ≡ 0r
+    πSum0Ong x = IQ.zeroOnImage A f+g (inr x) 
   
   opaque
     unfolding πSum
     unfolding IQ.inducedHom
     unfolding ginA/f
-    compToSumHelper : (n : ℕ) → (IQ.inducedHom A f πSum πSum0Onf) $cr (ginA/f n) ≡ 0r
-    compToSumHelper n = πSum0Ong n ∙ pres0
+    compToSumHelper : (x : X) → (IQ.inducedHom A f πSum πSum0Onf) $cr (ginA/f x) ≡ 0r
+    compToSumHelper x = πSum0Ong x ∙ pres0
 
   opaque
     unfolding A/f/πg
@@ -294,7 +291,7 @@ opaque
   unfolding sum.A/f/πg
   unfolding sum.A/f+g
   unfolding sum.ginA/f
-  quotientConclusion : (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) → CommRingEquiv 
+  quotientConclusion : {ℓ : Level} (A : CommRing ℓ) {X : Type ℓ} (f g : X → ⟨ A ⟩) → CommRingEquiv 
     (A IQ./Im (⊎.rec f g)) 
     ((A IQ./Im f) IQ./Im ((fst (IQ.quotientImageHom A f)) ∘ g))
   quotientConclusion A f g = sum.conclusion A f g 
