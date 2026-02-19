@@ -280,27 +280,10 @@ module sum (A : CommRing ℓ-zero) (f g : ℕ → ⟨ A ⟩) where
   opaque 
     sec''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ idCommRingHom A/f/πg ∘cr πg
     sec''' = IQ.quotientImageHomEpi A sec'' 
---  opaque 
---    unfolding πg
---    unfolding ginA/f
---    unfolding A/f
---    unfolding A/f/πg
---    unfolding IQ._/Im_
---    unfolding πSum
---    -- Learned fact : unfolding doesn't work for "top-level types", 
---    -- as those can leak out of the definition. 
---    sec'''' : (sumToComp ∘cr compToSum) ∘cr πg ≡ 
---                   (idCommRingHom A/f/πg) ∘cr (IQ.quotientImageHom A/f ginA/f)
---    sec'''' = ? -- sec'''
   opaque
     unfolding πg
     sec : sumToComp ∘cr compToSum ≡ idCommRingHom A/f/πg
     sec = IQ.quotientImageHomEpi A/f sec''' 
---    where
---      sec'''' : 
---        (sumToComp ∘cr compToSum) ∘cr (IQ.quotientImageHom A/f ginA/f) ≡ 
---        (idCommRingHom A/f/πg)    ∘cr (IQ.quotientImageHom A/f ginA/f)
---      sec'''' = sec'''
   opaque 
     conclusion : CommRingEquiv A/f+g A/f/πg
     conclusion = isoHomToCommRingEquiv sumToComp compToSum sec ret 
