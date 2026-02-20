@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --cubical --guardedness --lossy-unification #-}
 
 module CommRingQuotients.RepeatedQuotient where 
 {- This module shows that if we have two maps f,g : X → A, then quotienting first by f, then by g and quotienting by f + g give the same result -} 
@@ -148,7 +148,7 @@ module sum {ℓ : Level} (A : CommRing ℓ) {X : Type ℓ} (f g : X → ⟨ A �
   f+g = ⊎.rec f g 
   
   A/f : CommRing ℓ
-  A/f    = A IQ./Im f 
+  A/f = A IQ./Im f 
   opaque
     ginA/f : X → ⟨ A/f ⟩
     ginA/f = (fst $ IQ.quotientImageHom A f) ∘ g

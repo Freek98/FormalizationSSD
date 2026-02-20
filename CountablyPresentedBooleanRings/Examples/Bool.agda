@@ -4,6 +4,7 @@ module CountablyPresentedBooleanRings.Examples.Bool where
 {- The goal of this module is to show that the standard Booleans form a countably presented Boolean algebra-}
 
 
+open import BooleanRing.BooleanRingMaps
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)

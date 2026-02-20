@@ -1,6 +1,7 @@
 {-# OPTIONS --cubical --guardedness #-}
 module CountablyPresentedBooleanRings.Examples.FreeCase where 
 
+open import BooleanRing.BooleanRingMaps
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
 import Cubical.Data.Sum as ⊎
