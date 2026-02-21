@@ -52,7 +52,7 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty a
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import BasicDefinitions
 open import CommRingQuotients.EmptyQuotient
-open import CountablyPresentedBooleanRings.PresentedBoole
+open import CountablyPresentedBooleanRings.Definitions
 open import Cubical.Algebra.CommRing.Univalence 
 
 open import CommRingQuotients.EquivHelper

@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --cubical --guardedness --lossy-unification #-}
 
 module QuotientBool where
 {- This module restricts the quotients of commutative rings to quotients of Boolean rings -}
@@ -22,27 +22,37 @@ module _ {ℓ : Level} (B : BooleanRing ℓ) {X : Type ℓ} (f : X → ⟨ B ⟩
     R = BooleanRing→CommRing B
     Q = R IQ./Im f
 
-  open IsCommRingHom
-  open CommRingStr ⦃...⦄
-  instance
-    _ = snd R
-    _ = snd Q
-  opaque
-    quotientPreservesIdem : isIdemRing Q
-    quotientPreservesIdem = elimProp
-                             {P = λ( y : ⟨ Q ⟩) → y · y ≡ y}
-                             (λ y → is-set _ _) $
-                             λ r → π r · π r ≡⟨ sym (pres· πHom r r) ⟩
-                                   π (r · r) ≡⟨ cong π ( BooleanRingStr.·Idem (snd B) r ) ⟩
-                                   π r       ∎
-                             where
-                               π    : ⟨ R ⟩ → ⟨ Q ⟩
-                               π    = fst (quotientHom R (IQ.genIdeal R f) )
-                               πHom : IsCommRingHom (snd R) π (snd Q)
-                               πHom = snd (quotientHom R (IQ.genIdeal R f))
+    open IsCommRingHom
+    open CommRingStr ⦃...⦄
+    instance
+      _ = snd R
+      _ = snd Q
+    opaque
+      quotientPreservesIdem : isIdemRing Q
+      quotientPreservesIdem = elimProp
+        {P = λ( y : ⟨ Q ⟩) → y · y ≡ y}
+        (λ y → is-set _ _) $
+        λ r → π r · π r ≡⟨ sym (pres· πHom r r) ⟩
+              π (r · r) ≡⟨ cong π ( BooleanRingStr.·Idem (snd B) r ) ⟩
+              π r       ∎
+        where
+          π    : ⟨ R ⟩ → ⟨ Q ⟩
+          π    = fst (quotientHom R (IQ.genIdeal R f) )
+          πHom : IsCommRingHom (snd R) π (snd Q)
+          πHom = snd (quotientHom R (IQ.genIdeal R f))
   opaque 
     _/Im_ : BooleanRing ℓ
     _/Im_ = idemCommRing→BR Q quotientPreservesIdem  
+
+opaque 
+  unfolding _/Im_
+  QuotientBooleanRingAgreesWithCommRing : 
+    {ℓ : Level} {A : BooleanRing ℓ} → {X : Type ℓ} → {f : X → ⟨ A ⟩} → 
+    (BooleanRing→CommRing A) IQ./Im f ≡ BooleanRing→CommRing (A /Im f)
+  QuotientBooleanRingAgreesWithCommRing = refl 
+
+
+
 
 module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩} where
   private
@@ -51,8 +61,6 @@ module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩
     unfolding _/Im_
     quotientImageHom : BoolHom B (B /Im f)
     quotientImageHom = IQ.quotientImageHom R f
-  opaque
-    unfolding quotientImageHom
 
     quotientImageHomSurjective : isSurjection (fst quotientImageHom) 
     quotientImageHomSurjective = quotientHomSurjective (BooleanRing→CommRing B) (IQ.genIdeal (BooleanRing→CommRing B) f) 
@@ -62,13 +70,10 @@ module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩
     quotientImageHomEpi S {f'} {g'} = quotientHomEpi (BooleanRing→CommRing B) (IQ.genIdeal (BooleanRing→CommRing B) f) S f' g'
   
     open BooleanRingStr (snd $ B /Im f)
-  opaque
-    unfolding quotientImageHom
     zeroOnImage : (x : X) → (quotientImageHom $cr (f x)) ≡ 𝟘
     zeroOnImage = IQ.zeroOnImage R f 
 
   open BooleanRingStr 
-
   module _ {ℓ' : Level} (S : BooleanRing ℓ') (g : BoolHom B S)
     (gfx=0 : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) where
       opaque 

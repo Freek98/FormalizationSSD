@@ -53,7 +53,7 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty a
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import BasicDefinitions
 open import CommRingQuotients.EmptyQuotient
-open import CountablyPresentedBooleanRings.PresentedBoole
+open import CountablyPresentedBooleanRings.Definitions
 open import CountablyPresentedBooleanRings.Examples.FreeCase
 open import BooleanRing.BoolRingUnivalence
 
@@ -88,9 +88,6 @@ module _ {ℓ : Level} (B : BooleanRing ℓ) where
     false ≡⟨ (sym $ pres0 fHom) ⟩ 
     f 𝟘   ≡⟨ cong f p ⟩ f 𝟙 ≡⟨ pres1 fHom ⟩ 
     true  ∎
-
---invBooleanRingEquiv : {ℓ : Level} → {A B : BooleanRing ℓ} → BooleanRingEquiv A B → BooleanRingEquiv B A 
---invBooleanRingEquiv {ℓ} {A} {B} = invCommRingEquiv (A .fst , BooleanRing→CommRing A .snd) _
 
 free→2 : {A : Type} → BoolHom (freeBA A)  BoolBR
 free→2 {A} = (Iso.fun $ freeBA-universal-property A BoolBR) λ _ → false 

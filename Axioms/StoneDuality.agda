@@ -1,7 +1,7 @@
 {-# OPTIONS --cubical --guardedness #-}
 module Axioms.StoneDuality where
 open import BooleanRing.BooleanRingMaps
-open import CountablyPresentedBooleanRings.PresentedBoole 
+open import CountablyPresentedBooleanRings.Definitions 
 open import Cubical.Data.Sigma
 open import Cubical.Foundations.Univalence
 open import Cubical.Data.Sum

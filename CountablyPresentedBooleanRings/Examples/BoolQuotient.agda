@@ -2,7 +2,7 @@
 module CountablyPresentedBooleanRings.Examples.BoolQuotient where 
 
 open import CountablyPresentedBooleanRings.CountableQuotient
-open import CountablyPresentedBooleanRings.PresentedBoole
+open import CountablyPresentedBooleanRings.Definitions
 open import CountablyPresentedBooleanRings.Examples.Bool
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool

@@ -5,7 +5,7 @@ open import BooleanRing.BooleanRingQuotients.QuotientEquivalences
 open import QuotientBool as QB
 open import BasicDefinitions
 open import CommRingQuotients.EquivHelper 
-open import CountablyPresentedBooleanRings.PresentedBoole 
+open import CountablyPresentedBooleanRings.Definitions 
 open import BooleanRing.BooleanRingQuotients.QuotientConclusions
 open import BooleanRing.FreeBooleanRing.FreeBool
 open import BooleanRing.BoolRingUnivalence
@@ -99,6 +99,12 @@ sumQuotientPresented f g = k , equivChain where
 iteratedQuotientPresented : (f g : ℕ → ⟨ freeBA ℕ ⟩) →
   has-Boole-ω' ((freeBA ℕ QB./Im f) QB./Im (fst QB.quotientImageHom ∘ g))
 iteratedQuotientPresented f g = subst has-Boole-ω' (quotientEquivBool (freeBA ℕ) f g) (sumQuotientPresented f g)
+
+
+
+
+
+
 
 module mainTheorem (B : BooleanRing ℓ-zero)
   (pres : has-Boole-ω' B) (h : ℕ → ⟨ B ⟩)

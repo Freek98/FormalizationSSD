@@ -4,7 +4,7 @@ module BooleanRing.BooleanRingQuotients.QuotientEquivalences where
 open import QuotientBool as QB
 open import BasicDefinitions
 open import CommRingQuotients.EquivHelper 
-open import CountablyPresentedBooleanRings.PresentedBoole 
+open import CountablyPresentedBooleanRings.Definitions 
 open import BooleanRing.BooleanRingQuotients.QuotientConclusions
 open import BooleanRing.FreeBooleanRing.FreeBool
 open import BooleanRing.BooleanRingMaps
@@ -24,6 +24,8 @@ open import Cubical.Foundations.Isomorphism
 open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.BooleanRing
 open import Cubical.Relation.Nullary
+
+--Actually, I'm not sure why we do this for BooleanRings, it should also be true for commutative rings. 
 
 -- Reindexing: if σ : Iso X Y, then A /Im f ≅ A /Im (f ∘ Iso.inv σ)
 module reindex {A : BooleanRing ℓ-zero} {X Y : Type} (σ : Iso X Y) (f : X → ⟨ A ⟩) where

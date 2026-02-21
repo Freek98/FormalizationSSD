@@ -1,7 +1,7 @@
 {-# OPTIONS --cubical --guardedness #-}
 module CountablyPresentedBooleanRings.CountablyPresentedEquivalence where 
 
-open import CountablyPresentedBooleanRings.PresentedBoole
+open import CountablyPresentedBooleanRings.Definitions
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)

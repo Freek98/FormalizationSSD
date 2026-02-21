@@ -1,5 +1,5 @@
 {-# OPTIONS --cubical --guardedness #-}
-module CountablyPresentedBooleanRings.PresentedBoole where 
+module CountablyPresentedBooleanRings.Definitions where 
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
