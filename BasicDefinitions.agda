@@ -9,7 +9,7 @@ open import Cubical.Data.Nat
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Foundations.Isomorphism
 
-_↔_ : Type → Type → Type 
+_↔_ : {ℓ ℓ' : Level} → Type ℓ → Type ℓ' → Type (ℓ-max ℓ ℓ')
 A ↔ B = (A → B) × (B → A)
 
 binarySequence : Type 

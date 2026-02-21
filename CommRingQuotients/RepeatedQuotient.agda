@@ -5,6 +5,7 @@ module CommRingQuotients.RepeatedQuotient where
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
+open import BooleanRing.BooleanRingMaps
 import Cubical.Data.Sum as ⊎
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
 open import Cubical.Data.Empty renaming (rec to ex-falso ; rec* to empty-func)

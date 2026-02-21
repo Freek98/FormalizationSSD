@@ -9,6 +9,7 @@ open import CountablyPresentedBooleanRings.PresentedBoole
 open import BooleanRing.BooleanRingQuotients.QuotientConclusions
 open import BooleanRing.FreeBooleanRing.FreeBool
 open import BooleanRing.BoolRingUnivalence
+open import BooleanRing.BooleanRingMaps
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum as ⊎
