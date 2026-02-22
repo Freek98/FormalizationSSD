@@ -37,7 +37,7 @@ import BooleanRing.FreeBooleanRing.FreeBool as FB
 open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
 open  import BooleanRing.FreeBooleanRing.freeBATerms
 
-open import QuotientBool as QB
+open import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 import Cubical.HITs.SetQuotients as SQ
 import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
 open import Cubical.Algebra.CommRing.Ideal
@@ -86,62 +86,6 @@ module equ {ℓ : Level} (A : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ A ⟩)
 
   equalquot : (B : CommRing ℓ) → (p : A ≡ B) → quot B p ≡ A IQ./Im f
   equalquot B = J (λ B p → quot B p ≡ A IQ./Im f) $ cong (λ g → A IQ./Im g) (transportRefl f)
-
-module expand {γ : binarySequence} {ℓ : Level} (A : BooleanRing ℓ-zero) where
-  X = Σ[ n ∈ ℕ ] γ n ≡ true 
-  module _ (f : X → ⟨ A ⟩) where 
-    open BooleanRingStr ⦃...⦄ 
-    instance
-      _ = snd A 
-    g' : (n : ℕ) → (γn : Dec (γ n ≡ true)) → ⟨ A ⟩
-    g' n (yes p) = f (n , p)
-    g' n (no ¬p) = 𝟘
-    g : ℕ → ⟨ A ⟩
-    g n  = g' n (γ n =B true) 
-    gYesCase' : (n : ℕ) → (γn : Dec (γ n ≡ true)) → (p : γ n ≡ true) → g' n γn ≡ f ( n , p)
-    gYesCase' n (yes _) _ = cong f (Σ≡Prop (λ x → isSetBool _ _) refl)
-    gYesCase' n (no ¬p) p = ex-falso $ ¬p p 
-    gYesCase : (n : ℕ) → ( p : γ n ≡ true) → g n ≡ f (n , p)
-    gYesCase n = gYesCase' n (γ n =B true)
-    A/f = A QB./Im f 
-    A/g = A QB./Im g
-    instance 
-      _ = snd A/f
-      _ = snd A/g
-    open IsCommRingHom (snd $ QB.quotientImageHom {B = A} {f = f} )
-    fZeroOnG' : (n : ℕ) → (γn : Dec (γ n ≡ true) ) → QB.quotientImageHom {f = f} $cr g' n γn ≡ 𝟘 
-    fZeroOnG' n (yes p) = QB.zeroOnImage (n , p)
-    fZeroOnG' n (no ¬p) = pres0 
-    fZeroOnG : (n : ℕ) → QB.quotientImageHom {f = f} $cr g n ≡ 𝟘 
-    fZeroOnG n = fZeroOnG' n (γ n =B true) 
-    A/g→A/f : BoolHom A/g A/f
-    A/g→A/f = QB.inducedHom A/f QB.quotientImageHom fZeroOnG
-    
-    gZeroOnF : (x : X) → QB.quotientImageHom {f = g} $cr f x ≡ 𝟘 
-    gZeroOnF x@(n , p) = cong (fst QB.quotientImageHom) (sym $ gYesCase n p) ∙ QB.zeroOnImage n 
-    A/f→A/g : BoolHom A/f A/g
-    A/f→A/g = QB.inducedHom A/g QB.quotientImageHom gZeroOnF 
-    
-    A/f→A/g∘qf=qg : A/f→A/g ∘cr (QB.quotientImageHom {f = f}) ≡ QB.quotientImageHom {f = g} 
-    A/f→A/g∘qf=qg = QB.evalInduce A/g 
-
-    A/g→A/f∘qg=qf : A/g→A/f ∘cr (QB.quotientImageHom {f = g}) ≡ QB.quotientImageHom {f = f} 
-    A/g→A/f∘qg=qf = QB.evalInduce A/f  
-
-    A/g∘q=q : A/f→A/g ∘cr A/g→A/f ∘cr QB.quotientImageHom {f = g} ≡ QB.quotientImageHom {f = g} 
-    A/g∘q=q = cong (λ h → A/f→A/g ∘cr h) A/g→A/f∘qg=qf ∙ A/f→A/g∘qf=qg
-    A/g=id : A/f→A/g ∘cr A/g→A/f ≡ idCommRingHom (BooleanRing→CommRing A/g)
-    A/g=id = CommRingHom≡ $ 
-       QB.quotientImageHomEpi (_ , is-set) (cong fst A/g∘q=q) 
-
-    A/f∘q=q : A/g→A/f ∘cr A/f→A/g ∘cr QB.quotientImageHom {f = f} ≡ QB.quotientImageHom {f = f} 
-    A/f∘q=q = cong (λ h → A/g→A/f ∘cr h) A/f→A/g∘qf=qg ∙ A/g→A/f∘qg=qf
-    A/f=id : A/g→A/f ∘cr A/f→A/g ≡ idCommRingHom (BooleanRing→CommRing A/f)
-    A/f=id =  CommRingHom≡ $ 
-       QB.quotientImageHomEpi (⟨ A/f ⟩ , is-set) (cong fst A/f∘q=q)
-
-    claim : BooleanRingEquiv A/g A/f
-    claim = isoToCommRingEquiv A/g→A/f (fst A/f→A/g) (funExt⁻ $ cong fst A/f=id) (funExt⁻ $ cong fst A/g=id) 
 
 module sum {ℓ : Level} (A : CommRing ℓ) {X : Type ℓ} (f g : X → ⟨ A ⟩) where
   -- goal show that ((A / f) / π∘g ) ≡ ((A / g ) / π∘f) ≡ A/f+g

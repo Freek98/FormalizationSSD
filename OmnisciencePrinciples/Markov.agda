@@ -32,7 +32,7 @@ open  import BooleanRing.FreeBooleanRing.FreeBool
 open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
 open  import BooleanRing.FreeBooleanRing.freeBATerms
 
-open import QuotientBool as QB
+open import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 import Cubical.HITs.SetQuotients as SQ
 import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
 open import Cubical.Algebra.CommRing.Ideal
@@ -181,7 +181,7 @@ weakMP→MP wMP α = extractFirstHitInBinarySequence.extract α ∘ wMP α
 --
 --  0≡1-BR : BooleanRingStr.𝟘 (snd (BoolBR QB./Im α)) ≡ BooleanRingStr.𝟙 (snd (BoolBR QB./Im α))
 --  0≡1-BR = SpectrumEmptyImpliesTrivial.0≡1-in-B SD (2/α-Booleω α) (MarkovLib.emptySp α α≠0)
---  open import QuotientBool using (_/Im_)
+--  open import BooleanRing.BooleanRingQuotients.QuotientBool using (_/Im_)
 --  opaque
 --    unfolding _/Im_
 --    0≡1-CR : CommRingStr.0r (snd (BoolCR IQ./Im α)) ≡ CommRingStr.1r (snd (BoolCR IQ./Im α))

@@ -1,8 +1,8 @@
 {-# OPTIONS --cubical --guardedness --lossy-unification #-}
 
-module QuotientBool where
-{- This module restricts the quotients of commutative rings to quotients of Boolean rings -}
+module BooleanRing.BooleanRingQuotients.QuotientBool where
 
+{- This module restricts the quotients of commutative rings to quotients of Boolean rings -}
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Structure
@@ -50,8 +50,6 @@ opaque
     {ℓ : Level} {A : BooleanRing ℓ} → {X : Type ℓ} → {f : X → ⟨ A ⟩} → 
     (BooleanRing→CommRing A) IQ./Im f ≡ BooleanRing→CommRing (A /Im f)
   QuotientBooleanRingAgreesWithCommRing = refl 
-
-
 
 
 module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩} where

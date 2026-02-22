@@ -1,8 +1,9 @@
 {-# OPTIONS --cubical --guardedness #-}
+-- This file was copied, but could be made more general. I'm gonna delete it later. 
 module CountablyPresentedBooleanRings.CountableQuotient where 
-open import BooleanRing.BooleanRingQuotients.QuotientEquivalences
+open import BooleanRing.BooleanRingQuotients.QuotientConclusions
 
-open import QuotientBool as QB
+open import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 open import BasicDefinitions
 open import CommRingQuotients.EquivHelper 
 open import CountablyPresentedBooleanRings.Definitions 

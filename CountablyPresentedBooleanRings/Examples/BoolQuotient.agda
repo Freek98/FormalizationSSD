@@ -17,7 +17,7 @@ open IsCommRingHom
 
 open import BooleanRing.FreeBooleanRing.FreeBool
 open import Cubical.Data.Nat
-open import QuotientBool as QB
+open import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 open import Cubical.Algebra.BooleanRing.Instances.Bool
 open import Cubical.Algebra.CommRing.Instances.Bool
 
