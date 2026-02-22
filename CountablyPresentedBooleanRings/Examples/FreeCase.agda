@@ -309,15 +309,7 @@ module freeOnCountable (α : binarySequence) where
   freeAcp→freeAcp≡id : fst (freeA→freeAcp ∘cr freeAcp→freeA) ≡ idfun ⟨ freeAcp ⟩ 
   freeAcp→freeAcp≡id = quotientImageHomEpi (_ ,  λ _ _ → is-set _ _ ) (cong fst freeAcp→freeAcp∘q≡q) 
 
-  freeAcp≃freeA : BooleanRingEquiv freeAcp (freeBA A)
-  freeAcp≃freeA = isoToCommRingEquiv freeAcp→freeA (fst freeA→freeAcp) 
-    (λ x → cong (λ h → h $cr x)  freeA→freeA≡id)
-    (funExt⁻ freeAcp→freeAcp≡id)
-
   freeA≃freeAcp : BooleanRingEquiv (freeBA A) freeAcp
---  freeA≃freeAcp = isoToCommRingEquiv freeA→freeAcp (fst freeAcp→freeA) 
---    (funExt⁻ freeAcp→freeAcp≡id)
---    (λ x → cong (λ h → h $cr x)  freeA→freeA≡id)
   freeA≃freeAcp .fst .fst = fst freeA→freeAcp
   freeA≃freeAcp .fst .snd = isoToIsEquiv explicitIso where
     explicitIso : Iso ⟨ freeBA A ⟩ ⟨ freeBA ℕ QB./Im gensThatAreNotInA ⟩
@@ -326,7 +318,6 @@ module freeOnCountable (α : binarySequence) where
     explicitIso .Iso.sec = funExt⁻ freeAcp→freeAcp≡id
     explicitIso .Iso.ret = λ x → cong (λ h → h $cr x) freeA→freeA≡id 
   freeA≃freeAcp .snd = snd freeA→freeAcp 
---  freeA≃freeAcp = invBooleanRingEquiv freeAcp (freeBA A)  freeAcp≃freeA
 
   module quotientFreeByCountable  (γ : binarySequence) (f : (Σ[ n ∈ ℕ ] γ n ≡ true)  → ⟨ freeBA A ⟩) where
     freeA/f : BooleanRing ℓ-zero
@@ -340,10 +331,6 @@ module freeOnCountable (α : binarySequence) where
 
     freeA/fExpand≃freeA/f : BooleanRingEquiv freeA/fExpand freeA/f
     freeA/fExpand≃freeA/f = quotientByCountable.quotient-by-expansion-equiv γ (freeBA A) f 
-    
-    changeNAMEexpandEquiv : BooleanRingEquiv (freeBA A QB./Im fExpand) (freeBA A QB./Im f)
-    changeNAMEexpandEquiv = freeA/fExpand≃freeA/f
-
 
     e : ⟨ freeBA A ⟩ ≃ ⟨ freeAcp ⟩
     e = fst freeA≃freeAcp
@@ -354,37 +341,60 @@ module freeOnCountable (α : binarySequence) where
     freeA/fExpand≃freeAcp/efExpand : BooleanRingEquiv freeA/fExpand freeAcp/efExpand
     freeA/fExpand≃freeAcp/efExpand = EquivQuotBR freeA≃freeAcp fExpand
 
---    changeNAMEquotEquiv : BooleanRingEquiv (freeBA A QB./Im fExpand) 
---      (freeAcp QB./Im ((fst freeA→freeAcp) ∘ fExpand))
---    changeNAMEquotEquiv = freeA/fExpand≃freeAcp/efExpand 
-    
-    --presentation-freeℕ-freeAcp/ef = quotient-of-sum-presentation.doubleQuotientPresented gensThatAreNotInA liftExpandf
-    freeAcp/ef≅freeA/f : BooleanRingEquiv freeA/fExpand freeAcp/efExpand
-    freeAcp/ef≅freeA/f = EquivQuotBR freeA≃freeAcp fExpand
-    
     liftExpandf : ℕ → ⟨ freeBA ℕ ⟩
     liftExpandf = fst freeA→freeℕ ∘ fExpand
-    
-    changeNAMEchainPath : BooleanRingEquiv (freeBA A QB./Im f) 
-      ((freeBA ℕ QB./Im gensThatAreNotInA) QB./Im (fst QB.quotientImageHom ∘ liftExpandf ))
-    changeNAMEchainPath = freeA/fExpand≃freeAcp/efExpand ∘cre invBooleanRingEquiv (freeBA A /Im fExpand) (freeBA A /Im f) changeNAMEexpandEquiv 
 
     freeAcp/qliftExpandf : BooleanRing ℓ-zero
     freeAcp/qliftExpandf = freeAcp QB./Im (fst QB.quotientImageHom ∘ liftExpandf)
+    freeA/f≃freeAcp/qliftExpandf : BooleanRingEquiv freeA/f freeAcp/qliftExpandf 
+    freeA/f≃freeAcp/qliftExpandf = 
+      freeA/fExpand≃freeAcp/efExpand ∘cre 
+      invBooleanRingEquiv (freeBA A /Im fExpand) (freeBA A /Im f) 
+      freeA/fExpand≃freeA/f
 
     presentation-freeℕ-freeAcp/ef : has-quotient-of-freeℕ-presentation freeAcp/qliftExpandf
     presentation-freeℕ-freeAcp/ef = quotient-of-sum-presentation.doubleQuotientPresented gensThatAreNotInA liftExpandf
 
-
-
+    presentation-freeℕ-freeA/f : has-quotient-of-freeℕ-presentation freeA/f
+    presentation-freeℕ-freeA/f = subst has-quotient-of-freeℕ-presentation 
+      (sym $ uaBoolRing {A = freeA/f} {B = freeAcp/qliftExpandf } freeA/f≃freeAcp/qliftExpandf)
+      presentation-freeℕ-freeAcp/ef 
 
 free-on-countable-has-freeℕ-presentation : 
   (A : Type) → has-Countability-structure A → 
   has-quotient-of-freeℕ-presentation (freeBA A)
 free-on-countable-has-freeℕ-presentation A (α , A=Σα) = 
-  subst (has-quotient-of-freeℕ-presentation ∘ freeBA) (sym $ isoToPath A=Σα) 
-    (gensThatAreNotInA α , (invCommRingEquiv _ _ $ freeAcp≃freeA α))  where 
-  open freeOnCountable
+  subst (has-quotient-of-freeℕ-presentation ∘ freeBA) 
+  (sym $ isoToPath A=Σα) 
+  (gensThatAreNotInA , freeA≃freeAcp)  where 
+  open freeOnCountable α
+
+quotient-of-free-on-countable-by-countable-has-freeℕ-presentation : 
+  (A : Type) → has-Countability-structure A → 
+  (X : Type) → has-Countability-structure X → 
+  (f : X → ⟨ freeBA A ⟩) → 
+  has-quotient-of-freeℕ-presentation (freeBA A QB./Im f)
+quotient-of-free-on-countable-by-countable-has-freeℕ-presentation 
+  A (α , A=Σα) X (γ , X=Σγ) = J2 
+    {d = λ _ _ → (Σ-syntax ℕ λ n → γ n ≡ true)} 
+    (λ A' _ X' _ → ( f' : X' → ⟨ freeBA A' ⟩) → has-quotient-of-freeℕ-presentation (freeBA A' QB./Im f')) 
+    (freeOnCountable.quotientFreeByCountable.presentation-freeℕ-freeA/f α γ)
+    (sym $ isoToPath A=Σα) (sym $ isoToPath X=Σγ)
+
+has-countable-presentation→has-freeℕ-presentation : (B : BooleanRing ℓ-zero) → 
+  has-countable-presentation B → has-quotient-of-freeℕ-presentation B
+has-countable-presentation→has-freeℕ-presentation B 
+  (A , Acount , X , Xcount , f , B=freeA/f) = 
+  subst has-quotient-of-freeℕ-presentation 
+  (sym (uaBoolRing {A = B} {B = freeBA A /Im f }B=freeA/f)) 
+  (quotient-of-free-on-countable-by-countable-has-freeℕ-presentation 
+  A Acount X Xcount f) 
+
+-- Remark 1.4
+countably-presented-equivalence : (B : BooleanRing ℓ-zero) → 
+  is-countably-presented B ↔ is-countably-presented-alt B
+countably-presented-equivalence B .fst = PT.map (has-countable-presentation→has-freeℕ-presentation B)
+countably-presented-equivalence B .snd = PT.map (has-Boole'→ B) 
 
 -- the following is here for legacy reasons, should be removed in the end
 replacementFreeOnCountable = free-on-countable-has-freeℕ-presentation 
