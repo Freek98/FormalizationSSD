@@ -54,7 +54,7 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import BasicDefinitions
 open import CommRingQuotients.EmptyQuotient
 open import CountablyPresentedBooleanRings.Definitions
-open import CountablyPresentedBooleanRings.Examples.FreeCase
+open import CountablyPresentedBooleanRings.EquivalenceOfCountablyPresentedDefinitions
 open import BooleanRing.BoolRingUnivalence
 
 open import Cubical.Algebra.CommRing.Univalence 
@@ -175,7 +175,7 @@ count⊥ : has-Countability-structure ⊥
 count⊥ = ((λ n → false) , iso ex-falso (λ (n , f=t) → false≢true f=t) (λ b → ⊥ind b) ⊥.elim)  
 
 is-cp-free⊥ : has-Boole-ω' free⊥
-is-cp-free⊥ = replacementFreeOnCountable ⊥ count⊥
+is-cp-free⊥ = free-on-countable-has-freeℕ-presentation ⊥ count⊥
 
 is-cp-2 : has-Boole-ω' BoolBR
 is-cp-2 = subst has-Boole-ω' free⊥=2 is-cp-free⊥ 

@@ -1,4 +1,4 @@
-* Re-organizing the repo so the dependency structure (what imports what makes more sense). 
-- Proving that countably presented Boolean rings are closed under countable quotients (outsourced to AI). This is needed to give a comprehensive proof that 2/\alpha is countably presented, which is needed for all sort of stuff. 
-- Proving that the two definitions of countably presented Boolean algebras are equivalent. (remark 1.4) (we only have one direction now). This is related to the previous point. 
-- Ik kijk nu naar QuotientCase. Dat gaat deels over commutatieve ringen, en voor een ander deel over het bovenstaande outsourcen aan AI gedoe. 
+* Re-organizing the repo so the dependency structure (what imports what) makes more sense. 
++ StoneDuality currently contains a bunch of stuff on the Sp-decidable-subsets adjunction and anti-equivalence. This should move to a seperate file. The whole Category theory folder and everything in it is also in this field. I think it's most convenient to let the AI handle this, while I continue with the examples of countably presented Boolean rings.  
++ Countably presented Boolean rings should include Bool, 2/1, Cantor space, B_infty
++ Note that the definition of a Spectrum should not be in Axioms/StoneDuality. This is annoying, as it should not depend on the axioms. So let's think about where to put it. 

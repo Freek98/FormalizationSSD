@@ -1,5 +1,5 @@
 {-# OPTIONS --cubical --guardedness #-}
-module CountablyPresentedBooleanRings.Examples.FreeCase where 
+module CountablyPresentedBooleanRings.EquivalenceOfCountablyPresentedDefinitions where 
 
 open import BooleanRing.BooleanRingMaps
 open import BooleanRing.BoolRingUnivalence
@@ -395,7 +395,4 @@ countably-presented-equivalence : (B : BooleanRing ℓ-zero) →
   is-countably-presented B ↔ is-countably-presented-alt B
 countably-presented-equivalence B .fst = PT.map (has-countable-presentation→has-freeℕ-presentation B)
 countably-presented-equivalence B .snd = PT.map (has-Boole'→ B) 
-
--- the following is here for legacy reasons, should be removed in the end
-replacementFreeOnCountable = free-on-countable-has-freeℕ-presentation 
   

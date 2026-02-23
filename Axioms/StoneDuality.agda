@@ -256,11 +256,6 @@ module adjunctionFact
     ηIso≃εIso .AdjointEquivalence.ε .nIso                (d , εdIso)    = isIsoΣPropCat* D εIsIso εdIso
     ηIso≃εIso .AdjointEquivalence.triangleIdentities .Δ₁ (c , _)        = Δ₁ triangleIdentities c
     ηIso≃εIso .AdjointEquivalence.triangleIdentities .Δ₂ (d , _)        = Δ₂ triangleIdentities d
---  module _ {ℓP : Level} (P : C .ob → hProp ℓP) (ηIsoOnP : ((c : C .ob) → ⟨ P c ⟩ → ⟨ ηIsIso c ⟩)) where
-
-  module _ {ℓE ℓE' : Level} {E : Category ℓE ℓE'} 
-    (Hrest : Functor E ηIsoSubCat) (HfullyFaithful : isFullyFaithful Hrest) where
-      
 
   module _ {ℓE ℓE' : Level} {E : Category ℓE ℓE'} 
     (H : Functor E C) (HfullyFaithful : isFullyFaithful H) 
