@@ -78,6 +78,9 @@ has-quotient-of-freeℕ-presentation B = Σ[ f ∈ (ℕ → ⟨ freeBA ℕ ⟩) 
 is-countably-presented-alt : (B : BooleanRing ℓ-zero) → Type₀ 
 is-countably-presented-alt B = ∥ has-quotient-of-freeℕ-presentation B ∥₁
 
+countablyPresentedBooleanRing : Type (ℓ-suc ℓ-zero)
+countablyPresentedBooleanRing = Σ[ B ∈ BooleanRing ℓ-zero ] (is-countably-presented B)
+
 -- Remark 1.4 can also be in another file. Evertyhing that comes after this line should be put somewhere else at some point.
 countℕ : has-Countability-structure ℕ
 countℕ .fst _ = true
@@ -96,4 +99,5 @@ has-Boole-ω' B = Σ[ f ∈ (ℕ → ⟨ freeBA ℕ ⟩) ] (B is-presented-by �
 
 has-Boole'→ : (B : BooleanRing ℓ-zero) → has-Boole-ω' B → has-Boole-ω B
 has-Boole'→ B x = ℕ , countℕ , ℕ , countℕ , x
+
 

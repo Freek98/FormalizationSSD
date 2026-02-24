@@ -19,8 +19,6 @@ open <-Reasoning
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
-open import Cubical.Functions.Surjection
-open import Cubical.Foundations.Powerset
 open import Cubical.Foundations.Isomorphism
 open import Cubical.Foundations.Equiv
 
@@ -162,11 +160,11 @@ module _ where
     (λ (t , πt=b) → subst (λ a → (a ≡ 𝟘) ⊎ (a ≡ 𝟙)) πt=b (max2free⊥Helper t)) 
     (snd includeBATermsSurj b)
 
-  free⊥≅2 : BooleanRingEquiv free⊥ BoolBR 
-  free⊥≅2 = invBooleanRingEquiv BoolBR free⊥ (BoolBRCharacterisation free⊥ freeNonTriv max2free⊥) 
+  2≃free⊥ : BooleanRingEquiv BoolBR free⊥ 
+  2≃free⊥ = (BoolBRCharacterisation free⊥ freeNonTriv max2free⊥)
   
   free⊥=2 : free⊥ ≡ BoolBR
-  free⊥=2 = uaBoolRing free⊥≅2 
+  free⊥=2 = sym (uaBoolRing 2≃free⊥)
 
 ⊥ind : {A : Type} → {b : ⊥} →  (a : A) → ex-falso b ≡ a
 ⊥ind {b = ()} 
