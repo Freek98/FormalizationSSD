@@ -6,6 +6,8 @@ open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
 open import Cubical.Data.Nat
 
+open import Cubical.Foundations.Function
+
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Foundations.Isomorphism
 
@@ -14,6 +16,9 @@ A ↔ B = (A → B) × (B → A)
 
 binarySequence : Type 
 binarySequence = ℕ → Bool
+
+bitFlip : binarySequence → binarySequence
+bitFlip α = not ∘ α 
 
 δSequence : ℕ → binarySequence
 δSequence = _≡ᵇ_

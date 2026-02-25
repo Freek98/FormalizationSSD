@@ -100,6 +100,7 @@ module _ where
   open IsAbGroup
   open IsMonoid
   open IsSemigroup
+  -- Note CommRing.Instances.Pointwise exists and maybe you can refactor trough that. 
   pointWiseStructure : { ℓ ℓ' : Level} (A : Type ℓ) (B : A → Type ℓ') → 
       ((a : A) → BooleanRingStr (B a)) → BooleanRingStr ((a : A) → B a)
   pointWiseStructure A B f .𝟘 = 𝟘 ∘ f 
