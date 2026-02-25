@@ -15,8 +15,14 @@ A ↔ B = (A → B) × (B → A)
 binarySequence : Type 
 binarySequence = ℕ → Bool
 
+δSequence : ℕ → binarySequence
+δSequence = _≡ᵇ_
+
+Σℕ : binarySequence → Type 
+Σℕ α = Σ[ n ∈ ℕ ] α n ≡ true
+
 has-Countability-structure : {ℓ : Level} → (A : Type ℓ) → Type ℓ
-has-Countability-structure A = Σ[ α ∈ binarySequence ] Iso A (Σ[ n ∈ ℕ ] α n ≡ true)
+has-Countability-structure A = Σ[ α ∈ binarySequence ] Iso A (Σℕ α)
 
 -- Definition 1.2.
 is-countable : {ℓ : Level} → (A : Type ℓ) → Type ℓ
