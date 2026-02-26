@@ -1,12 +1,12 @@
 {-# OPTIONS --cubical --guardedness #-}
 module CountablyPresentedBooleanRings.Examples.NFinCofin where
-
 open import CountablyPresentedBooleanRings.Definitions
 open import CountablyPresentedBooleanRings.Examples.Bool
 open import Cubical.Foundations.Equiv
 open import Cubical.Data.Fin
 open import Cubical.Foundations.Isomorphism
 open import BooleanRing.BooleanRingMaps
+open import BooleanRing.SubBooleanRing
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Nat hiding (_·_ ; _+_)
 open import Cubical.Foundations.Prelude hiding (_∨_ ; _∧_)
@@ -16,6 +16,7 @@ open import Cubical.Algebra.BooleanRing
 open import Cubical.Algebra.CommRing.Base
 
 open import Cubical.Data.Sum
+open import Cubical.Data.Sigma hiding (_∨_ ; _∧_)
 open import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 open import BooleanRing.BooleanRingQuotients.QuotientConclusions
 open import Cubical.Algebra.BooleanRing.Instances.Bool
@@ -23,9 +24,10 @@ open import CountablyPresentedBooleanRings.EquivalenceOfCountablyPresentedDefini
 open import BasicDefinitions
 open import Cubical.Data.Unit
 open import Cubical.Data.Bool
+open import Cubical.HITs.PropositionalTruncation
 open import Cubical.Functions.Embedding
 open import Cubical.Foundations.Structure
-open import Cubical.Data.Nat.Order
+open import Cubical.Data.Nat.Order renaming (_≟_ to _=ℕ_)
 open import Cubical.Algebra.CommRing.Instances.Unit
 open import QuickFixes
 
@@ -35,6 +37,21 @@ isFinite α = Σ[ n ∈ ℕ ] (∀ (m : ℕ) → m > n → α m ≡ false)
 
 isCofinite : binarySequence → Type 
 isCofinite α = Σ[ n ∈ ℕ ](∀ (m : ℕ) → m > n → α m ≡ true)
+-- I will just replace this with isFinite (¬ α)
+
+isFiniteProp : binarySequence → Type
+isFiniteProp α = ( ∀ (n : ℕ) → α n ≡ false) ⊎ (Σ[ n ∈ ℕ ] (α n ≡ true) × 
+                                              (∀ (m : ℕ) → m > n → α m ≡ false))
+
+isPropisFiniteProp : (α : binarySequence) → isProp (isFiniteProp α)
+isPropisFiniteProp α (inl α=0) (inl α=0') = cong inl (funExt λ n → isSetBool _ _ _ _)
+isPropisFiniteProp α (inl α=0) (inr (n , αn=1 , _)) = ex-falso (true≢false (sym αn=1 ∙ α=0 n))
+isPropisFiniteProp α (inr (n , αn=1 , _)) (inl α=0) = ex-falso (true≢false (sym αn=1 ∙ α=0 n))
+isPropisFiniteProp α (inr (n , αn=1 , α>n=0)) (inr (m , αm=1 , α>m=0)) = cong inr $
+  case_of_ {B = λ _ → (n , αn=1 , α>n=0) ≡ (m , αm=1 , α>m=0)} (n =ℕ m) 
+  λ { (lt n<m) → ex-falso (false≢true (sym (α>n=0 m n<m) ∙ αm=1))
+    ; (eq n=m) → Σ≡Prop (λ _ → isProp× (isSetBool _ _) (isPropΠ2 λ _ _ → isSetBool _ _)) n=m
+    ; (gt m<n) → ex-falso (false≢true (sym (α>m=0 n m<n) ∙ αn=1)) } 
 
 BooleanStructureOnBinarySequences : BooleanRingStr binarySequence
 BooleanStructureOnBinarySequences = pointWiseStructure ℕ (λ _ → Bool) (λ _ → snd BoolBR)
@@ -45,6 +62,18 @@ instance
  _ = BoolBR
 
 open BooleanAlgebraStr (binarySequence , BooleanStructureOnBinarySequences)
+
+isCofiniteProp : binarySequence → Type 
+isCofiniteProp α = isFiniteProp (¬ α)
+
+isFiniteOrCofinite : (α : binarySequence) → Type
+isFiniteOrCofinite α = isFinite α ⊎ isCofinite α
+
+FinCofinℕ : Type
+FinCofinℕ = Σ[ α ∈ binarySequence ] ∥ isFiniteOrCofinite α ∥₁ 
+
+open SubBoolRing
+
 
 complementFiniteIsCofinite : (α : binarySequence) → isFinite α → 
                              isCofinite (¬ α)
@@ -95,23 +124,25 @@ UnionCofiniteIsCofinite α β αCofin = subst isCofinite
   (complementFiniteIsCofinite (¬ α ∧ ¬ β) 
   (intersectionWithFiniteIsFinite (¬ α) (¬ β) (complementCofiniteIsFinite α αCofin))) 
 
---isFiniteOrCofinite : (α : binarySequence) → Type
---isFiniteOrCofinite α = isFinite α ⊎ isCofinite α
 -- I feel there should be some generalization to subalgebras here. 
 -- Suppose I have some algebraic structure, say rings, I can show in general that if R is a ring, and P : ⟨ R ⟩ → hProp -- Note you didn't do hProp :(, but you can truncate I guess. 
 --  then Σ[ r ∈ R ] P r is also a ring, with the inherited ring structure. 
 --  Then you can do the same for commRings, BooleanRings and all the structures you need for that. Let's ask that to some AI program, feel it should be a good short task. 
 
+{-
+It might be nice to have the following definition work at some point
 data FinCofinℕ : Type where
   Finite   : (α : binarySequence) → isFinite α   → FinCofinℕ
   Cofinite : (α : binarySequence) → isCofinite α → FinCofinℕ
+-}
+--FinCofinℕsubBR : IsSubBooleanRing 
+--  (binarySequence , BooleanStructureOnBinarySequences) 
+--  (∥_∥₁ ∘ isFiniteOrCofinite) 
+--  λ _ → squash₁ 
+--FinCofinℕsubBR .IsSubBooleanRing.0-closed = {! !}
+--FinCofinℕsubBR .IsSubBooleanRing.1-closed = {! !}
+--FinCofinℕsubBR .IsSubBooleanRing.+-closed = {! !}
+--FinCofinℕsubBR .IsSubBooleanRing.·-closed = {! !}
+--FinCofinℕsubBR .IsSubBooleanRing.neg-closed = {! !} 
 
-open BooleanRingStr
-BooleanRingStrOnFinCofinℕ : BooleanRingStr FinCofinℕ 
-BooleanRingStrOnFinCofinℕ .𝟘 = Finite   (λ _ → false) (0 , λ _ _ → refl)
-BooleanRingStrOnFinCofinℕ .𝟙 = Cofinite (λ _ → true)  (0 , λ _ _ → refl)
-BooleanRingStrOnFinCofinℕ ._+_ = {! !}
-BooleanRingStrOnFinCofinℕ ._·_ = {! !}
-- BooleanRingStrOnFinCofinℕ = {! !}
-BooleanRingStrOnFinCofinℕ .isBooleanRing = {! !} 
 
