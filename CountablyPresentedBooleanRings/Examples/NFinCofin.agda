@@ -5,6 +5,7 @@ open import CountablyPresentedBooleanRings.Examples.Bool
 open import BooleanRing.AlgebraicFacts
 open import Cubical.Foundations.Equiv
 open import Cubical.Tactics.NatSolver
+open import Cubical.Tactics.CommRingSolver
 open import BooleanRing.BooleanRingMaps
 open import BooleanRing.SubBooleanRing
 open import Cubical.Data.Empty renaming (rec to ex-falso)
@@ -14,6 +15,7 @@ open import Cubical.Foundations.HLevels
 open import Cubical.Foundations.Function
 open import Cubical.Algebra.BooleanRing
 open import Cubical.Algebra.CommRing.Base
+open import Cubical.Algebra.CommRing.Instances.Bool
 
 open import Cubical.Data.Sum
 open import Cubical.Data.Sigma hiding (_∨_ ; _∧_)
@@ -24,13 +26,21 @@ open import CountablyPresentedBooleanRings.EquivalenceOfCountablyPresentedDefini
 open import BasicDefinitions
 open import Cubical.Data.Unit
 open import Cubical.Relation.Nullary hiding (¬_)
-open import Cubical.Data.Bool renaming ( _≟_ to _=B_)
+open import Cubical.Data.Bool renaming ( _≟_ to _=B_) hiding (_≤_ ; _≥_)
 open import Cubical.HITs.PropositionalTruncation
 open import Cubical.Functions.Embedding
 open import Cubical.Foundations.Structure
 open import Cubical.Data.Nat.Order renaming (_≟_ to _=ℕ_)
 open import Cubical.Algebra.CommRing.Instances.Unit
 open import QuickFixes
+
+module QuickBooleanFix where
+  open BooleanAlgebraStr BoolBR 
+  claim : (a b : Bool) → (a ∨ b) ≡ a or b
+  claim false false = refl
+  claim false true  = refl
+  claim true  false = refl
+  claim true  true  = refl 
 
 booleanStructureOnBinarySequences : BooleanRingStr binarySequence
 booleanStructureOnBinarySequences = pointWiseStructure ℕ (λ _ → Bool) (λ _ → snd BoolBR)
@@ -40,129 +50,127 @@ booleanStructureOnBinarySequences = pointWiseStructure ℕ (λ _ → Bool) (λ _
 
 open BooleanAlgebraStr ℙℕ
 
---skipSteps : ℕ → binarySequence → binarySequence
---skipSteps zero α = α ∘ suc
---skipSteps (suc n) α = skipSteps n α ∘ suc
---
---skipStepsByAdd : (n : ℕ) → (α : binarySequence) → skipSteps n α ≡ α ∘ (_+ℕ_ (suc n))
---skipStepsByAdd zero α = refl
---skipStepsByAdd (suc n) α = 
---  skipSteps n α ∘ suc ≡⟨ cong (λ β → β ∘ suc ) $ skipStepsByAdd n α ⟩
---  α ∘ (λ k → suc n +ℕ k) ∘ suc ≡⟨ cong (λ p → α ∘ p) (funExt λ k → solveℕ!) ⟩ 
---  α ∘ (λ k → (suc (suc n)) +ℕ k) ∎  
---
---skipStepSize : (n : ℕ) → (α : binarySequence) → skipSteps n α zero ≡ α (suc n)
---skipStepSize n α = funExt⁻ (skipStepsByAdd n α) 0 ∙ cong α solveℕ!
---
---isConst0 : binarySequence → Type
---isConst0 α = ∀ (n : ℕ) → α n ≡ false 
---
---data isFinite (α : binarySequence) : Type where
---  constant0 : isConst0 α → isFinite α
---  isConstantAfter : (n : ℕ) → (α n ≡ true) → isConst0 (skipSteps n α) → isFinite α
---
---bounded→Finite : (α : binarySequence) → (n : ℕ) → isConst0 (skipSteps n α) → isFinite α
---bounded→Finite α zero α>n=0 = case_of_ {B = λ _ → isFinite α} (α 0 =B false) λ 
---  { (yes p) → constant0 λ { zero → p
---                          ; (suc m) → α>n=0 m }
---  ; (no ¬p) → isConstantAfter 0 (¬false→true (α 0) ¬p) α>n=0 } 
---bounded→Finite α (suc n) α>Sn=0 = case_of_ {B = λ _ → isFinite α} (α (suc n) =B false) λ 
---  { (yes p) → bounded→Finite α n λ { zero → skipStepSize n α ∙ p
---                                   ; (suc m) → α>Sn=0 m } 
---  ; (no ¬p) → isConstantAfter (suc n) (¬false→true (α (suc n)) ¬p) α>Sn=0 } 
---
---intersectWithFiniteIsFinite : (α β : binarySequence) → isFinite α → isFinite (α ∧ β) 
---intersectWithFiniteIsFinite α β (constant0 x) = constant0 λ n → cong (λ a → a and β n) (x n)
---intersectWithFiniteIsFinite α β (isConstantAfter n αn=1 α>n=0) = bounded→Finite (α ∧ β) n λ m → 
---  skipSteps n (α ∧ β) m 
---    ≡⟨ (funExt⁻ $ skipStepsByAdd n (α ∧ β)) m ⟩ 
---  α ((suc n) +ℕ m) and β ((suc n) +ℕ m) 
---    ≡⟨ cong (λ x → x and β ((suc n) +ℕ m) ) (sym $ (funExt⁻ $ skipStepsByAdd n α) m) ⟩ 
---  (skipSteps n α m) and β ((suc n) +ℕ m) 
---    ≡⟨ cong (λ x → x and β (suc n +ℕ m)) (α>n=0 m) ⟩ 
---  false and β ((suc n) +ℕ m) 
---    ≡⟨⟩ 
---  false ∎
---
---isPropisFinite : (α : binarySequence) → isProp (isFinite α)
---isPropisFinite α (constant0 x) (constant0 x₁) = cong constant0 $ funExt λ _ → isSetBool _ _ _ _
---isPropisFinite α (constant0 α=0) (isConstantAfter n αn=1 _) = 
---  ex-falso (false≢true (sym (α=0 n) ∙ αn=1))
---isPropisFinite α (isConstantAfter n αn=1 _) (constant0 α=0) =
---  ex-falso (false≢true (sym (α=0 n) ∙ αn=1))
---isPropisFinite α (isConstantAfter n αn=1 α>n=0) (isConstantAfter m αm=1 α>m=0) = 
---  case_of_ {B = λ _ → (isConstantAfter n αn=1 α>n=0) ≡ (isConstantAfter m αm=1 α>m=0)} (n =ℕ m) λ { (lt n<m) → ex-falso (true≢false (sym αm=1 ∙ {! α>n=0 !}))
---                                                                                                  ; (eq x) → {! !}
---                                                                                                  ; (gt x) → {! !} }
---
-{-
+isZeroFrom : ℕ → binarySequence → Type
+isZeroFrom n α = ∀ (k : ℕ) → (k ≥ n) → α k ≡ false
 
-{-
-isPropisFinite : (α : binarySequence) → isProp (isFinite α)
-isPropisFinite α (inr (n , αn=1 , α>n=0)) (inr (m , αm=1 , α>m=0)) = cong inr $
-  case_of_ {B = λ _ → (n , αn=1 , α>n=0) ≡ (m , αm=1 , α>m=0)} (n =ℕ m) 
-  λ { (lt n<m) → ex-falso (false≢true (sym (α>n=0 m n<m) ∙ αm=1))
-    ; (eq n=m) → Σ≡Prop (λ _ → isProp× (isSetBool _ _) (isPropΠ2 λ _ _ → isSetBool _ _)) n=m
-    ; (gt m<n) → ex-falso (false≢true (sym (α>m=0 n m<n) ∙ αn=1)) } 
+data isFinite (α : binarySequence) : Type where
+  constant0 : isZeroFrom 0 α → isFinite α
+  last1 : (n : ℕ) → (α n ≡ true) → isZeroFrom (suc n) α → isFinite α
+
+bounded→Finite : (α : binarySequence) → (n : ℕ) → isZeroFrom n α → isFinite α
+bounded→Finite α zero α≥n=0 = constant0 α≥n=0 
+bounded→Finite α (suc n) α>n=0 = case_of_ {B = λ _ → isFinite α} (α n =B false) λ 
+  { (yes αn=0) → bounded→Finite α n λ k k≥n → case ≤-split k≥n of λ
+            { (inl k>n) → α>n=0 k k>n
+            ; (inr k=n) → sym (cong α k=n) ∙ αn=0 }
+  ; (no αn≠0) → last1 n (¬false→true (α n) αn≠0) α>n=0 } 
+
+ 
+finite→Bounded : (α : binarySequence) → isFinite α → Σ[ n ∈ ℕ ] isZeroFrom n α
+finite→Bounded α (constant0 x) = 0 , x
+finite→Bounded α (last1 n _ x) = suc n , x 
+
+isPropIsFinite : (α : binarySequence) → isProp (isFinite α)
+isPropIsFinite α (constant0 α=0) (constant0 α=0') = cong constant0 (funExt λ _ → funExt λ _ → isSetBool _ _ _ _)
+isPropIsFinite α (constant0 α=0) (last1 n αn=1 _) = 
+  ex-falso (false≢true (sym (α=0 n zero-≤) ∙ αn=1))
+isPropIsFinite α (last1 n αn=1 _) (constant0 α=0) = 
+  ex-falso (false≢true (sym (α=0 n zero-≤) ∙ αn=1))
+isPropIsFinite α (last1 n αn=1 α>n=0) (last1 m αm=1 α>m=0) = 
+  case_of_ {B = λ _ → last1 n αn=1 α>n=0 ≡ last1 m αm=1 α>m=0} (n =ℕ m) λ 
+  { (lt n<m) → ex-falso $ true≢false $ sym αm=1 ∙ α>n=0 m n<m
+  ; (eq n=m) → cong₃ last1 n=m 
+               (isProp→PathP (λ _ → isSetBool _ _) αn=1 αm=1) 
+               (isProp→PathP (λ _ → isPropΠ2 λ _ _ → isSetBool _ _) α>n=0 α>m=0)
+  ; (gt n>m) → ex-falso $ true≢false $ sym αn=1 ∙ α>m=0 n n>m } 
+
+
+
+intersectWithBoundedIsBounded : (α β : binarySequence) → (n : ℕ) → isZeroFrom n α → isZeroFrom n (α ∧ β)
+intersectWithBoundedIsBounded α β n α≥n=0 k k≥n = cong (λ a → a and β k) (α≥n=0 k k≥n) 
+
+intersectionWithFiniteIsFinite : (α β : binarySequence) → isFinite α → isFinite (α ∧ β) 
+intersectionWithFiniteIsFinite α β αFin = case finite→Bounded α αFin of 
+  λ (n , α≥n=0) → bounded→Finite (α ∧ β) n (intersectWithBoundedIsBounded α β n α≥n=0)
 
 isCofinite : binarySequence → Type 
 isCofinite α = isFinite (¬ α)
 
-¬FiniteAndCofinite : (α : binarySequence) → isFinite α → isCofinite α → ⊥ 
-¬FiniteAndCofinite α (inl α=0) (inl ¬α=0) = true≢false $ 
-  true    ≡⟨ cong not (sym $ α=0 0) ⟩ 
-  (¬ α) 0 ≡⟨ ¬α=0 0 ⟩ 
-  false   ∎
-¬FiniteAndCofinite α (inl α=0) (inr (n , ¬αn=1 , ¬α>m=0 )) = true≢false $
-  true    ≡⟨ sym $ cong not (α=0 (suc n)) ⟩ 
-  (¬ α) (suc n) ≡⟨ ¬α>m=0 (suc n) <-suc ⟩ 
-  false   ∎
-¬FiniteAndCofinite α (inr (n , αn=1 , ¬α>m=0 )) (inl ¬α=0) = true≢false $
-  true    ≡⟨ (sym $ cong not $ ¬α>m=0 (suc n) <-suc) ⟩ 
-  (¬ α) (suc n) ≡⟨ ¬α=0 (suc n) ⟩ 
-  false   ∎
-¬FiniteAndCofinite α (inr (n , αn=1 , α>n=0) ) (inr (m , ¬αm=1 , ¬α>m=0)) = true≢false $ 
-  true ≡⟨ sym $ cong not (α>n=0 ((max (suc m) (suc n))) right-≤-max) ⟩ 
-  (¬ α $ (max (suc m) (suc n))) 
-       ≡⟨ ¬α>m=0 (max (suc m) (suc n)) (left-≤-max {m = suc m}{ n = suc n}) ⟩
-  false ∎  
+Finite≢Cofinite : (α : binarySequence) → isFinite α → isCofinite α → ⊥ 
+Finite≢Cofinite α (constant0 α=0) (constant0 ¬α=0) = true≢false $
+  true ≡⟨ cong not (sym $ α=0 0 zero-≤) ⟩
+  not (α 0) ≡⟨ ¬α=0 0 ≤-refl ⟩ 
+  false ∎ 
+Finite≢Cofinite α (constant0 α=0) (last1 n _ ¬α>n=0) = true≢false $ 
+  true ≡⟨ cong not (sym $ α=0 (suc n) zero-≤) ⟩
+  not (α (suc n)) ≡⟨ ¬α>n=0 (suc n) ≤-refl ⟩ 
+  false ∎ 
+Finite≢Cofinite α (last1 n _ α>n=0) (constant0 ¬α=0) = false≢true $ 
+  false ≡⟨ (sym $ ¬α=0 (suc n) zero-≤) ⟩
+  (not (α (suc n))) ≡⟨ cong not (α>n=0 (suc n) ≤-refl) ⟩ 
+  true ∎ 
+Finite≢Cofinite α (last1 n αn=1 α>n=0) (last1 m ¬αm=1 ¬α>m=0) = false≢true $ 
+  false ≡⟨ sym (¬α>m=0 Smaxnm $ right-≤-max {m = suc n}) ⟩ 
+  not (α Smaxnm) ≡⟨ cong not (α>n=0 Smaxnm $ left-≤-max {n = suc m} ) ⟩ 
+  true ∎ where Smaxnm = max (suc n) (suc m)
 
 ¬FinIsCofin : (α : binarySequence) → isFinite α → isCofinite (¬ α)
-¬FinIsCofin α = subst isFinite (sym $ funExt (notnot ∘ α)) 
+¬FinIsCofin α = subst isFinite (sym $ ¬Invol) 
 
 ¬CofinIsFin : (α : binarySequence) → isCofinite α → isFinite (¬ α)
-¬CofinIsFin α c = c 
+¬CofinIsFin α c = c
 
-isFiniteOrCofinite : (α : binarySequence) → Type
-isFiniteOrCofinite α = isFinite α ⊎ isCofinite α
+data isFiniteOrCofinite (α : binarySequence) : Type where
+  Fin : isFinite α → isFiniteOrCofinite α
+  Cof : isCofinite α → isFiniteOrCofinite α
+
 
 isPropisFiniteOrCofinite : (α : binarySequence) → isProp (isFiniteOrCofinite α)
-isPropisFiniteOrCofinite α (inl f) (inl f') = cong inl $ isPropisFinite α f f'
-isPropisFiniteOrCofinite α (inl f) (inr c)  = ex-falso $ ¬FiniteAndCofinite α f c
-isPropisFiniteOrCofinite α (inr c) (inl f)  = ex-falso $ ¬FiniteAndCofinite α f c
-isPropisFiniteOrCofinite α (inr c) (inr c') = cong inr $ isPropisFinite (¬ α) c c' 
+isPropisFiniteOrCofinite α (Fin f) (Fin f') = cong Fin $ isPropIsFinite α f f'
+isPropisFiniteOrCofinite α (Fin f) (Cof c)  = ex-falso (Finite≢Cofinite α f c)
+isPropisFiniteOrCofinite α (Cof c) (Fin f)  = ex-falso (Finite≢Cofinite α f c)
+isPropisFiniteOrCofinite α (Cof c) (Cof c') = cong Cof $ isPropIsFinite (¬ α) c c'
+
 
 0Finite : isFinite (λ n → false)
-0Finite = inl λ n → refl 
+0Finite = constant0 λ _ _ → refl
 
 1Cofinite : isCofinite (λ n → true)
 1Cofinite = 0Finite
 
-intersectionWithFiniteIsFinite : (α : binarySequence) → isFinite α → (β : binarySequence) → isFinite (α ∧ β)
-intersectionWithFiniteIsFinite = {! !} 
+
+disjunction-max : (α β : binarySequence) → (n m : ℕ) → isZeroFrom n α → isZeroFrom m β → isZeroFrom (max n m) (α ∨ β)
+disjunction-max α β n m α≥n=0 β≥m=0 k k≥mn = 
+  (α ∨ β) k 
+    ≡⟨ QuickBooleanFix.claim (α k) (β k) ⟩
+  α k or β k 
+    ≡⟨ cong₂ _or_ (α≥n=0 k (≤-trans (left-≤-max  {n = m}) k≥mn)) 
+                  (β≥m=0 k (≤-trans (right-≤-max {m = n}) k≥mn)) ⟩ 
+  false ∎  
+
+finiteClosedByUnion : (α β : binarySequence) → isFinite α → isFinite β → isFinite (α ∨ β)
+finiteClosedByUnion α β αFin βFin = case (finite→Bounded α  αFin , finite→Bounded β βFin) of λ 
+  ((n , α≥n=0) , (m , β≥m=0)) → bounded→Finite (α ∨ β) (max n m) 
+  (disjunction-max α β n m α≥n=0 β≥m=0)  
+
+FinCofin-∧-cl : (α β : binarySequence) → isFiniteOrCofinite α → isFiniteOrCofinite β → isFiniteOrCofinite (α ∧ β) 
+FinCofin-∧-cl α β (Fin αf) (βcf) = Fin (intersectionWithFiniteIsFinite α β αf)
+FinCofin-∧-cl α β (Cof αc) (Fin βf) = subst isFiniteOrCofinite (∧Comm {x = β} {y = α}) 
+  (Fin (intersectionWithFiniteIsFinite β α βf))
+FinCofin-∧-cl α β (Cof αc) (Cof βc) = Cof $ 
+  subst isFinite (sym $ DeMorgan¬∧ {x = α} {y = β}) 
+  (finiteClosedByUnion (¬ α) (¬ β) αc βc)
 
 open SubBooleanAlgebra
-ℕfinCofinSubBA : IsSubBooleanAlgebra (binarySequence , BooleanStructureOnBinarySequences) isFiniteOrCofinite isPropisFiniteOrCofinite 
-ℕfinCofinSubBA .IsSubBooleanAlgebra.𝟘-cl = inl 0Finite
-ℕfinCofinSubBA .IsSubBooleanAlgebra.𝟙-cl = inr 1Cofinite
-ℕfinCofinSubBA .IsSubBooleanAlgebra.∧-cl = {! !}
+ℕfinCofinSubBA : IsSubBooleanAlgebra ℙℕ isFiniteOrCofinite isPropisFiniteOrCofinite 
+ℕfinCofinSubBA .IsSubBooleanAlgebra.𝟘-cl = Fin 0Finite
+ℕfinCofinSubBA .IsSubBooleanAlgebra.𝟙-cl = Cof 1Cofinite
+ℕfinCofinSubBA .IsSubBooleanAlgebra.∧-cl = FinCofin-∧-cl _ _
 ℕfinCofinSubBA .IsSubBooleanAlgebra.∨-cl = {! !}
 ℕfinCofinSubBA .IsSubBooleanAlgebra.¬-cl = {! !} 
+{-
 
---ℕfinCofinAlgebra : BooleanRing ℓ-zero
---ℕfinCofinAlgebra = SubBoolAlgConstr.mkSubBooleanAlgebra (binarySequence , BooleanStructureOnBinarySequences) isFiniteOrCofinite isPropisFiniteOrCofinite (inl 0Finite) (inr 1Cofinite) {! !} {! !} {! !} 
-
-
+{-
 
 --open <-Reasoning
 --
