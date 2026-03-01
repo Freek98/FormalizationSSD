@@ -1,10 +1,10 @@
 {-# OPTIONS --cubical --guardedness #-}
 module BooleanRing.SubBooleanRing where
 
-open import Cubical.Foundations.Prelude
+open import Cubical.Foundations.Prelude hiding (_∨_ ; _∧_)
 open import Cubical.Foundations.HLevels
 open import Cubical.Foundations.Structure
-open import Cubical.Data.Sigma
+open import Cubical.Data.Sigma hiding (_∨_ ; _∧_)
 
 open import Cubical.Algebra.Semigroup
 open import Cubical.Algebra.Monoid
@@ -13,6 +13,7 @@ open import Cubical.Algebra.AbGroup.Base
 open import Cubical.Algebra.Ring.Base
 open import Cubical.Algebra.CommRing.Base
 open import Cubical.Algebra.BooleanRing
+open import BooleanRing.AlgebraicFacts
 
 private
   variable
@@ -119,3 +120,38 @@ module SubBoolRing
     subBooleanRing .snd .BooleanRingStr.isBooleanRing .IsBooleanRing.isCommRing =
       makeIsCommRing isSetSub +s-assoc +s-idr +s-invr +s-comm ·s-assoc ·s-idr ·s-distrR+ ·s-comm
     subBooleanRing .snd .BooleanRingStr.isBooleanRing .IsBooleanRing.·Idem = ·s-idem
+
+module SubBooleanAlgebra (B : BooleanRing ℓ) (P : ⟨ B ⟩ → Type ℓ') (isPropP : ∀ x → isProp (P x)) where 
+  open BooleanRingStr (snd B)
+  open BooleanAlgebraStr B
+  record IsSubBooleanAlgebra : Type (ℓ-max ℓ ℓ') where
+    field
+      𝟘-cl : P 𝟘
+      𝟙-cl : P 𝟙
+      ∧-cl : ∀ {x y} → P x → P y → P (x ∧ y)
+      ∨-cl : ∀ {x y} → P x → P y → P (x ∨ y)
+      ¬-cl : ∀ {x} → P x → P (¬ x)
+  module DeriveRingClosure (subAlgebraClosure : IsSubBooleanAlgebra ) where
+    open IsSubBooleanAlgebra subAlgebraClosure 
+    +-cl : ∀ {x y} → P x → P y → P (x + y)
+    +-cl px py = subst P (sym (+FromBooleanAlgebraStr B)) 
+      (∨-cl (∧-cl px (¬-cl py)) (∧-cl (¬-cl px) py))
+  
+    ·-cl : ∀ {x y} → P x → P y → P (x · y)
+    ·-cl = ∧-cl
+  
+    neg-cl : ∀ {x} → P x → P (- x)
+    neg-cl px = subst P -IsId px
+--
+  open SubBoolRing
+  open IsSubBooleanRing
+  
+--  deriveRing-cl : IsSubBooleanRing B P isPropP
+--  deriveRing-cl .0-closed = 𝟘-cl
+--  deriveRing-cl .1-closed = 𝟙-cl
+--  deriveRing-cl .+-closed = +-cl
+--  deriveRing-cl .·-closed = ·-cl
+--  deriveRing-cl .neg-closed = neg-cl 
+--
+--  mkSubBooleanAlgebra : BooleanRing (ℓ-max ℓ ℓ')
+--  mkSubBooleanAlgebra = SubBoolRing.MkSub.subBooleanRing B P isPropP deriveRing-cl 
