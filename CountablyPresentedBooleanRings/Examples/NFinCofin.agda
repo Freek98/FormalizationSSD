@@ -32,9 +32,6 @@ open import Cubical.Data.Nat.Order renaming (_≟_ to _=ℕ_)
 open import Cubical.Algebra.CommRing.Instances.Unit
 open import QuickFixes
 
---isFinite : binarySequence → Type 
---isFinite α = (∀ (n : ℕ) → α n ≡ false) ⊎ ((α 0 ≡ true) × isFinite (α ∘ suc))
-
 booleanStructureOnBinarySequences : BooleanRingStr binarySequence
 booleanStructureOnBinarySequences = pointWiseStructure ℕ (λ _ → Bool) (λ _ → snd BoolBR)
 
@@ -43,54 +40,65 @@ booleanStructureOnBinarySequences = pointWiseStructure ℕ (λ _ → Bool) (λ _
 
 open BooleanAlgebraStr ℙℕ
 
-skipSteps : ℕ → binarySequence → binarySequence
-skipSteps zero α = α ∘ suc
-skipSteps (suc n) α = skipSteps n α ∘ suc
-
-skipStepsByAdd : (n : ℕ) → (α : binarySequence) → skipSteps n α ≡ α ∘ (λ k → (suc n) +ℕ k)
-skipStepsByAdd zero α = refl
-skipStepsByAdd (suc n) α = 
-  skipSteps n α ∘ suc ≡⟨ cong (λ β → β ∘ suc ) $ skipStepsByAdd n α ⟩
-  α ∘ (λ k → suc n +ℕ k) ∘ suc ≡⟨ cong (λ p → α ∘ p) (funExt λ k → solveℕ!) ⟩ 
-  α ∘ (λ k → (suc (suc n)) +ℕ k) ∎  
-
-skipStepSize : (n : ℕ) → (α : binarySequence) → skipSteps n α zero ≡ α (suc n)
-skipStepSize n α = funExt⁻ (skipStepsByAdd n α) 0 ∙ cong α solveℕ!
-
-isConst0 : binarySequence → Type
-isConst0 α = ∀ (n : ℕ) → α n ≡ false 
-
-data isFinite (α : binarySequence) : Type where
-  constant0 : isConst0 α → isFinite α
-  isConstantAfter : (n : ℕ) → (α n ≡ true) → isConst0 (skipSteps n α) → isFinite α
-
-bounded→Finite : (α : binarySequence) → (n : ℕ) → isConst0 (skipSteps n α) → isFinite α
-bounded→Finite α zero α>n=0 = case_of_ {B = λ _ → isFinite α} (α 0 =B false) λ 
-  { (yes p) → constant0 λ { zero → p
-                          ; (suc m) → α>n=0 m }
-  ; (no ¬p) → isConstantAfter 0 (¬false→true (α 0) ¬p) α>n=0 } 
-bounded→Finite α (suc n) α>Sn=0 = case_of_ {B = λ _ → isFinite α} (α (suc n) =B false) λ 
-  { (yes p) → bounded→Finite α n λ { zero → skipStepSize n α ∙ p
-                                   ; (suc m) → α>Sn=0 m } 
-  ; (no ¬p) → isConstantAfter (suc n) (¬false→true (α (suc n)) ¬p) α>Sn=0 } 
-
-intersectWithFiniteIsFinite : (α β : binarySequence) → isFinite α → isFinite (α ∧ β) 
-intersectWithFiniteIsFinite α β (constant0 x) = constant0 λ n → cong (λ a → a and β n) (x n)
-intersectWithFiniteIsFinite α β (isConstantAfter n x x₁) = bounded→Finite (α ∧ β) n λ m → {! !}
-
+--skipSteps : ℕ → binarySequence → binarySequence
+--skipSteps zero α = α ∘ suc
+--skipSteps (suc n) α = skipSteps n α ∘ suc
+--
+--skipStepsByAdd : (n : ℕ) → (α : binarySequence) → skipSteps n α ≡ α ∘ (_+ℕ_ (suc n))
+--skipStepsByAdd zero α = refl
+--skipStepsByAdd (suc n) α = 
+--  skipSteps n α ∘ suc ≡⟨ cong (λ β → β ∘ suc ) $ skipStepsByAdd n α ⟩
+--  α ∘ (λ k → suc n +ℕ k) ∘ suc ≡⟨ cong (λ p → α ∘ p) (funExt λ k → solveℕ!) ⟩ 
+--  α ∘ (λ k → (suc (suc n)) +ℕ k) ∎  
+--
+--skipStepSize : (n : ℕ) → (α : binarySequence) → skipSteps n α zero ≡ α (suc n)
+--skipStepSize n α = funExt⁻ (skipStepsByAdd n α) 0 ∙ cong α solveℕ!
+--
+--isConst0 : binarySequence → Type
+--isConst0 α = ∀ (n : ℕ) → α n ≡ false 
+--
+--data isFinite (α : binarySequence) : Type where
+--  constant0 : isConst0 α → isFinite α
+--  isConstantAfter : (n : ℕ) → (α n ≡ true) → isConst0 (skipSteps n α) → isFinite α
+--
+--bounded→Finite : (α : binarySequence) → (n : ℕ) → isConst0 (skipSteps n α) → isFinite α
+--bounded→Finite α zero α>n=0 = case_of_ {B = λ _ → isFinite α} (α 0 =B false) λ 
+--  { (yes p) → constant0 λ { zero → p
+--                          ; (suc m) → α>n=0 m }
+--  ; (no ¬p) → isConstantAfter 0 (¬false→true (α 0) ¬p) α>n=0 } 
+--bounded→Finite α (suc n) α>Sn=0 = case_of_ {B = λ _ → isFinite α} (α (suc n) =B false) λ 
+--  { (yes p) → bounded→Finite α n λ { zero → skipStepSize n α ∙ p
+--                                   ; (suc m) → α>Sn=0 m } 
+--  ; (no ¬p) → isConstantAfter (suc n) (¬false→true (α (suc n)) ¬p) α>Sn=0 } 
+--
+--intersectWithFiniteIsFinite : (α β : binarySequence) → isFinite α → isFinite (α ∧ β) 
+--intersectWithFiniteIsFinite α β (constant0 x) = constant0 λ n → cong (λ a → a and β n) (x n)
+--intersectWithFiniteIsFinite α β (isConstantAfter n αn=1 α>n=0) = bounded→Finite (α ∧ β) n λ m → 
+--  skipSteps n (α ∧ β) m 
+--    ≡⟨ (funExt⁻ $ skipStepsByAdd n (α ∧ β)) m ⟩ 
+--  α ((suc n) +ℕ m) and β ((suc n) +ℕ m) 
+--    ≡⟨ cong (λ x → x and β ((suc n) +ℕ m) ) (sym $ (funExt⁻ $ skipStepsByAdd n α) m) ⟩ 
+--  (skipSteps n α m) and β ((suc n) +ℕ m) 
+--    ≡⟨ cong (λ x → x and β (suc n +ℕ m)) (α>n=0 m) ⟩ 
+--  false and β ((suc n) +ℕ m) 
+--    ≡⟨⟩ 
+--  false ∎
+--
 --isPropisFinite : (α : binarySequence) → isProp (isFinite α)
 --isPropisFinite α (constant0 x) (constant0 x₁) = cong constant0 $ funExt λ _ → isSetBool _ _ _ _
---isPropisFinite α (constant0 x) (isConstantAfter n x₁ x₂) = {! !}
---isPropisFinite α (isConstantAfter n x x₁) (constant0 x₂) = {! !}
---isPropisFinite α (isConstantAfter n x x₁) (isConstantAfter n₁ x₂ x₃) = {! !} 
-
+--isPropisFinite α (constant0 α=0) (isConstantAfter n αn=1 _) = 
+--  ex-falso (false≢true (sym (α=0 n) ∙ αn=1))
+--isPropisFinite α (isConstantAfter n αn=1 _) (constant0 α=0) =
+--  ex-falso (false≢true (sym (α=0 n) ∙ αn=1))
+--isPropisFinite α (isConstantAfter n αn=1 α>n=0) (isConstantAfter m αm=1 α>m=0) = 
+--  case_of_ {B = λ _ → (isConstantAfter n αn=1 α>n=0) ≡ (isConstantAfter m αm=1 α>m=0)} (n =ℕ m) λ { (lt n<m) → ex-falso (true≢false (sym αm=1 ∙ {! α>n=0 !}))
+--                                                                                                  ; (eq x) → {! !}
+--                                                                                                  ; (gt x) → {! !} }
+--
 {-
 
 {-
 isPropisFinite : (α : binarySequence) → isProp (isFinite α)
-isPropisFinite α (inl α=0) (inl α=0') = cong inl (funExt λ n → isSetBool _ _ _ _)
-isPropisFinite α (inl α=0) (inr (n , αn=1 , _)) = ex-falso (true≢false (sym αn=1 ∙ α=0 n))
-isPropisFinite α (inr (n , αn=1 , _)) (inl α=0) = ex-falso (true≢false (sym αn=1 ∙ α=0 n))
 isPropisFinite α (inr (n , αn=1 , α>n=0)) (inr (m , αm=1 , α>m=0)) = cong inr $
   case_of_ {B = λ _ → (n , αn=1 , α>n=0) ≡ (m , αm=1 , α>m=0)} (n =ℕ m) 
   λ { (lt n<m) → ex-falso (false≢true (sym (α>n=0 m n<m) ∙ αm=1))
