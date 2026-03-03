@@ -88,7 +88,7 @@ module _ (SD : StoneDualityAxiom) where
                     (ΣpropEmbedding isSet λ A → isPropIsSet {A = A})
                     (SpFunctor .F-ob , SpEmbeddingIntoSets) 
   
-  isPropHasStoneStr : {ℓ : Level} (S : Type ℓ) → isProp (hasStoneStr S)
+  isPropHasStoneStr : (S : Type ℓ-zero) → isProp (hasStoneStr S)
   isPropHasStoneStr = isEmbedding→hasPropFibers SpEmbedding 
 
 StoneCat : Category (ℓ-suc ℓ-zero) ℓ-zero 
