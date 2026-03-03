@@ -62,7 +62,8 @@ SpGeneralBooleanRing : {ℓ : Level} → BooleanRing ℓ → Type ℓ
 SpGeneralBooleanRing B = BoolHom B BoolBR
 
 Booleω : Type (ℓ-suc ℓ-zero)
-Booleω = Σ[ B ∈ BooleanRing ℓ-zero ] ∥ has-Boole-ω' B ∥₁ 
+Booleω = countablyPresentedBooleanRing
+-- just changed this if things crash Loading is slow for some reason. 
 
 Sp : Booleω → Type ℓ-zero
 Sp = SpGeneralBooleanRing ∘ fst 
