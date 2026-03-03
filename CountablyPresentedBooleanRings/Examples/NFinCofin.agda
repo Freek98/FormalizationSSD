@@ -216,36 +216,59 @@ module PresentationℕfinCofin where
 
   freeℕ→ℕFinCof : BoolHom (freeBA ℕ) ℕfinCofinBA
   freeℕ→ℕFinCof = inducedBAHom ℕ ℕfinCofinBA singleton
-
-
-
-  open BooleanAlgebraStr ⦃...⦄
-  instance 
-    _ = freeBA ℕ
-    _ = ℕfinCofinBA
-  open BooleanRingStr ⦃...⦄
-  instance
-    _ = snd $ freeBA ℕ
-    _ = snd ℕfinCofinBA
-  relationHelper : (n m : ℕ) → Dec (n ≡ m) → ⟨ freeBA ℕ ⟩
-  relationHelper _ _ (yes _) = 𝟘
-  relationHelper n m (no ¬p) = generator n · generator m 
-
-  relations : ℕ × ℕ → ⟨ freeBA ℕ ⟩
-  relations (n , m) = relationHelper n m (discreteℕ n m)
   
-  open IsCommRingHom (snd freeℕ→ℕFinCof)
-  relationHelperRespected : (n m : ℕ) → (d : Dec (n ≡ m)) → freeℕ→ℕFinCof $cr (relationHelper n m d) ≡ 𝟘
-  relationHelperRespected n m (yes p) = pres0
-  relationHelperRespected n m (no ¬p) = 
-    freeℕ→ℕFinCof $cr (generator n · generator m)
-      ≡⟨ pres· (generator n) (generator m) ⟩ 
-    (freeℕ→ℕFinCof $cr generator n) · (freeℕ→ℕFinCof $cr generator m)   
-      ≡⟨ cong₂ _·_ (funExt⁻ (evalBAInduce ℕ ℕfinCofinBA singleton) n)  (funExt⁻ (evalBAInduce ℕ ℕfinCofinBA singleton) m) ⟩ 
-    (singleton n) · (singleton m)
-      ≡⟨ Σ≡Prop isPropisFiniteOrCofinite (funExt (δn∧δm=0 n m ¬p)) ⟩ 
-    𝟘 ∎ 
+  module Relations where
+    open BooleanAlgebraStr ⦃...⦄
+    instance 
+      _ = freeBA ℕ
+      _ = ℕfinCofinBA
+    open BooleanRingStr ⦃...⦄
+    instance
+      _ = snd $ freeBA ℕ
+      _ = snd ℕfinCofinBA
+    relationHelper : (n m : ℕ) → Dec (n ≡ m) → ⟨ freeBA ℕ ⟩
+    relationHelper _ _ (yes _) = 𝟘
+    relationHelper n m (no ¬p) = generator n · generator m 
+  
+    relations : ℕ × ℕ → ⟨ freeBA ℕ ⟩
+    relations (n , m) = relationHelper n m (discreteℕ n m)
+    
+    open IsCommRingHom (snd freeℕ→ℕFinCof)
+    relationHelperRespected : (n m : ℕ) → (d : Dec (n ≡ m)) → freeℕ→ℕFinCof $cr (relationHelper n m d) ≡ 𝟘
+    relationHelperRespected n m (yes p) = pres0
+    relationHelperRespected n m (no ¬p) = 
+      freeℕ→ℕFinCof $cr (generator n · generator m)
+        ≡⟨ pres· (generator n) (generator m) ⟩ 
+      (freeℕ→ℕFinCof $cr generator n) · (freeℕ→ℕFinCof $cr generator m)   
+        ≡⟨ cong₂ _·_ (funExt⁻ (evalBAInduce ℕ ℕfinCofinBA singleton) n)  (funExt⁻ (evalBAInduce ℕ ℕfinCofinBA singleton) m) ⟩ 
+      (singleton n) · (singleton m)
+        ≡⟨ Σ≡Prop isPropisFiniteOrCofinite (funExt (δn∧δm=0 n m ¬p)) ⟩ 
+      𝟘 ∎ 
+  
+    relationsRespected : ∀(p : ℕ × ℕ) → freeℕ→ℕFinCof $cr (relations p) ≡ 𝟘 
+    relationsRespected (n , m) = relationHelperRespected n m (discreteℕ n m)
+    
+    presentation : BooleanRing ℓ-zero
+    presentation = (freeBA ℕ) QB./Im relations
 
-  relationsRespected : ∀(p : ℕ × ℕ) → freeℕ→ℕFinCof $cr (relations p) ≡ 𝟘 
-  relationsRespected (n , m) = relationHelperRespected n m (discreteℕ n m)
+    presentation→ℕFinCof : BoolHom presentation ℕfinCofinBA 
+    presentation→ℕFinCof = inducedHom ℕfinCofinBA freeℕ→ℕFinCof relationsRespected 
+  
+  module FinCofinℕ→freeBAℕ where
+    open BooleanAlgebraStr (freeBA ℕ) 
+    open BooleanRingStr (snd $ freeBA ℕ) 
+    singleEntry : (α : binarySequence) → (m : ℕ) → ⟨ freeBA ℕ ⟩
+    singleEntry α m = if α m then generator m else 𝟘 
+  
+    embedUpTo : (α : binarySequence) → (m : ℕ) → ⟨ freeBA ℕ ⟩
+    embedUpTo α zero = singleEntry α 0 
+    embedUpTo α (suc m) = embedUpTo α m ∨ singleEntry α (suc m) 
+    
+    Finite→FreeℕMap : (α : binarySequence) → isFinite α → ⟨ freeBA ℕ ⟩
+    Finite→FreeℕMap α (constant0 _) = 𝟘
+    Finite→FreeℕMap α (last1 n _ _) = embedUpTo α n 
+
+    ℕFinCof→FreeℕMap : ⟨ ℕfinCofinBA ⟩ → ⟨ freeBA ℕ ⟩
+    ℕFinCof→FreeℕMap (α , Fin αf) = Finite→FreeℕMap α αf
+    ℕFinCof→FreeℕMap (α , Cof αc) = ¬ Finite→FreeℕMap (bitFlip α) αc 
 

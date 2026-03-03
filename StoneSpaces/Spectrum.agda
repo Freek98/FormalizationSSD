@@ -1,5 +1,5 @@
 {-# OPTIONS --cubical --guardedness #-}
-module Axioms.StoneDuality where
+module StoneSpaces.Spectrum where
 open import BooleanRing.BooleanRingMaps
 open import CountablyPresentedBooleanRings.Definitions 
 open import Cubical.Data.Sigma
@@ -39,7 +39,6 @@ open import Cubical.HITs.PropositionalTruncation as PT
 
 open import CountablyPresentedBooleanRings.Examples.Bool
 open import QuickFixes
-open import StoneSpaces.Spectrum
 
 open import BooleanRing.BoolRingUnivalence
 
@@ -57,40 +56,52 @@ open import Cubical.Tactics.CategorySolver.Reflection
 open import CategoryTheory.BasicFacts
 open import CategoryTheory.SigmaPropCat
 open import CategoryTheory.Image
-open import CategoryTheory.StuffFromStoneAboutBAs
-open import CategoryTheory.StuffThatWasInStoneAndShouldBeOrganized
-open Functor
 
-StoneDualityAxiom : Type (ℓ-suc ℓ-zero)
-StoneDualityAxiom = (B : Booleω) → isEquiv (evaluationMap B)
+open Category hiding (_∘_)
+SpGeneralBooleanRing : {ℓ : Level} → BooleanRing ℓ → Type ℓ
+SpGeneralBooleanRing B = BoolHom B BoolBR
 
-module _ (SD : StoneDualityAxiom) where
-  SDHomVersion : (B : Booleω) → BooleanRingEquiv (fst B) (2^ (Sp B))
-  SDHomVersion B .fst .fst = evaluationMap B
-  SDHomVersion B .fst .snd = SD B
-  SDHomVersion B .snd      = evaluationIsHom B 
-  
-  ηIsoOnBooleω : (B : Booleω) → isIso BACat {x = fst B} {y = 2^ (Sp B)} (ηBA' (fst B)) 
-  ηIsoOnBooleω B = subst (isIso BACat {x = fst B} {y = 2^ (Sp B)}) 
-    (sym $ ηBA'Agrees (fst B)) 
-    (snd $ (Iso.inv $ BAIso≅BAEquiv (fst B) (2^ (Sp B))) (SDHomVersion B)) 
+Booleω : Type (ℓ-suc ℓ-zero)
+Booleω = Σ[ B ∈ BooleanRing ℓ-zero ] ∥ has-Boole-ω' B ∥₁ 
 
-  SpFullyFaithful : isFullyFaithful SpFunctor
-  SpFullyFaithful = adjunctionFact.ηIsoOnImageH→FHFullyFaithful SpGeneralFunctor 2^Functor Sp⊣2^ BooleωEmbedding 
-   BooleωEmbeddingIsFullyFaithful ηIsoOnBooleω 
+Sp : Booleω → Type ℓ-zero
+Sp = SpGeneralBooleanRing ∘ fst 
 
-  SpEmbeddingIntoSets : isEmbedding ((SpFunctor .F-ob) :> (Booleω → hSet ℓ-zero))
-  SpEmbeddingIntoSets = isFullyFaithful→isEmbd-ob BooleωUnivalent 
-    (isUnivalentOp (isUnivalentSET {ℓ-zero})) {F = SpFunctor} SpFullyFaithful 
+isSetBoolHom : {ℓ ℓ' : Level} → (B : BooleanRing ℓ) → (C : BooleanRing ℓ') → isSet $ BoolHom B C
+isSetBoolHom B C = Embedding-into-isSet→isSet 
+  (fst , hasPropFibers→isEmbedding propFiber)
+  (isSet→ CSet) where
+    CSet : isSet ⟨ C ⟩
+    CSet = BooleanRingStr.is-set (snd C)
+    proj : BoolHom B C → fst B → fst C
+    proj = fst 
+    propFiber : (f : ⟨ B ⟩ → ⟨ C ⟩) → isProp (Σ[ z ∈ BoolHom B C ] fst z ≡ f)
+    propFiber f ((g , ghom) , g=f) ((h , hhom) , h=f) = Σ≡Prop 
+      (λ f' → isSet→ CSet (fst f') f) (Σ≡Prop 
+      (λ f' → isPropIsBoolRingHom (snd B) f' (snd C)) 
+      (g=f ∙ sym h=f)) 
 
-  SpEmbedding : isEmbedding Sp 
-  SpEmbedding = snd $ compEmbedding 
-                    (ΣpropEmbedding isSet λ A → isPropIsSet {A = A})
-                    (SpFunctor .F-ob , SpEmbeddingIntoSets) 
-  
-  isPropHasStoneStr : {ℓ : Level} (S : Type ℓ) → isProp (hasStoneStr S)
-  isPropHasStoneStr = isEmbedding→hasPropFibers SpEmbedding 
+isSetSp : {ℓ : Level} → (B : BooleanRing ℓ) → isSet (SpGeneralBooleanRing B)
+isSetSp B = isSetBoolHom B BoolBR 
 
-StoneCat : Category (ℓ-suc ℓ-zero) ℓ-zero 
-StoneCat = ImageFunctor.Image SpFunctor  
+ev : (B C : BooleanRing ℓ-zero ) → (b  : ⟨ B ⟩) → BoolHom B C → ⟨ C ⟩
+ev B C b f = f $cr b 
 
+evaluationMapGeneralBooleanRing : (B : BooleanRing ℓ-zero ) → (b  : ⟨ B ⟩) → SpGeneralBooleanRing B → Bool
+evaluationMapGeneralBooleanRing B = ev B BoolBR
+
+evaluationMap : (B : Booleω) → (b : ⟨ fst B ⟩) → Sp B → Bool
+evaluationMap B = evaluationMapGeneralBooleanRing (fst B)
+
+BAstructOnDecidableSubsets : {ℓ : Level} → (S : Type ℓ) → BooleanRingStr (S → Bool)
+BAstructOnDecidableSubsets S = pointWiseStructure S (λ _ → Bool) (λ _ → snd BoolBR) 
+
+2^ : {ℓ : Level} → (S : Type ℓ) → BooleanRing ℓ
+2^ S .fst = S → Bool
+2^ S .snd = BAstructOnDecidableSubsets S 
+
+hasStoneStr : Type ℓ-zero → Type (ℓ-suc ℓ-zero) 
+hasStoneStr S = Σ[ B ∈ Booleω ] Sp B ≡ S
+
+Stone : Type (ℓ-suc ℓ-zero)
+Stone = TypeWithStr ℓ-zero hasStoneStr
