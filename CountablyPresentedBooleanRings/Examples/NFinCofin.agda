@@ -16,7 +16,7 @@ open import Cubical.Foundations.Prelude hiding (_∨_ ; _∧_)
 open import Cubical.Foundations.HLevels
 open import Cubical.Foundations.Function
 open import Cubical.Algebra.BooleanRing
-open import Cubical.Algebra.CommRing.Base
+open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.CommRing.Instances.Bool
 
 open import Cubical.Data.Sum
@@ -266,50 +266,63 @@ module Presentation where
   ℕFinCof→FreeℕMap : ⟨ ℕfinCofinBA ⟩ → ⟨ freeBA ℕ ⟩
   ℕFinCof→FreeℕMap (α , Fin αf) = Finite→FreeℕMap α αf
   ℕFinCof→FreeℕMap (α , Cof αc) = ¬ Finite→FreeℕMap (¬ α) αc 
-
-  ℕFinCof→FreeℕIsHom : IsCommRingHom 
-    (snd $ BooleanRing→CommRing ℕfinCofinBA) ℕFinCof→FreeℕMap 
-    (snd $ BooleanRing→CommRing $ freeBA ℕ) 
-  ℕFinCof→FreeℕIsHom = FromPres¬∧.isBoolRingHom ℕfinCofinBA 
-    (freeBA ℕ) ℕFinCof→FreeℕMap pres¬ pres∧   where
-    pres¬ : (x : ⟨ ℕfinCofinBA ⟩) → (ℕFinCof→FreeℕMap (¬ x))  ≡ ¬ (ℕFinCof→FreeℕMap x)
-    pres¬ (α , Fin αf) = 
-      ℕFinCof→FreeℕMap (¬ (α , Fin αf)) 
-        ≡⟨ cong ℕFinCof→FreeℕMap (Σ≡Prop isPropisFiniteOrCofinite refl) ⟩ 
-      ℕFinCof→FreeℕMap (¬ α , Cof (¬FinIsCofin α αf) )
-        ≡⟨⟩ 
-      ¬ (ℕFinCof→FreeℕMap (¬ ¬ α , Fin (¬CofinIsFin (¬ α) (¬FinIsCofin α αf))))
-        ≡⟨ cong (¬_ ∘ ℕFinCof→FreeℕMap) (Σ≡Prop isPropisFiniteOrCofinite ¬Invol) ⟩ 
-      ¬ (ℕFinCof→FreeℕMap (α , Fin αf)) ∎
-    pres¬ (α , Cof αc) = 
-      ℕFinCof→FreeℕMap (¬ (α , Cof αc) )
-        ≡⟨ cong ℕFinCof→FreeℕMap (Σ≡Prop isPropisFiniteOrCofinite refl) ⟩ 
-      ℕFinCof→FreeℕMap ( ¬ α , Fin αc)
-        ≡⟨⟩ 
-      Finite→FreeℕMap (¬ α) αc
-        ≡⟨ sym ¬Invol ⟩ 
-      ¬ ¬ (Finite→FreeℕMap (¬ α) αc)
-        ≡⟨⟩
-      ¬ (ℕFinCof→FreeℕMap (α , Cof αc)) ∎
-    pres∧ : (x y : ⟨ ℕfinCofinBA ⟩) → (ℕFinCof→FreeℕMap (x ∧ y))  ≡ (ℕFinCof→FreeℕMap x) ∧ (ℕFinCof→FreeℕMap y)
-    pres∧ (fst₁ , snd₁) (fst₂ , snd₂) = {! !} 
-
-  ℕFinCof→presentation : ⟨ ℕfinCofinBA ⟩ → ⟨ presentation ⟩
-  ℕFinCof→presentation = fst (QB.quotientImageHom) ∘ ℕFinCof→FreeℕMap
-
-
---  module isomorphism where 
---    qx=qrx : 
---  worksOnGenerators : (x : freeBATerms ℕ) → (QB.quotientImageHom 
---    (QB.quotientImageHom {B = freeBA ℕ} {f = relations}) $cr includeTerm x) ≡ 
---    QB.quotientImageHom $cr (ℕFinCof→FreeℕMap (freeℕ→ℕFinCof $cr includeTerm x))
---  freeA→freeA≡id : (freeAcp→freeA ∘cr freeA→freeAcp) ≡ 
---                   idCommRingHom (BooleanRing→CommRing (freeBA A))
---  freeA→freeA≡id = equalityFromEqualityOnGenerators (freeBA A) _ _ freeA→freeA≡idOnGens
-
   
-  q∘roundtrip : (x : ⟨ freeBA ℕ ⟩) → 
-    (QB.quotientImageHom {B = freeBA ℕ} {f = relations}) $cr x ≡ 
-    QB.quotientImageHom $cr (ℕFinCof→FreeℕMap (freeℕ→ℕFinCof $cr x))
-  q∘roundtrip = {! !} 
+  pres¬ToFree : (x : ⟨ ℕfinCofinBA ⟩) → (ℕFinCof→FreeℕMap (¬ x))  ≡ ¬ (ℕFinCof→FreeℕMap x)
+  pres¬ToFree (α , Fin αf) = 
+    ℕFinCof→FreeℕMap (¬ (α , Fin αf)) 
+      ≡⟨ cong ℕFinCof→FreeℕMap (Σ≡Prop isPropisFiniteOrCofinite refl) ⟩ 
+    ℕFinCof→FreeℕMap (¬ α , Cof (¬FinIsCofin α αf) )
+      ≡⟨⟩ 
+    ¬ (ℕFinCof→FreeℕMap (¬ ¬ α , Fin (¬CofinIsFin (¬ α) (¬FinIsCofin α αf))))
+      ≡⟨ cong (¬_ ∘ ℕFinCof→FreeℕMap) (Σ≡Prop isPropisFiniteOrCofinite ¬Invol) ⟩ 
+    ¬ (ℕFinCof→FreeℕMap (α , Fin αf)) ∎
+  pres¬ToFree (α , Cof αc) = 
+    ℕFinCof→FreeℕMap (¬ (α , Cof αc) )
+      ≡⟨ cong ℕFinCof→FreeℕMap (Σ≡Prop isPropisFiniteOrCofinite refl) ⟩ 
+    ℕFinCof→FreeℕMap ( ¬ α , Fin αc)
+      ≡⟨⟩ 
+    Finite→FreeℕMap (¬ α) αc
+      ≡⟨ sym ¬Invol ⟩ 
+    ¬ ¬ (Finite→FreeℕMap (¬ α) αc)
+      ≡⟨⟩
+    ¬ (ℕFinCof→FreeℕMap (α , Cof αc)) ∎
+
+  ℕFinCof→Presentation : ⟨ ℕfinCofinBA ⟩ → ⟨ presentation ⟩
+  ℕFinCof→Presentation = fst (QB.quotientImageHom) ∘ ℕFinCof→FreeℕMap
+
+  ℕFinCof→PresentationIsHom : IsCommRingHom 
+    (BooleanRingStr→CommRingStr (snd ℕfinCofinBA)) 
+    ℕFinCof→Presentation 
+    (BooleanRingStr→CommRingStr (snd presentation))
+  ℕFinCof→PresentationIsHom = {! !} 
+
+  ℕFinCof→PresentationHom : BoolHom ℕfinCofinBA presentation
+  ℕFinCof→PresentationHom = ℕFinCof→Presentation , ℕFinCof→PresentationIsHom
+
+  agreeOnGens : (n : ℕ) → 
+    (QB.quotientImageHom $cr generator n) ≡ 
+    ((ℕFinCof→PresentationHom ∘cr presentation→ℕFinCof ∘cr QB.quotientImageHom) $cr generator n)
+  agreeOnGens = {! !} 
+
+  roundTripPresentation : ℕFinCof→PresentationHom ∘cr presentation→ℕFinCof ≡ idBoolHom presentation
+  roundTripPresentation = {! !} 
+
+  boundedEqualIffLongEnoughEqual : (α β : binarySequence) → (n : ℕ) → (αbound : isZeroFrom n α) → (βbound : isZeroFrom n β) → 
+    ((k : ℕ) → (k < n) → α k ≡ β k) → α ≡ β
+  boundedEqualIffLongEnoughEqual α β n α≥n=0 β≥n=0 α=β<n = funExt λ m → case splitℕ-< m n of λ 
+    { (inl m<n) → α=β<n m m<n
+    ; (inr m≥n) → α≥n=0 m m≥n ∙ sym (β≥n=0 m m≥n) } 
+
+  roundTripℕFinCofHelper : (α : binarySequence) → (αf : isFinite α) → 
+    (fst (freeℕ→ℕFinCof) ∘ ℕFinCof→FreeℕMap) (α , Fin αf) ≡ (α , Fin αf)
+  roundTripℕFinCofHelper α (constant0 x) = {! !}
+  roundTripℕFinCofHelper α (last1 n x x₁) = {! !} 
+
+  roundTripℕFinCof : presentation→ℕFinCof ∘cr ℕFinCof→PresentationHom ≡ idBoolHom ℕfinCofinBA
+  roundTripℕFinCof = {! !} 
+
+  ℕFinCof=Presentation : BooleanRingEquiv ℕfinCofinBA presentation
+  ℕFinCof=Presentation = {! !} 
+
+
 
