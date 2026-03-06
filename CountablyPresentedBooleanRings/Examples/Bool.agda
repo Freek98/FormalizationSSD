@@ -12,9 +12,6 @@ open import Cubical.Data.Empty as ⊥ renaming (rec to ex-falso ; rec* to empty-
 {- I got a unification problem for using rec* in EmptyQuotient, 
 -- which is needed as that's what the image quotient uses, which maybe was a design mistake
 -}
-open import Cubical.Data.Nat renaming (_+_ to _+ℕ_ ; _·_ to _·ℕ_)
-open import Cubical.Data.Nat.Order 
-open <-Reasoning
 
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
@@ -178,3 +175,5 @@ is-cp-free⊥ = free-on-countable-has-freeℕ-presentation ⊥ count⊥
 is-cp-2 : has-Boole-ω' BoolBR
 is-cp-2 = subst has-Boole-ω' free⊥=2 is-cp-free⊥ 
 
+BoolCP : countablyPresentedBooleanRing
+BoolCP = BoolBR , ∣ is-cp-2 ∣₁

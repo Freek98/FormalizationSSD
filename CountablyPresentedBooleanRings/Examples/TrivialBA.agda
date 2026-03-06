@@ -2,6 +2,7 @@
 module CountablyPresentedBooleanRings.Examples.TrivialBA where 
 
 open import CountablyPresentedBooleanRings.Definitions
+open import Cubical.HITs.PropositionalTruncation as PT
 open import CountablyPresentedBooleanRings.Examples.Bool
 open import Cubical.Foundations.Equiv
 open import Cubical.Foundations.Isomorphism
@@ -88,4 +89,6 @@ module trivialPresentation where
 
   presentation : has-countable-presentation trivialBooleanRing
   presentation = ⊥ , count⊥ , Unit , countUnit , e ∘ point1 , triv≃free⊥/1
- 
+
+UnitCP : countablyPresentedBooleanRing 
+UnitCP = trivialBooleanRing , ∣ has-countable-presentation→has-freeℕ-presentation trivialBooleanRing trivialPresentation.presentation ∣₁ 

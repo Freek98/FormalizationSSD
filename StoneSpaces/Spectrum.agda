@@ -53,17 +53,11 @@ open import Cubical.Categories.Instances.Sets
 open import Cubical.Categories.Constructions.Opposite
 open import Cubical.Tactics.CategorySolver.Reflection
 
-open import CategoryTheory.BasicFacts
-open import CategoryTheory.SigmaPropCat
-open import CategoryTheory.Image
-
-open Category hiding (_∘_)
 SpGeneralBooleanRing : {ℓ : Level} → BooleanRing ℓ → Type ℓ
 SpGeneralBooleanRing B = BoolHom B BoolBR
 
 Booleω : Type (ℓ-suc ℓ-zero)
 Booleω = countablyPresentedBooleanRing
--- just changed this if things crash Loading is slow for some reason. 
 
 Sp : Booleω → Type ℓ-zero
 Sp = SpGeneralBooleanRing ∘ fst 
@@ -106,3 +100,6 @@ hasStoneStr S = Σ[ B ∈ Booleω ] Sp B ≡ S
 
 Stone : Type (ℓ-suc ℓ-zero)
 Stone = TypeWithStr ℓ-zero hasStoneStr
+
+StoneSpace : Type (ℓ-suc ℓ-zero)
+StoneSpace = Stone
