@@ -56,7 +56,7 @@ instance
 ℙℕ : BooleanRing ℓ-zero
 ℙℕ = binarySequence , booleanStructureOnBinarySequences
 
-module Definition where 
+module DefinitionFinCofin where 
   isZeroFrom : ℕ → binarySequence → Type
   isZeroFrom n α = ∀ (k : ℕ) → (k ≥ n) → α k ≡ false
   
@@ -183,7 +183,7 @@ module Definition where
   ℕfinCofinSubBA .IsSubBooleanAlgebra.∨-cl = FinCofin-∨-cl _ _
   ℕfinCofinSubBA .IsSubBooleanAlgebra.¬-cl = FinCofin-¬-cl _ 
 
-open Definition 
+open DefinitionFinCofin
 
 ℕfinCofinBA : BooleanRing ℓ-zero
 ℕfinCofinBA = mkSubBooleanAlgebra ℕfinCofinSubBA 
