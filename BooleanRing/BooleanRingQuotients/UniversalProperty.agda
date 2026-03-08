@@ -2,21 +2,6 @@
 
 module BooleanRing.BooleanRingQuotients.UniversalProperty where
 
-{- This module proves that any Boolean ring C with the universal property
-   of B /Im f is equivalent to B /Im f. Concretely:
-
-   Given:
-     B : BooleanRing, f : X → ⟨ B ⟩  (quotient data)
-     C : BooleanRing
-     φ : BoolHom B C  (a map from B to C)
-     φ-zero : φ kills Im(f)
-     extension : for any S and g : BoolHom B S killing Im(f), a map C → S
-     commutes   : extension S g ∘cr φ ≡ g  (computation)
-     unique : uniqueness of the induced map
-
-   Conclude: BooleanRingEquiv (B /Im f) C
--}
-
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.HLevels
@@ -33,20 +18,22 @@ open import BooleanRing.BoolRingUnivalence
 
 private variable ℓ : Level
 
+open BooleanRingStr
+
 module UniversalProperty
   (B : BooleanRing ℓ) {X : Type ℓ} (f : X → ⟨ B ⟩)
   (C : BooleanRing ℓ)
   (φ : BoolHom B C)
-  (φ-zero : ∀ (x : X) → φ $cr (f x) ≡ BooleanRingStr.𝟘 (snd C))
+  (φ-zero : ∀ (x : X) → φ $cr (f x) ≡ 𝟘 (snd C))
   (extension : (S : BooleanRing ℓ) (g : BoolHom B S)
-              (g-zero : ∀ (x : X) → g $cr (f x) ≡ BooleanRingStr.𝟘 (snd S))
-              → BoolHom C S)
+               (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) → 
+               BoolHom C S)
   (commutes : (S : BooleanRing ℓ) (g : BoolHom B S)
-            (g-zero : ∀ (x : X) → g $cr (f x) ≡ BooleanRingStr.𝟘 (snd S))
-            → extension S g g-zero ∘cr φ ≡ g)
+              (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) → 
+              extension S g g-zero ∘cr φ ≡ g)
   (unique : (S : BooleanRing ℓ) (g : BoolHom B S)
-              (g-zero : ∀ (x : X) → g $cr (f x) ≡ BooleanRingStr.𝟘 (snd S))
-              (h : BoolHom C S) → g ≡ h ∘cr φ → extension S g g-zero ≡ h)
+            (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S))
+            (h : BoolHom C S) → g ≡ h ∘cr φ → extension S g g-zero ≡ h)
   where
 
   private
