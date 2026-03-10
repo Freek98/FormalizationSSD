@@ -79,7 +79,7 @@ module UniversalProperty
       (Q→C ∘cr C→Q) ∘cr φ ∎
 
     idPath : φ ≡ idBoolHom C ∘cr φ
-    idPath = sym (CommRingHom≡ refl)
+    idPath = CommRingHom≡ refl
 
   Q≃C-Iso : Iso ⟨ Q ⟩ ⟨ C ⟩
   Q≃C-Iso .Iso.fun = fst Q→C

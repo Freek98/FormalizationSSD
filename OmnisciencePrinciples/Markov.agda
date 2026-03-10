@@ -19,6 +19,7 @@ open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
 open import Cubical.Foundations.Powerset
+open import Cubical.Foundations.HLevels
 
 open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.BooleanRing
@@ -109,19 +110,8 @@ module extractFirstHitInBinarySequence (α : binarySequence) where
 
   propHelp : (n : ℕ) → isProp (is-first-hit n)
   propHelp n (p , nF) (p' , nF') = Σ≡Prop 
-    (λ αn → propFun₂ λ n _ → isSetBool (α n) false) 
-    (prophelp n p p') where
-
-    propFun : { A : Type} { B : A → Type} → ((a : A)  → isProp (B a)) → isProp ((a : A) → B a)
-    propFun Bprop f g = funExt {f = f} {g = g} λ { x → Bprop x (f x) (g x) } 
-  
-    propFun₂ : {A : Type} {B : A → Type} {C : (a : A) → (b : B a) → Type} → 
-       ((a : A) → (b : B a) → isProp (C a b)) → 
-       isProp ( (a : A) → (b : B a) → C a b) 
-    propFun₂ Cprop f g = propFun (λ a → propFun λ b → Cprop a b) f g 
-  
-    prophelp : (n : ℕ) → isProp ( α n ≡ true) 
-    prophelp n x y = isSetBool (α n) true x y
+    (λ αn → isPropΠ2 λ n _ → isSetBool (α n) false) 
+    (isSetBool (α n) true p p') 
 
   firstProp : isProp first-hit
   firstProp (m , αm , mFirst) (n , αn , nFirst ) with (m ≟ n ) 

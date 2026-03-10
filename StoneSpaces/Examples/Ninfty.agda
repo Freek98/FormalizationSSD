@@ -7,6 +7,7 @@ open import Cubical.Data.Unit
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Nat
+open import Cubical.Data.Sigma hiding (_∧_)
 open import Cubical.Relation.Nullary
 open import Cubical.Algebra.BooleanRing.Instances.Bool
 open import Cubical.HITs.PropositionalTruncation as PT
@@ -19,6 +20,7 @@ open import BooleanRing.FreeBooleanRing.FreeBool
 open import Cubical.Algebra.CommRing
 
 open import Cubical.Foundations.Function
+open import Cubical.Foundations.HLevels
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Univalence
 open import Cubical.Foundations.Prelude hiding (_∨_ ; _∧_)
@@ -42,8 +44,7 @@ hits1AtMostOnce : binarySequence → Type
 hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n ≡ m 
 
 isPropHits1AtMostOnce : (α : binarySequence) → isProp (hits1AtMostOnce α)
-isPropHits1AtMostOnce α = {! isPropΠ !} 
-
+isPropHits1AtMostOnce α = isPropΠ4 λ n m _ _ → isSetℕ n m 
 
 hits1NotTwice : binarySequence → Type 
 hits1NotTwice α = ∀ (n m : ℕ) → ((m ≡ n) → ⊥) → α m and α n ≡ false
@@ -72,8 +73,14 @@ notTwice→AtMostOnce α notTwice m n αm=1 αn=1 = case discreteℕ m n return 
 SpB∞ : Type ℓ-zero
 SpB∞ = SpGeneralBooleanRing presentation
 
+
+
+
+--SpB∞AsUniversalProperty : 
+
 Sp→BinarySequence : SpB∞ → binarySequence
 Sp→BinarySequence f n = (f ∘cr quotientImageHom) $cr generator n
+
 
 open IsCommRingHom
 open isBoolAlgHom
@@ -112,11 +119,17 @@ hits1AtMostOnce→respectsRelations α α1atmostOnce n m with (discreteℕ n m)
                 ≡⟨ atMostOnce→NotTwice α α1atmostOnce m n ¬p ⟩ 
               false ∎ 
 
+
+
 neededIso : Iso SpB∞ ℕ∞
 neededIso .Iso.fun f = Sp→BinarySequence f  , SpHits1AtMostOnce f
-neededIso .Iso.inv (α , α1atmostOnce) = inducedHom BoolBR (BinarySequence→SpFreeℕ α) λ n → hits1AtMostOnce→respectsRelations α α1atmostOnce (fst $ Iso.inv ℕ×ℕ≅ℕ n) (snd $ Iso.inv ℕ×ℕ≅ℕ n)
-neededIso .Iso.sec (α , α1atmostOnce) = {! Σ≡Prop !}
-neededIso .Iso.ret f = {! evalInduce  !} 
+neededIso .Iso.inv (α , α1atmostOnce) = inducedHom BoolBR (BinarySequence→SpFreeℕ α) 
+  λ n → hits1AtMostOnce→respectsRelations α α1atmostOnce (fst $ Iso.inv ℕ×ℕ≅ℕ n) (snd $ Iso.inv ℕ×ℕ≅ℕ n)
+neededIso .Iso.sec (α , α1atmostOnce) = Σ≡Prop isPropHits1AtMostOnce (funExt (λ n → {!   !}) ∙ evalBAInduce ℕ BoolBR α)
+neededIso .Iso.ret f = {! !} 
+
+
+
 
 --freeℕCP : countablyPresentedBooleanRing
 --freeℕCP = freeBA ℕ , ∣ free-on-countable-has-freeℕ-presentation ℕ countℕ ∣₁ 
