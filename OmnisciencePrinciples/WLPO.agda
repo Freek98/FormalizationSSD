@@ -22,8 +22,8 @@ open import Cubical.HITs.PropositionalTruncation as PT
 
 open  import BooleanRing.FreeBooleanRing.FreeBool
 
-open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
-open  import BooleanRing.FreeBooleanRing.freeBATerms
+open import BooleanRing.FreeBooleanRing.SurjectiveTerms
+open import BooleanRing.FreeBooleanRing.freeBATerms
 open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base as TV
 
 zeroSequence : binarySequence 
