@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CategoryTheory.BasicFacts where
 open import Cubical.Data.Sigma
 open import Cubical.Foundations.Univalence

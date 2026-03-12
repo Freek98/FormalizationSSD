@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module QuickFixes where
 open import BooleanRing.BooleanRingMaps
 -- Idea : this was necessary but shouldn't be in any particularly file where they're used. 

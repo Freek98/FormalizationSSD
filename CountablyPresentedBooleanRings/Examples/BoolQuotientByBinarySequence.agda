@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CountablyPresentedBooleanRings.Examples.BoolQuotientByBinarySequence where 
 
 open import CountablyPresentedBooleanRings.Definitions

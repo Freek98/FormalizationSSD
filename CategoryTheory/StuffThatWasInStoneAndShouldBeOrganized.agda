@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CategoryTheory.StuffThatWasInStoneAndShouldBeOrganized where
 open import BooleanRing.BooleanRingMaps
 open import CountablyPresentedBooleanRings.Definitions 

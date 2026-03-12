@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module BooleanRing.SubBooleanRing where
 
 open import Cubical.Foundations.Prelude hiding (_∨_ ; _∧_)

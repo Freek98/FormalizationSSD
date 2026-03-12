@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical -WnoUselessAbstract  -WnoUnsupportedIndexedMatch -WnoInteractionMetaBoundaries --guardedness #-}
+{-# OPTIONS -WnoUselessAbstract  -WnoUnsupportedIndexedMatch -WnoInteractionMetaBoundaries --guardedness #-}
 
 module CommRingQuotients.IdealTerms where 
 

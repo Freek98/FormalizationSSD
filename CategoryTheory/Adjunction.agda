@@ -1,5 +1,5 @@
 
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CategoryTheory.Adjunction where
 
 open import Cubical.Data.Sigma

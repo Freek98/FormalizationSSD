@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module Axioms.StoneDuality where
 open import BooleanRing.BooleanRingMaps
 open import CountablyPresentedBooleanRings.Definitions 

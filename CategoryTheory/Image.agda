@@ -1,6 +1,6 @@
 
 
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CategoryTheory.Image where
 
 open import Cubical.Data.Sigma

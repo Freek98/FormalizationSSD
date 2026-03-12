@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module AntiEquivalence where
 -- So far, contains Lemma 1.12 of the paper. 
 open import Axioms.StoneDuality

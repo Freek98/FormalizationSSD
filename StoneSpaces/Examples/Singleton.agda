@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module StoneSpaces.Examples.Singleton where
 
 open import StoneSpaces.Spectrum

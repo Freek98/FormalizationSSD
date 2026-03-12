@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 
 module PropositionalTopology.OpenClosedProps where
 open import QuickFixes

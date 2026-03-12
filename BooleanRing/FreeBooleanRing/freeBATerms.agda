@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 
 module BooleanRing.FreeBooleanRing.freeBATerms where
 {- This file shows that the terms of a freely generated Boolean ring have a surjection into that freely generated Boolean ring. -}

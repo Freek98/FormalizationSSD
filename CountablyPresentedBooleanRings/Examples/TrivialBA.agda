@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CountablyPresentedBooleanRings.Examples.TrivialBA where 
 
 open import CountablyPresentedBooleanRings.Definitions

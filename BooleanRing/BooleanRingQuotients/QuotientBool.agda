@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness --lossy-unification #-}
+{-# OPTIONS --guardedness --lossy-unification #-}
 
 module BooleanRing.BooleanRingQuotients.QuotientBool where
 

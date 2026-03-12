@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness --lossy-unification #-}
+{-# OPTIONS --guardedness --lossy-unification #-}
 module CountablyPresentedBooleanRings.Examples.freeN where
 open import CountablyPresentedBooleanRings.Definitions
 open import CountablyPresentedBooleanRings.Examples.Bool

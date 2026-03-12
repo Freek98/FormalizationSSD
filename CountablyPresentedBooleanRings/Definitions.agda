@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CountablyPresentedBooleanRings.Definitions where 
 
 open import Cubical.Data.Sigma

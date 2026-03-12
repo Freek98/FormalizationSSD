@@ -1,5 +1,5 @@
 
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CategoryTheory.SigmaPropCat where
 
 open import Cubical.Data.Sigma

@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module CountablyPresentedBooleanRings.EquivalenceOfCountablyPresentedDefinitions where 
 
 open import BooleanRing.BooleanRingMaps

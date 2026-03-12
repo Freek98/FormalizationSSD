@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness #-}
+{-# OPTIONS --guardedness #-}
 module BooleanRing.AlgebraicFacts where
 
 open import Cubical.Foundations.Equiv
