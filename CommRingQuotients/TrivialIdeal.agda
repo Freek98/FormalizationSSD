@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 
 module CommRingQuotients.TrivialIdeal where 
 {- This file shows for a Ring R and Ideal I, that if R/I is trivial, then 1 ∈ I -}

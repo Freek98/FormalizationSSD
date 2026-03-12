@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness --lossy-unification #-}
+{-# OPTIONS  --lossy-unification #-}
 
 module BooleanRing.BooleanRingQuotients.QuotientConclusions  where 
 {- We show that the quotient of a Boolean Ring agrees with that of the underlying commutative Ring -}

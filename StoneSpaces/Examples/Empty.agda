@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 module StoneSpaces.Examples.Empty where
 
 open import StoneSpaces.Spectrum

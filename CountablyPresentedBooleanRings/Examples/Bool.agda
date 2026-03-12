@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 
 module CountablyPresentedBooleanRings.Examples.Bool where 
 {- The goal of this module is to show that the standard Booleans form a countably presented Boolean algebra-}

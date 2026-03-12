@@ -1,4 +1,3 @@
-{-# OPTIONS --guardedness #-}
 module BooleanRing.BooleanRingMaps where 
 
 open import Cubical.Data.Sigma

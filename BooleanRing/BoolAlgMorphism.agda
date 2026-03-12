@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 -- Note : slight adaptions made, but this is AI generated. 
 module BooleanRing.BoolAlgMorphism where
 

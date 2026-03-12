@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness --lossy-unification #-}
+{-# OPTIONS  --lossy-unification #-}
 module OmnisciencePrinciples.LLPO where
 open import CountablyPresentedBooleanRings.Examples.NFinCofin
 

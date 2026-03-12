@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 
 module BooleanRing.FreeBooleanRing.FreeBool where
 

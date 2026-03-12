@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 
 module OmnisciencePrinciples.Markov where 
 

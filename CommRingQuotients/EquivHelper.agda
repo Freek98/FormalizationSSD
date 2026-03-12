@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 module CommRingQuotients.EquivHelper where 
 
 open import Cubical.Data.Sigma

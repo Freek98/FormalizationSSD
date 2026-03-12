@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness --lossy-unification #-}
+{-# OPTIONS  --lossy-unification #-}
 
 module CommRingQuotients.RepeatedQuotient where 
 {- This module shows that if we have two maps f,g : X → A, then quotienting first by f, then by g and quotienting by f + g give the same result -} 

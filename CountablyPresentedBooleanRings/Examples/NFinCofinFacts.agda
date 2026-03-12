@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness --lossy-unification #-}
+{-# OPTIONS  --lossy-unification #-}
 module CountablyPresentedBooleanRings.Examples.NFinCofinFacts where
 open import CountablyPresentedBooleanRings.Examples.NFinCofin
 

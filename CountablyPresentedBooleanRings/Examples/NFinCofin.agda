@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness --lossy-unification #-}
+{-# OPTIONS  --lossy-unification #-}
 module CountablyPresentedBooleanRings.Examples.NFinCofin where
 
 open import BooleanRing.SubBooleanRing

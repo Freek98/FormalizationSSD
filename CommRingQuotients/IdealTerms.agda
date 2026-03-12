@@ -1,5 +1,3 @@
-{-# OPTIONS -WnoUselessAbstract  -WnoUnsupportedIndexedMatch -WnoInteractionMetaBoundaries --guardedness #-}
-
 module CommRingQuotients.IdealTerms where 
 
 open import Cubical.Functions.Fixpoint

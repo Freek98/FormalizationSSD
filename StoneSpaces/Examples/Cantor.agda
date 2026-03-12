@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 module StoneSpaces.Examples.Cantor where
 
 open import StoneSpaces.Spectrum

@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 module BasicDefinitions where 
 
 open import Cubical.Data.Sigma

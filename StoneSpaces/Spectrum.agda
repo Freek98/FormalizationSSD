@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 module StoneSpaces.Spectrum where
 open import BooleanRing.BooleanRingMaps
 open import CountablyPresentedBooleanRings.Definitions 

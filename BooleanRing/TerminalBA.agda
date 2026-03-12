@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 
 module TerminalBA where 
 

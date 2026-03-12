@@ -1,4 +1,3 @@
-{-# OPTIONS --guardedness #-}
 module AntiEquivalence where
 -- So far, contains Lemma 1.12 of the paper. 
 open import Axioms.StoneDuality
@@ -14,7 +13,6 @@ open import Cubical.Data.Bool hiding (_≤_ ; _≥_) renaming (_≟_ to _=B_)
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
-open import Cubical.Data.Sum.Properties using (isProp⊎)
 
 open import Cubical.Relation.Nullary
 

@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 module StoneSpaces.Examples.ClosedProp where
 
 open import StoneSpaces.Spectrum

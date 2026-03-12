@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 
 module Axioms.LocalChoice where 
 

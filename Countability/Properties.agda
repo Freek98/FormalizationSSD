@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness #-}
+
 -- AI generated, minor edits. 
 module Countability.Properties where
 

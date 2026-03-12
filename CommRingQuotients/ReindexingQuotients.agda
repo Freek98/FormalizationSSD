@@ -1,4 +1,4 @@
-{-# OPTIONS --guardedness --lossy-unification #-}
+{-# OPTIONS  --lossy-unification #-}
 
 module CommRingQuotients.ReindexingQuotients where
 open import CommRingQuotients.EquivHelper

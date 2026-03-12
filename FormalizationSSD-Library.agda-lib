@@ -1,4 +1,4 @@
 name: FormalizationSSD-Library
 include: .
 depend: cubical-0.9
-flags: --cubical
+flags: --cubical --guardedness
