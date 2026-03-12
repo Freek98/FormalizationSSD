@@ -40,7 +40,10 @@ module _ {ℓ : Level} (B : BooleanRing ℓ) where
       ≡⟨ +IdR (x + y) ⟩ 
     x + y ∎
 
-
-
-
+module LatticeResults {ℓ : Level} (B : BooleanRing ℓ) where
+  open BooleanRingStr (snd B)
+  open BooleanAlgebraStr (snd B)
+  nonzero-inc : {a b : ⟨ B ⟩ } → ((a ≡ 𝟘) → ⊥)  → (a ∨ b ≡ 𝟘) → ⊥ 
+  nonzero-inc {a} {b} a≢0 a∨b=0 = a≢0 $ 
+    a ≡⟨ sym ∧AbsorbL∨ ⟩ a ∧ ( a ∨ b) ≡⟨ cong (_∧_ a) a∨b=0 ⟩ a ∧ 𝟘 ≡⟨ ∧AnnihilR ⟩ 𝟘 ∎
 

@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --guardedness --lossy-unification #-}
+{-# OPTIONS --guardedness --lossy-unification #-}
 module OmnisciencePrinciples.LLPO where
 open import CountablyPresentedBooleanRings.Examples.NFinCofin
 
@@ -41,6 +41,10 @@ open import Axioms.SurjectionsAreFormalSurjections
 open import Axioms.StoneDuality
 open import StoneSpaces.Spectrum
 
+--module EquivalenceRequirements where
+--  Booleω-has-prods : Type _
+--  Booleω-has-prods = {ℓ : Level} → (B C : BooleanRing ℓ) → is-countably-presented-alt B → is-countably-presented-alt C → is-countably-presented-alt (B ×BR C)
+--
 module LLPOProof (sd : StoneDualityAxiom) (fs : formalSurjectionsAreSurjectionsAxiom) where
   module B∞Dfn (B∞ : BooleanRing ℓ-zero) (singletons : ℕ → ⟨ B∞ ⟩) where
     module UniversalPropertyB∞Dfn (C : BooleanRing ℓ-zero) where
@@ -59,6 +63,8 @@ module LLPOProof (sd : StoneDualityAxiom) (fs : formalSurjectionsAreSurjectionsA
       ℕ∞=SpB∞ : Iso (SpGeneralBooleanRing B∞) ℕ∞ 
       ℕ∞=SpB∞ = fst $ universal BoolBR 
       module countablyPresentedB∞ (presented : is-countably-presented-alt B∞) where
+        
+
 
 
 

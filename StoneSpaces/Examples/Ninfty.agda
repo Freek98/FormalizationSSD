@@ -40,6 +40,10 @@ instance
   _ = snd $ freeBA ℕ
   _ = snd $ presentation
 
+
+
+
+
 hits1AtMostOnce : binarySequence → Type 
 hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n ≡ m 
 
@@ -73,7 +77,7 @@ notTwice→AtMostOnce α notTwice m n αm=1 αn=1 = case discreteℕ m n return 
 SpB∞ : Type ℓ-zero
 SpB∞ = SpGeneralBooleanRing presentation
 
-
+--universalPropertyPresentation : 
 
 
 --SpB∞AsUniversalProperty : 
@@ -121,13 +125,13 @@ hits1AtMostOnce→respectsRelations α α1atmostOnce n m with (discreteℕ n m)
 
 
 
-neededIso : Iso SpB∞ ℕ∞
-neededIso .Iso.fun f = Sp→BinarySequence f  , SpHits1AtMostOnce f
-neededIso .Iso.inv (α , α1atmostOnce) = inducedHom BoolBR (BinarySequence→SpFreeℕ α) 
-  λ n → hits1AtMostOnce→respectsRelations α α1atmostOnce (fst $ Iso.inv ℕ×ℕ≅ℕ n) (snd $ Iso.inv ℕ×ℕ≅ℕ n)
-neededIso .Iso.sec (α , α1atmostOnce) = Σ≡Prop isPropHits1AtMostOnce (funExt (λ n → {!   !}) ∙ evalBAInduce ℕ BoolBR α)
-neededIso .Iso.ret f = {! !} 
-
+--neededIso : Iso SpB∞ ℕ∞
+--neededIso .Iso.fun f = Sp→BinarySequence f  , SpHits1AtMostOnce f
+--neededIso .Iso.inv (α , α1atmostOnce) = inducedHom BoolBR (BinarySequence→SpFreeℕ α) 
+--  λ n → hits1AtMostOnce→respectsRelations α α1atmostOnce (fst $ Iso.inv ℕ×ℕ≅ℕ n) (snd $ Iso.inv ℕ×ℕ≅ℕ n)
+--neededIso .Iso.sec (α , α1atmostOnce) = Σ≡Prop isPropHits1AtMostOnce (funExt (λ n → {!   !}) ∙ evalBAInduce ℕ BoolBR α)
+--neededIso .Iso.ret f = {! !} 
+--
 
 
 
