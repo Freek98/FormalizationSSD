@@ -1,5 +1,4 @@
 
-
 module BooleanRing.ProductBA where 
 
 open import Cubical.Data.Sigma
@@ -47,3 +46,5 @@ module BRProduct {ℓ ℓ' : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ')
       (BooleanRingStr.·Idem (snd B) b) 
       (BooleanRingStr.·Idem (snd C) c) 
 
+_×BR_ : {ℓ ℓ' : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ') → BooleanRing (ℓ-max ℓ ℓ')
+_×BR_ = BRProduct.product
