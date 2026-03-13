@@ -1,4 +1,3 @@
-
 module CountablyPresentedBooleanRings.Definitions where 
 
 open import Cubical.Data.Sigma

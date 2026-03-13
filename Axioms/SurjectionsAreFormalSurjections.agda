@@ -1,5 +1,3 @@
-
-
 module Axioms.SurjectionsAreFormalSurjections where
 
 open import BasicDefinitions

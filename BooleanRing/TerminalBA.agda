@@ -1,6 +1,4 @@
-
-
-module TerminalBA where 
+module BooleanRing.TerminalBA where 
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)

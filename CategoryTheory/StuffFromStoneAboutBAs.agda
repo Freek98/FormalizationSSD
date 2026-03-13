@@ -63,8 +63,12 @@ open import CategoryTheory.StuffThatWasInStoneAndShouldBeOrganized
 open Category hiding (_∘_)
 open Functor
 open isUnivalent 
-BACat : Category (ℓ-suc ℓ-zero) (ℓ-zero)
-BACat .ob                       = BooleanRing ℓ-zero
+
+private 
+  variable ℓ ℓ' : Level
+
+BACat : Category (ℓ-suc ℓ) ℓ
+BACat {ℓ} .ob                   = BooleanRing ℓ
 BACat .Hom[_,_]                 = BoolHom
 BACat .id {x = B}               = idBoolHom B
 BACat ._⋆_ f g                  = g ∘cr f
@@ -73,9 +77,13 @@ BACat .⋆IdR _                   = CommRingHom≡ refl
 BACat .⋆Assoc _ _ _             = CommRingHom≡ refl
 BACat .isSetHom {x = B} {y = C} = isSetBoolHom B C 
 
-BooleωCat : Category (ℓ-suc ℓ-zero) ℓ-zero 
-BooleωCat = ΣPropCat* BACat λ B → ∥ has-Boole-ω' B ∥₁ , squash₁
+--BooleωCat : Category (ℓ-suc ℓ-zero) ℓ-zero
+--BooleωCat = ΣPropCat BACat λ B → is-countably-presented B , squash₁ 
+-- Annoyingly, there is some level stuff here that makes we have to make choices. 
+BooleωCat : Category (ℓ-suc ℓ-zero) ℓ-zero
+BooleωCat = ΣPropCat* BACat λ B → is-countably-presented-alt B , squash₁ 
 
+{-
 module _ (B C : BooleanRing ℓ-zero)  where
   open isIso
   -- Idea : show BACAT is Univalent 
@@ -108,7 +116,6 @@ pathToIsoDecompIsDecomp : (B C : BooleanRing ℓ-zero) → pathToIso {x = B} {y 
 pathToIsoDecompIsDecomp B C = funExt $ 
   J (λ C' p → pathToIso {x = B} {y = C'} p ≡ fst (pathToIsoDecomp B C') p) 
   (pathToIso-refl ∙ (sym $ pathToIsoDecompAtRefl B)) 
-
 
 BACatUnivalent : isUnivalent BACat
 BACatUnivalent .univ B C = subst isEquiv (sym (pathToIsoDecompIsDecomp B C)) (snd $ pathToIsoDecomp B C) 
@@ -234,4 +241,4 @@ Sp⊣2^ = adj'→adj _ _ Sp⊣2^'
 
 SpFunctor : Functor BooleωCat ((SET ℓ-zero) ^op)
 SpFunctor = SpGeneralFunctor ∘F BooleωEmbedding
-
+-}

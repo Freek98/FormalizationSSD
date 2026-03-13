@@ -149,28 +149,37 @@ module ΣBoolCountable (α : binarySequence) where
 -- ════════════════════════════════════════════════════════════════
 -- Main results: closure properties of is-countable
 -- ════════════════════════════════════════════════════════════════
+has-Countability-structure-× : {A B : Type}
+  → has-Countability-structure A → has-Countability-structure B → has-Countability-structure (A × B)
+has-Countability-structure-× (α , iA) (β , iB) = 
+    let open CountableProduct α β
+    in γ× , compIso (prodIso iA iB) ΣℕProd
 
 is-countable-× : {A B : Type}
   → is-countable A → is-countable B → is-countable (A × B)
-is-countable-× cA cB = PT.map2 (λ (α , iA) (β , iB) →
-    let open CountableProduct α β
-    in γ× , compIso (prodIso iA iB) ΣℕProd
-  ) cA cB
+is-countable-× = PT.map2  has-Countability-structure-×
+
+has-Countability-structure-⊎ : {A B : Type}
+  → has-Countability-structure A → has-Countability-structure B → has-Countability-structure (A ⊎ B)
+has-Countability-structure-⊎ (α , iA) (β , iB) =
+    let open CountableSum α β
+    in γ⊎ , compIso (⊎Iso iA iB) ΣℕSum
 
 is-countable-⊎ : {A B : Type}
   → is-countable A → is-countable B → is-countable (A ⊎ B)
-is-countable-⊎ cA cB = PT.map2 (λ (α , iA) (β , iB) →
-    let open CountableSum α β
-    in γ⊎ , compIso (⊎Iso iA iB) ΣℕSum
-  ) cA cB
+is-countable-⊎ = PT.map2 has-Countability-structure-⊎
 
-is-countable-Σ-Bool : {A : Type} (P : A → Bool)
-  → is-countable A → is-countable (Σ[ a ∈ A ] P a ≡ true)
-is-countable-Σ-Bool {A} P = PT.map (λ (α , iA) →
+
+has-Countability-structure-Σ-Bool : {A : Type} (P : A → Bool)
+  → has-Countability-structure A → has-Countability-structure (Σ[ a ∈ A ] P a ≡ true)
+has-Countability-structure-Σ-Bool {A} P (α , iA) =
     let open ΣBoolCountable α
         P' : Σℕ α → Bool
         P' x = P (inv iA x)
     in γΣ P' , compIso (Σ-cong-iso iA (λ a →
            pathToIso (cong (λ z → P z ≡ true) (sym (ret iA a)))))
          (ΣℕBoolSub P')
-  )
+
+is-countable-Σ-Bool : {A : Type} (P : A → Bool)
+  → is-countable A → is-countable (Σ[ a ∈ A ] P a ≡ true)
+is-countable-Σ-Bool P = PT.map (has-Countability-structure-Σ-Bool P) 

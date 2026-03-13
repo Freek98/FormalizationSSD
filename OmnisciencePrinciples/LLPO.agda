@@ -134,15 +134,10 @@ module LLPOProof (sd : StoneDualityAxiom) (fs : formalSurjectionsAreSurjectionsA
           ℕ∞+ℕ∞=SpProd = compIso (SpAntiEquivalenceOnProd prodUP) (⊎Iso ℕ∞=SpB∞ ℕ∞=SpB∞)
           open Functor
           module fProps 
+            (prodIso : Iso (BoolHom B∞ (B∞ ×BR B∞)) (ℕ∞ ⊎ ℕ∞ → ℕ∞))
             (f : BoolHom B∞ (B∞ ×BR B∞)) 
             (fInj : isInjectiveBoolHom (B∞ , presented) ((B∞ ×BR B∞) , prodPresented presented presented) f) 
-            (fcorrespondsToe : ((ℕ∞ ⊎ ℕ∞ → ℕ∞) 
-              Iso⟨ invIso $ compIso (domIso ℕ∞+ℕ∞=SpProd) (codomainIso ℕ∞=SpB∞) ⟩ 
-            (SpGeneralBooleanRing (B∞ ×BR B∞) → SpGeneralBooleanRing B∞) 
-              Iso⟨ {! !} ⟩ 
-            BoolHom B∞ (B∞ ×BR B∞) ∎Iso) .Iso.inv 
-            f ≡ e ) where
-            --{! (λ g → g ∘cr f) :> (SpGeneralBooleanRing (B∞ ×BR B∞) → SpGeneralBooleanRing (B∞)) ∘Iso !}) where
+            (fcorrespondsToe : prodIso .Iso.fun f ≡ e ) where
 
 
         
