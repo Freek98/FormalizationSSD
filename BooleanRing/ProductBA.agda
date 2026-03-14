@@ -89,11 +89,6 @@ module BRProduct (B : BooleanRing ℓ) (C : BooleanRing ℓ') where
     uniqueness : (h : BoolHom D product) → (πB ∘cr h ≡ f) → (πC ∘cr h ≡ g) → ⟨f,g⟩ ≡ h
     uniqueness h Bh=f Ch=g = CommRingHom≡ (funExt λ d → cong₂ _,_ 
       (cong (λ k → fst k d) (sym Bh=f)) (cong (λ k → fst k d) (sym Ch=g))) 
---    isContr Σ[ fg
-    --isBinProduct = ∀ {z : ob} (f₁ : Hom[ z , x ]) (f₂ : Hom[ z , y ]) →
-    --    ∃![ f ∈ Hom[ z , x×y ] ] (f ⋆ π₁ ≡ f₁) × (f ⋆ π₂ ≡ f₂)
-
-
 
 module BACatProduct {ℓ : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ) where
     open BinProduct
@@ -108,8 +103,8 @@ module BACatProduct {ℓ : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ) wh
     catProduct .univProp f g .fst .snd = extensionπB f g , extensionπC f g
     catProduct .univProp f g .snd (h , Bh=f , Ch=g) = Σ≡Prop 
       (λ _ → isProp× (isSetHom BACat _ _) (isSetHom BACat _ _)) 
-      -- Note that this argument works for any category, 
-      -- so maybe this should be generalized to a smart constructor.
+      -- Note that this argument works for any category, and always needs to be provided.
+      -- So maybe this should be generalized to a smart constructor.
       (uniqueness f g h Bh=f Ch=g)
 
 _×BR_ : (B : BooleanRing ℓ) (C : BooleanRing ℓ') → BooleanRing (ℓ-max ℓ ℓ')

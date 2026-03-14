@@ -68,10 +68,18 @@ module freeBASum (A B : Type) where
       ((freeBA (A ⊎ B)) /Im (fst (fst sumFreeEqu) ∘ combMap)) 
     quotientEqu = {! !} 
 
-
-
-Equ×Map : (B C D E : BooleanRing ℓ-zero) → BooleanRingEquiv B D → BooleanRingEquiv C E → BooleanRingEquiv (B ×BR C) (D ×BR E)
-Equ×Map = {! !} 
+module _ where
+  open IsCommRingHom
+  ×BR-map : {B C D E : BooleanRing ℓ-zero} → BoolHom B D → 
+       BoolHom C E → BoolHom (B ×BR C) (D ×BR E)
+  ×BR-map f g .fst = map-× (fst f) (fst g)
+  ×BR-map f g .snd = {!  !} 
+  
+  Equ×Map : {B C D E : BooleanRing ℓ-zero} → BooleanRingEquiv B D → 
+       BooleanRingEquiv C E → BooleanRingEquiv (B ×BR C) (D ×BR E)
+  Equ×Map f g .fst .fst = map-× {! fst f  !} {! !}
+  Equ×Map f g .fst .snd = {! !}
+  Equ×Map f g .snd = {! !} 
 
 module ProductPresentation (B C : BooleanRing ℓ-zero) where
   predProd : (presB : has-countable-presentation B) 
@@ -83,7 +91,7 @@ module ProductPresentation (B C : BooleanRing ℓ-zero) where
            (X ⊎ Y) , has-Countability-structure-⊎ XCount YCount , 
            fst (fst sumFreeEqu) ∘ combMap , 
            (EquivQuotBR sumFreeEqu combMap) ∘cre {! quotientEqu !} ∘cre Equ×Map 
-             B C (freeBA BGens /Im f) (freeBA CGens /Im g) B=FreeG/f C=FreeG/g where
+             B=FreeG/f C=FreeG/g where
            -- Sketch:
            -- B ×BR C ≃ (freeBA BGens / f) (freeBA CGens / g) ≃
            --           ((freeBA (A ⊎ B)) /Im (fst (fst sumFreeEqu) ∘ combMap))
