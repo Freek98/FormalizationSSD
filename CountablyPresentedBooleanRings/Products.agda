@@ -37,20 +37,34 @@ open import Cubical.Algebra.CommRing
 import Cubical.Algebra.CommRing.Quotient.Base as Quot
 open import Cubical.Tactics.CommRingSolver
 
-open import Cubical.Algebra.CommRing.Polynomials.Typevariate.UniversalProperty as UP
-open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base
 open import BasicDefinitions
 open import CommRingQuotients.EmptyQuotient
 open import Countability.Properties
 open import BooleanRing.BooleanRingMaps
 open import BooleanRing.ProductBA
+open import CategoryTheory.StuffFromStoneAboutBAs
+open import Cubical.Categories.Category
 
 module freeBASum (A B : Type) where
   -- the following should make use of the universal property of free Boolean algebras
+
   sumFreeEqu : BooleanRingEquiv (freeBA A ×BR freeBA B) (freeBA (A ⊎ B))
-  sumFreeEqu = {! !} 
+  sumFreeEqu = {! !} where
+    equivalence : (D : BooleanRing _) → 
+      Iso 
+      (BACat [ freeBA (A ⊎ B) , D ]) 
+      (BACat [ freeBA A , D ] × BACat [ freeBA B , D ])
+    equivalence D = 
+      BoolHom (freeBA (A ⊎ B)) D 
+        Iso⟨ invIso (freeBA-universal-property (A ⊎ B) D) ⟩ 
+      ((A ⊎ B) → ⟨ D ⟩)
+        Iso⟨ Π⊎Iso ⟩ 
+      ((A → ⟨ D ⟩) × (B → ⟨ D ⟩))
+        Iso⟨ prodIso (freeBA-universal-property A D) (freeBA-universal-property B D) ⟩ 
+      BoolHom (freeBA A) D × BoolHom (freeBA B) D 
+        ∎Iso 
   -- Sketch using universal properties of freeBA and ⊎ 
-  --          (freeBA A ⊎ B , D) ≃ (A ⊎ B , D) ≃ (A , ⟨ D ⟩) × (B , ⟨ D ⟩) ≃ 
+  --          (freeBA (A ⊎ B) , D) ≃ (A ⊎ B , D) ≃ (A , ⟨ D ⟩) × (B , ⟨ D ⟩) ≃ 
   --          (freeBA A , D) x (freeBA B , D)
   --          And then use some yoneda-trick of A , D = B , D for all D, then A = B
   module quotient {X Y : Type} (f : X → ⟨ freeBA A ⟩) (g : Y → ⟨ freeBA B ⟩) where
@@ -62,19 +76,44 @@ module freeBASum (A B : Type) where
     combMap : (X ⊎ Y) → ⟨ freeBA A ×BR freeBA B ⟩
     combMap (inl x) = f x , 𝟘
     combMap (inr y) = 𝟘 , g y 
+--    quotientEqu : BooleanRingEquiv 
+--      ((freeBA A /Im f) ×BR (freeBA B /Im g)) 
+--      ((freeBA (A ⊎ B)) /Im (fst (fst sumFreeEqu) ∘ combMap)) 
+--    quotientEqu = {! !} 
 
-    quotientEqu : BooleanRingEquiv 
-      ((freeBA A /Im f) ×BR (freeBA B /Im g)) 
-      ((freeBA (A ⊎ B)) /Im (fst (fst sumFreeEqu) ∘ combMap)) 
-    quotientEqu = {! !} 
+
+    -- In words: 
+    -- A map from the latter into D is a map 
+    -- d : freeBA (A ⊎ B) → D, 
+    --
+    -- Denote α : freeBA A -> freeBA (A ⊎ B) and β : freeBA B → freeBA (A ⊎ B)
+    --
+    -- such that d ∘ α ∘ f x = 0 for all x and d ∘ β ∘ g y = 0 for all y, 
+    -- which means that d ∘ (α ∘ f ⊎ β ∘ g) z = 0  for all z : X ⊎ Y.
+    --
+    --
+    --  [ ((freeBA A /Im f) ×BR (freeBA B /Im g)) , D ]
+
+--    quotientEqu : BooleanRingEquiv 
+--      ((freeBA A /Im f) ×BR (freeBA B /Im g)) 
+--      ((freeBA (A ⊎ B)) /Im (⊎.map f g) ) 
+--    quotientEqu = {! !} 
+    -- here the idea is that
+    -- ((freeBA A / Im f) x freeBA B /Im g , D) = 
+    -- [(freeBA A / Im f) , D] + [(freeBA B /Im g) , D] = 
+    -- (Σ[ α ∈ freeBA A , D ] α∘f = 0) + (Σ[ β ∈ freeBA B , D ] β∘f = 0) = 
+    --
+    --
+  -- Sketch using universal properties of freeBA and ⊎ 
+  --          (freeBA (A ⊎ B) , D) ≃ (A ⊎ B , D) ≃ (A , ⟨ D ⟩) × (B , ⟨ D ⟩) ≃ 
+  --          (freeBA A , D) x (freeBA B , D) ≅
+  --          (freeBA A + freeBA B , D) 
+  --          And then use some yoneda-trick of [A , D] = [B , D] for all D, then A = B
+  --
+  --          (D , freeBA A × freeBA B) = (D , freeBA A) ⊎ (D , freeBA B) 
 
 module _ where
   open IsCommRingHom
-  ×BR-map : {B C D E : BooleanRing ℓ-zero} → BoolHom B D → 
-       BoolHom C E → BoolHom (B ×BR C) (D ×BR E)
-  ×BR-map f g .fst = map-× (fst f) (fst g)
-  ×BR-map f g .snd = {!  !} 
-  
   Equ×Map : {B C D E : BooleanRing ℓ-zero} → BooleanRingEquiv B D → 
        BooleanRingEquiv C E → BooleanRingEquiv (B ×BR C) (D ×BR E)
   Equ×Map f g .fst .fst = map-× {! fst f  !} {! !}
@@ -90,13 +129,13 @@ module ProductPresentation (B C : BooleanRing ℓ-zero) where
            (BGens ⊎ CGens) , has-Countability-structure-⊎ BGensCount CGensCount , 
            (X ⊎ Y) , has-Countability-structure-⊎ XCount YCount , 
            fst (fst sumFreeEqu) ∘ combMap , 
-           (EquivQuotBR sumFreeEqu combMap) ∘cre {! quotientEqu !} ∘cre Equ×Map 
+           (EquivQuotBR sumFreeEqu combMap) ∘cre {! !} ∘cre Equ×Map 
              B=FreeG/f C=FreeG/g where
            -- Sketch:
-           -- B ×BR C ≃ (freeBA BGens / f) (freeBA CGens / g) ≃
+           -- B ×BR C ≃ (freeBA BGens / f) ×BR (freeBA CGens / g) ≃
            --           ((freeBA (A ⊎ B)) /Im (fst (fst sumFreeEqu) ∘ combMap))
            --           
-           --           
+           --
            open freeBASum BGens CGens
            open quotient f g 
 

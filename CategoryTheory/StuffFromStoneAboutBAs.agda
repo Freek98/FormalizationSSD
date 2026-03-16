@@ -83,7 +83,6 @@ BACat .isSetHom {x = B} {y = C} = isSetBoolHom B C
 BooleωCat : Category (ℓ-suc ℓ-zero) ℓ-zero
 BooleωCat = ΣPropCat* BACat λ B → is-countably-presented-alt B , squash₁ 
 
-{-
 module _ (B C : BooleanRing ℓ-zero)  where
   open isIso
   -- Idea : show BACAT is Univalent 
@@ -241,4 +240,3 @@ Sp⊣2^ = adj'→adj _ _ Sp⊣2^'
 
 SpFunctor : Functor BooleωCat ((SET ℓ-zero) ^op)
 SpFunctor = SpGeneralFunctor ∘F BooleωEmbedding
--}

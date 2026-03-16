@@ -149,6 +149,10 @@ module ΣBoolCountable (α : binarySequence) where
 -- ════════════════════════════════════════════════════════════════
 -- Main results: closure properties of is-countable
 -- ════════════════════════════════════════════════════════════════
+
+has-Countability-structure-Iso : {A B : Type} → has-Countability-structure A → Iso A B → has-Countability-structure B 
+has-Countability-structure-Iso (α , A≃Σℕα) A≃B = α , compIso (invIso A≃B) A≃Σℕα 
+
 has-Countability-structure-× : {A B : Type}
   → has-Countability-structure A → has-Countability-structure B → has-Countability-structure (A × B)
 has-Countability-structure-× (α , iA) (β , iB) = 
