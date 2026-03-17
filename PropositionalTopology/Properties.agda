@@ -3,6 +3,7 @@ open import PropositionalTopology.Definitions
 
 open import BinarySequences
 open import Cubical.Foundations.Isomorphism
+open Iso
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
 open import Cubical.Data.Nat.Bijections.Sum
@@ -151,3 +152,69 @@ decIsOpen P (no ¬p) = ∣ (λ _ → false) , (λ p₁ → ex-falso (¬p p₁)) 
 decIsClosed : (P : hProp ℓ-zero) → Dec ⟨ P ⟩ → isClosedProp P
 decIsClosed P (yes p) = ∣ (λ _ → false) , (λ _ _ → refl) , (λ _ → p) ∣₁
 decIsClosed P (no ¬p) = ∣ (λ _ → true) , (λ p₁ → ex-falso (¬p p₁)) , (λ f → ex-falso (true≢false (f 0))) ∣₁
+
+ℕ⊓ : {ℓ : Level} → (P : ℕ → hProp ℓ) → hProp ℓ
+ℕ⊓ P = (∀ n → ⟨ P n ⟩) , isPropΠ λ n → snd (P n) 
+
+ℕ⊔ : {ℓ : Level} → (P : ℕ → hProp ℓ) → hProp ℓ
+ℕ⊔ P = ( ∃[ n ∈ ℕ ] ⟨ P n ⟩) , squash₁ 
+
+ClosedWitnessℕ⊓ : 
+  (P : ℕ → hProp ℓ-zero)
+  → ((n : ℕ) → isClosedWitness (P n))
+  → isClosedWitness (ℕ⊓ P)
+
+ClosedWitnessℕ⊓ P w = β , ∀P→β , β→∀P where
+  βSplit : ℕ → ℕ → Bool 
+  βSplit n = fst (w n)
+
+  β : binarySequence
+  β = uncurry βSplit ∘ inv ℕ×ℕ≅ℕ 
+
+  ∀P→β : ((n : ℕ) → ⟨ P n ⟩) → (k : ℕ) → β k ≡ false
+  ∀P→β allP k = fst (snd (w n)) (allP n) m where
+    n = fst (inv ℕ×ℕ≅ℕ k)
+    m = snd (inv ℕ×ℕ≅ℕ k)
+
+  β→∀P : ((k : ℕ) → β k ≡ false) → (n : ℕ) → ⟨ P n ⟩
+  β→∀P allβ n = snd (snd (w n)) βSplitnm=0 where
+    βSplitnm=0 : (m : ℕ) → βSplit n m ≡ false
+    βSplitnm=0 m =
+      βSplit n m
+        ≡⟨ sym (cong (uncurry βSplit) (ret ℕ×ℕ≅ℕ (n , m))) ⟩
+      β (fun ℕ×ℕ≅ℕ (n , m))
+        ≡⟨ allβ (fun ℕ×ℕ≅ℕ (n , m)) ⟩
+      false ∎
+
+OpenWitnessℕ⊔ : (P : ℕ → hProp ℓ-zero)
+  → (w : (n : ℕ) → isOpenWitness (P n))
+  → isOpenWitness (ℕ⊔ P)
+OpenWitnessℕ⊔ P w = β , ∃P→Σβ , ∣_∣₁ ∘ Σβ→ΣP  where
+  βSplit : ℕ → ℕ → Bool 
+  βSplit n = fst (w n)
+
+  β : binarySequence
+  β k = uncurry βSplit (inv ℕ×ℕ≅ℕ k) 
+
+  Σβ→ΣP : Σℕ β → Σ[ n ∈ ℕ ] ⟨ P n ⟩
+  Σβ→ΣP (k , βk=t) = n , snd (snd (w n)) (m , βSplitnm=t) where
+    n = fst (inv ℕ×ℕ≅ℕ k)
+    m = snd (inv ℕ×ℕ≅ℕ k)
+    βSplitnm=t : βSplit n m ≡ true
+    βSplitnm=t = βk=t
+
+  ΣP→Σβ : Σ[ n ∈ ℕ ] ⟨ P n ⟩ → Σℕ β 
+  ΣP→Σβ (n , pn) = let 
+    (m , βSplitnm=t) = fst (snd (w n)) pn
+    k = fun ℕ×ℕ≅ℕ (n , m)
+    eq : inv ℕ×ℕ≅ℕ k ≡ (n , m)
+    eq = ret ℕ×ℕ≅ℕ (n , m)
+    βk=t : β k ≡ true
+    βk=t = cong (λ p → βSplit (fst p) (snd p)) eq ∙ βSplitnm=t
+    in  (k , βk=t) 
+
+  ∃P→∃β : ∃[ n ∈ ℕ ] ⟨ P n ⟩ → ∥ Σℕ β ∥₁
+  ∃P→∃β = PT.map ΣP→Σβ
+  ∃P→Σβ :  ∃[ n ∈ ℕ ] ⟨ P n ⟩ → Σℕ β
+  ∃P→Σβ = extract ∘ ∃P→∃β where
+    open extractFirstHitInBinarySequence β
