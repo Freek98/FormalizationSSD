@@ -215,6 +215,7 @@ OpenWitnessℕ⊔ P w = β , ∃P→Σβ , ∣_∣₁ ∘ Σβ→ΣP  where
 
   ∃P→∃β : ∃[ n ∈ ℕ ] ⟨ P n ⟩ → ∥ Σℕ β ∥₁
   ∃P→∃β = PT.map ΣP→Σβ
+
   ∃P→Σβ :  ∃[ n ∈ ℕ ] ⟨ P n ⟩ → Σℕ β
   ∃P→Σβ = extract ∘ ∃P→∃β where
     open extractFirstHitInBinarySequence β

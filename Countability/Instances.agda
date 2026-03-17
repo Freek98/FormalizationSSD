@@ -20,6 +20,7 @@ open import Cubical.Data.Nat.Bijections.Sum using (ℕ⊎ℕ≅ℕ)
 open import Cubical.HITs.PropositionalTruncation as PT
 
 open import BasicDefinitions
+open import BinarySequences
 
 ℕcount : has-Countability-structure ℕ
 ℕcount .fst _ = true
@@ -40,6 +41,14 @@ open import BasicDefinitions
   ℕ×ℕ-Diag≃ΣℕP .Iso.inv ((n , m) , Pnm=t) = (n , m) , λ n=m → {! case (discreteℕ n m) of ?  !} 
   ℕ×ℕ-Diag≃ΣℕP .Iso.sec _ = Σ≡Prop (λ _ → isSetBool _ _) refl
   ℕ×ℕ-Diag≃ΣℕP .Iso.ret _ = Σ≡Prop (λ _ → isPropΠ λ _ → isProp⊥) refl 
+--  ℕ×ℕ-Diag≃ΣℕP : Iso ℕ×ℕ-Diag (Σ[ p ∈ (ℕ × ℕ) ] P p ≡ true)
+--  ℕ×ℕ-Diag≃ΣℕP .Iso.fun ((n , m) , n≢m) =
+--    (n , m) , ¬false→true (not (n ≡ᵇ m)) λ not-eq-false →
+--      n≢m (≡ᵇ-true→≡ n m (not-false→orig-true (n ≡ᵇ m) not-eq-false))
+--  ℕ×ℕ-Diag≃ΣℕP .inv ((n , m) , Pnm=t) =
+--    (n , m) , λ n=m → true≢false (sym Pnm=t ∙ orig-true→not-false (n ≡ᵇ m) (≡→≡ᵇ-true n m n=m))
+--  ℕ×ℕ-Diag≃ΣℕP .sec _ = Σ≡Prop (λ _ → isSetBool _ _) refl
+--  ℕ×ℕ-Diag≃ΣℕP .ret _ = Σ≡Prop (λ _ → isPropΠ λ _ → isProp⊥) refl
   
 
 
