@@ -36,9 +36,27 @@ module SequentialColimitOfFiniteTypes
     (snd (isProp≤ {m = n} {n = m} p q i)) 
     (iterMap n (fst (isProp≤ p q i)) x) 
 
-  ιnmcomp : {n m k : ℕ} → (n≤m : n ≤ m) → (m≤k : m ≤ k) → (n≤k : n ≤ k) → (x : X n) → 
+  iterMapComp : (n m k : ℕ) (x : X n)
+    → PathP (λ i → X (+-assoc k m n i)) (iterMap (m + n) k (iterMap n m x)) (iterMap n (k + m) x)
+  iterMapComp n m zero x = refl
+  iterMapComp n m (suc k) x = congP (λ _ → Xmap) (iterMapComp n m k x)
+
+  ιnmcomp : {n m k : ℕ} → (n≤m : n ≤ m) → (m≤k : m ≤ k) → (n≤k : n ≤ k) → (x : X n) →
     ιnm m≤k (ιnm n≤m x) ≡ ιnm n≤k x
-  ιnmcomp n≤m m≤k n≤k x = {!  !} 
+  ιnmcomp {n} {m} {k} n≤m m≤k n≤k x =
+    inductionLemma n (n≤m .fst) (m≤k .fst) x m (n≤m .snd) k (m≤k .snd) n≤k
+    where
+    inductionLemma : (n d e : ℕ) (x : X n)
+      (m : ℕ) (p : d + n ≡ m)
+      (k : ℕ) (q : e + m ≡ k)
+      (n≤k : n ≤ k)
+      → ιnm (e , q) (ιnm (d , p) x) ≡ ιnm n≤k x
+    inductionLemma n d e x =
+      J> J> λ n≤k →
+      transportRefl _
+      ∙ cong (iterMap (d + n) e) (transportRefl _)
+      ∙ sym (fromPathP (symP (iterMapComp n d e x)))
+      ∙ cong (λ le → ιnm le x) (isProp≤ _ _)
 
   ιnmPres : {n m k l : ℕ} (n≤k : n ≤ k) (m≤k : m ≤ k) (k≤l : k ≤ l) (n≤l : n ≤ l) (m≤l : m ≤ l) (x : X n) (y : X m) → ιnm n≤k x ≡ ιnm m≤k y → ιnm n≤l x ≡ ιnm m≤l y
   ιnmPres n≤k m≤k k≤l n≤l m≤l x y p = 
