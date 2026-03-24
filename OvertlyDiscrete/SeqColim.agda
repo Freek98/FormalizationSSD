@@ -7,12 +7,57 @@ open import Cubical.Foundations.Transport
 open import Cubical.Foundations.HLevels
 open import Cubical.Data.Nat
 open import Cubical.Data.Sigma
+open import Cubical.Data.Sum
 open import Cubical.Data.Nat.Order
+import Cubical.Data.Nat.Order.Recursive as Rec
+open Rec.Minimal
 open import Cubical.Relation.Nullary
 open import Cubical.Data.FinSet
+open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Sequence
 open import Cubical.HITs.SequentialColimit 
 open import Cubical.HITs.PropositionalTruncation as PT
+
+data _≤E_ : (n m : ℕ) → Type where
+  ≤E-refl : {n : ℕ} → n ≤E n
+  ≤E-suc : {n m : ℕ} → n ≤E m → n ≤E suc m
+
+suc-≤E-suc : {n m : ℕ} → n ≤E m → suc n ≤E suc m 
+suc-≤E-suc ≤E-refl = ≤E-refl
+suc-≤E-suc (≤E-suc c) = ≤E-suc (suc-≤E-suc c) 
+
+≤E→≤ : {n m : ℕ} → n ≤E m → n ≤ m 
+≤E→≤ ≤E-refl = ≤-refl
+≤E→≤ (≤E-suc x) = ≤-suc (≤E→≤ x) 
+
+≤→≤E : {n m : ℕ} → (n ≤ m) → n ≤E m 
+≤→≤E {n} {m} (k , p) = helper n m k p where
+  helper : (n m k : ℕ) → (p : k + n ≡ m) → n ≤E m
+  helper n m zero p = subst (λ m' → n ≤E m') p ≤E-refl
+  helper n zero (suc k) p = ex-falso (¬-<-zero (n , +-comm n (suc k) ∙ p))
+  helper n (suc m) (suc k) p = ≤E-suc (helper n m k (cong predℕ p)) 
+
+≤Induction' : (k : ℕ) → (P : (n : ℕ) → k ≤ n → Type) → P k ≤-refl → 
+  ((l : ℕ) → (k≤l : k ≤ l) → P l k≤l) → (m : ℕ) → (k≤m : k ≤ m) → P m k≤m
+≤Induction' k P Pk Psuc (suc m) k≤m = case ≤-split k≤m of λ 
+  { (inl k<m) → {! !}
+  ; (inr k=m) → {! !} } 
+≤Induction' k P Pk Psuc zero k≤m = {! !}
+
+≤Induction : (P : ℕ → Type) → (k : ℕ) → P k → ((l : ℕ) → P l → P (suc l)) → (m : ℕ) → k ≤ m → P m 
+≤Induction P k Pk Psuc (suc m) k≤m = case (≤-split k≤m)  of λ 
+  { (inl (n , n+sk=sm)) → Psuc m (≤Induction P k Pk Psuc m (n , {! n+sk=sm !}))
+  ; (inr k=sucm) → subst P k=sucm Pk }
+≤Induction P zero Pk Psuc zero k≤m = Pk
+≤Induction P (suc k) Pk Psuc zero k≤m = ex-falso (¬-<-zero k≤m)
+
+decΣProp : {A : Type} {B : A → Type} → isProp A → (( a : A) → isProp (B a)) → Dec A → ((a : A) → Dec (B a)) → Dec (Σ[ a ∈ A ] (B a))
+decΣProp {A = A} {B = B} Aprop Bprop (yes a) Bdec with Bdec a 
+... | yes b = yes (a , b)
+... | no ¬p = no λ ((a' , b)) → ¬p (subst B (Aprop a' a) b) 
+decΣProp Aprop Bprop (no ¬p) Bdec = no (¬p ∘ fst) 
+
+--decΣProp2 : {A : Type} {B : A → Type} {C : (a : A) → B a → Type} → 
 
 module SequentialColimitOfFiniteTypes 
   (X : ℕ → Type) (Xmap : {n : ℕ} → X n → X (suc n))
@@ -30,6 +75,10 @@ module SequentialColimitOfFiniteTypes
 
   ιnm : {n m : ℕ} → (n ≤ m) → X n → X m 
   ιnm {n} {m} (d , d+n=m) x = subst X d+n=m (iterMap n d x) 
+
+  ιnm' : {n m : ℕ} → n ≤E m → X n → X m 
+  ιnm' ≤E-refl x = x
+  ιnm' (≤E-suc k) x = Xmap (ιnm' k x) 
 
   ιnmUseProp : {n m : ℕ} → {p q : n ≤ m} → (x : X n) → ιnm p x ≡ ιnm q x
   ιnmUseProp {n}{m}{p}{q} x i = subst X 
@@ -64,6 +113,21 @@ module SequentialColimitOfFiniteTypes
     ιnm k≤l (ιnm n≤k x) ≡⟨ cong (ιnm k≤l) p ⟩ 
     ιnm k≤l (ιnm m≤k y) ≡⟨ ιnmcomp m≤k k≤l m≤l y ⟩ 
     ιnm m≤l y ∎
+  
+--  ιnm'Incl : {n m : ℕ} → (n≤m : n ≤E m) → (x : X n) → 
+--    incl {n = n} x ≡ incl {n = m} (ιnm' n≤m x)
+--  ιnm'Incl ≤E-refl x = refl
+--  ιnm'Incl {n = n} {m = (suc m)} (≤E-suc c) x = 
+--    incl {n = n} x ≡⟨ push {n = n} x ⟩ 
+--    incl {n = suc n} (Xmap {n = n} x) 
+--      ≡⟨ ιnm'Incl {n = suc n} {m = suc m} (suc-≤E-suc {n = n} {m = m} c) (Xmap x) ⟩ 
+--    incl (ιnm' (suc-≤E-suc c) (Xmap x)) 
+--      ≡⟨ sym {! push   !} ⟩ 
+--    incl {n = suc m} (ιnm' {n = n} (≤E-suc c) x)  ∎
+--
+  ιnmIncl : {n m : ℕ} → (n≤m : n ≤ m) → (x : X n) → incl {n = n} x ≡ incl {n = m} (ιnm n≤m x)
+  ιnmIncl {n} {m} n≤m x = ≤Induction' n (λ k n≤k → incl {n = n} x ≡ incl {n = k} (ιnm n≤k x)) 
+    {! refl !} {! !} {! !} {! !} -- ≤Induction {! !} {! !} {! !} {! !} {! !} {! !} 
 
   X∞ : Type 
   X∞ = SeqColim Xseq
@@ -76,15 +140,20 @@ module SequentialColimitOfFiniteTypes
   isPropEqualAt k = isPropΣ isProp≤ λ _ → isPropΣ isProp≤ λ _ → isFinSet→isSet (isFin k) _ _ 
 
   isDecEqualAt : {n m : ℕ} → {x : X n} → {y : X m} → (k : ℕ) → Dec (EqualAt x y k)
-  isDecEqualAt {n} {m} {x} {y} k with (≤Dec n k) , (≤Dec m k) 
-  ... | _ , no ¬p = no  λ (_ , m≤k , _) → ¬p m≤k 
-  ... | no ¬p , _ = no λ (n≤k , _) → ¬p n≤k
-  ... | yes n≤k , yes m≤k with (isFinSet→Discrete (isFin k) (ιnm n≤k x) (ιnm m≤k y) ) 
-  ... | yes p₂ = yes (n≤k , m≤k , p₂)
-  ... | no ¬p = no λ (_ , _ , z) → ¬p {!  !} -- here there should be some use of ιnm not really caring about what the input of the inequality is. 
+  isDecEqualAt k = 
+    decΣProp isProp≤ 
+    (λ _ → isPropΣ isProp≤ λ _ → isFinSet→isSet (isFin k) _ _) (≤Dec _ _) λ _ → 
+    decΣProp isProp≤ 
+    (λ _ → isFinSet→isSet (isFin k) _ _) (≤Dec _ _) λ _ → isFinSet→Discrete (isFin k) _ _  
+
+  
 
   EqWitness : {n m : ℕ} → (x : X n) → (y : X m) → Type
   EqWitness x y = Σ[ k ∈ ℕ ] EqualAt x y k
+
+  EqWitnessSplitSupport : {n m : ℕ} → (x : X n) → (y : X m) →  SplitSupport $ EqWitness x y
+  EqWitnessSplitSupport x y = Collapsible→SplitSupport $ Decidable→Collapsible 
+    isPropEqualAt isDecEqualAt
 
   EqWitness-refl : {n : ℕ} (x : X n) → EqWitness x x
   EqWitness-refl {n} x = n , ≤-refl , ≤-refl , refl 
@@ -114,6 +183,10 @@ module SequentialColimitOfFiniteTypes
 
   EqWitnessPushCase← : {n m : ℕ} (x : X n) (y : X m) → ∥ EqWitness x (Xmap y) ∥₁ → ∥ EqWitness x y ∥₁ 
   EqWitnessPushCase← x y = PT.map (EqWitness-trans-inc-sym x y) 
+  
+  EqWitness→EqX∞ : {n m : ℕ} → (x : X n) → (y : X m) → EqWitness x y → 
+    incl {n = n} x ≡ incl {n = m} y 
+  EqWitness→EqX∞ x y (k , n≤k , m≤k , ιnmx=ιnmy ) = {!  ιnmPres !} 
 
   Code : (n : ℕ) → (x : X n) (y : X∞) → Type
   Code n x (incl y) = ∥ EqWitness x y ∥₁
