@@ -184,23 +184,23 @@ module FiniteSeqColim
     incl (ι m≤k y) ≡⟨ sym (ι-incl m≤k y) ⟩ 
     incl y ∎
 
+
+  EqWitness-push→ : {n m : ℕ} (x : X n) (y : X m)
+    → EqWitness x y → EqWitness x (Xmap y)
+  EqWitness-push→ x y w = 
+    EqWitness-trans x y _ w (EqWitness-suc y)
+
+  EqWitness-push← : {n m : ℕ} (x : X n) (y : X m)
+    → EqWitness x (Xmap y) → EqWitness x y
+  EqWitness-push← x y w = 
+    EqWitness-trans x (Xmap y) y w 
+    (EqWitness-sym y _ (EqWitness-suc y))
   Code : (n : ℕ) → X n → X∞ → Type
   Code n x (incl y) = ∥ EqWitness x y ∥₁
   Code n x (push y i) =
     hPropExt squash₁ squash₁
       (PT.map (EqWitness-push→ x y))
-      (PT.map (EqWitness-push← x y)) i where
-
-    EqWitness-push→ : {n m : ℕ} (x : X n) (y : X m)
-      → EqWitness x y → EqWitness x (Xmap y)
-    EqWitness-push→ x y w = 
-      EqWitness-trans x y _ w (EqWitness-suc y)
-
-    EqWitness-push← : {n m : ℕ} (x : X n) (y : X m)
-      → EqWitness x (Xmap y) → EqWitness x y
-    EqWitness-push← x y w = 
-      EqWitness-trans x (Xmap y) y w 
-      (EqWitness-sym y _ (EqWitness-suc y))
+      (PT.map (EqWitness-push← x y)) i 
 
 
   encode : (n : ℕ) (x : X n) (y : X∞) → incl x ≡ y → Code n x y
@@ -215,7 +215,7 @@ module FiniteSeqColim
 
   decode : (n : ℕ) (x : X n) (y : X∞) → Code n x y → incl x ≡ y
   decode n x (incl y) c = EqWitness→Path x y (EqWitness-splitSupport x y c)
-  decode n x (push {n = m} y i) c = {! x=pushyi i1 !} where
+  decode n x (push {n = m} y i) c = {! !} where -- hcomp (λ j → {! !}) x=pushyi where
     c' : Code n x (push y i)
     c' = c 
     cAt0' : Code n x (incl y) 
@@ -229,13 +229,30 @@ module FiniteSeqColim
 
     Eqxy : EqWitness x y 
     Eqxy = EqWitness-splitSupport x y cAt0 
+
+    EqxMy : EqWitness x (Xmap y)
+    EqxMy = EqWitness-push→ x y Eqxy 
+
     x=y : incl x ≡ incl y 
     x=y = EqWitness→Path x y Eqxy 
+    
+    x=my : incl x ≡ incl (Xmap y)
+    x=my = EqWitness→Path x (Xmap y) EqxMy 
+
+
+    {-        x=y
+    --     ιx---ιy
+    --     |    |
+    -- refl|    | ??? 
+    --     |    |
+    --     ιx---ι(m y)     
+    --        x=my
+    -}
     x=pushyi : incl x ≡ push y i
     x=pushyi = x=y ∙ λ j → push y (i ∧ j) 
     
-    x=my : incl x ≡ incl (Xmap y)
-    x=my = {! !} 
+    pushyi=my : (push y i) ≡ incl (Xmap y)
+    pushyi=my = λ j → push y (i ∨ j) 
 
     {-
 
