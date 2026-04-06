@@ -1,8 +1,10 @@
+{-# OPTIONS --lossy-unification #-}
 module OvertlyDiscrete.SeqColim where
--- originally human, then cleaned up and refactored with AI help. See 9cfdd16c9820ce97dbb46cb70846233738f5c184 for the version that was human
+-- at some points cleaned up with AI help. See 9cfdd16c9820ce97dbb46cb70846233738f5c184 for the version that was human
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Univalence 
 open import Cubical.Foundations.Function
+open import Cubical.Foundations.Equiv
 open import Cubical.Foundations.Transport
 open import Cubical.Foundations.HLevels
 open import Cubical.Data.Nat
@@ -206,16 +208,34 @@ module FiniteSeqColim
   encode : (n : ℕ) (x : X n) (y : X∞) → incl x ≡ y → Code n x y
   encode n x y p = J (λ y _ → Code n x y) ∣ EqWitness-refl x ∣₁ p
 
-  y=pushyi : {n : ℕ} → (y : X n) → (i : I)  → PathP (λ j → X∞) (incl y) (push y i) 
-  y=pushyi {n = n} y i j = push {n = n} y (i ∧ j) 
-  my=pushyi : {n : ℕ} → (y : X n) → (i : I)  → PathP (λ j → X∞) (push y i) (incl (Xmap y))
-  my=pushyi {n = n} y i j = push {n = n} y (i ∨ j) 
-  pushyi=pushyj : {n : ℕ} → (y : X n) → (i j : I) → PathP (λ k → X∞) (push y i) (push y j)
-  pushyi=pushyj y i j = (sym $ y=pushyi y i) ∙ y=pushyi y j 
+--  y=pushyi : {n : ℕ} → (y : X n) → (i : I)  → PathP (λ j → X∞) (incl y) (push y i) 
+--  y=pushyi {n = n} y i j = push {n = n} y (i ∧ j) 
+--  my=pushyi : {n : ℕ} → (y : X n) → (i : I)  → PathP (λ j → X∞) (push y i) (incl (Xmap y))
+--  my=pushyi {n = n} y i j = push {n = n} y (i ∨ j) 
+--  pushyi=pushyj : {n : ℕ} → (y : X n) → (i j : I) → PathP (λ k → X∞) (push y i) (push y j)
+--  pushyi=pushyj y i j = (sym $ y=pushyi y i) ∙ y=pushyi y j 
 
   decode : (n : ℕ) (x : X n) (y : X∞) → Code n x y → incl x ≡ y
   decode n x (incl y) c = EqWitness→Path x y (EqWitness-splitSupport x y c)
-  decode n x (push {n = m} y i) c = {! !} where -- hcomp (λ j → {! !}) x=pushyi where
+  decode n x (push {n = m} y i) c = 
+    ua→ {A₀ = ∥ EqWitness x y ∥₁ } {A₁ = ∥ EqWitness x (Xmap y) ∥₁ } 
+        {e = propBiimpl→Equiv squash₁ squash₁ 
+          (PT.map $ EqWitness-push→ x y) (PT.map $ EqWitness-push← x y  )  } 
+        {B = λ j → incl x ≡ (push y j) } 
+        {f₀ = λ c → EqWitness→Path x y (EqWitness-splitSupport x y c)} 
+        {f₁  = λ c → EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) c )} 
+        f i c where 
+--    f' : (a : ∥ EqWitness x y ∥₁) → PathP (λ j → incl x ≡ push y j) 
+--        (EqWitness→Path x y (EqWitness-splitSupport x y a)) 
+--        (EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) {! !})) 
+--    f' a = {!  !} 
+
+    f : (a : ∥ EqWitness x y ∥₁) → PathP (λ j → incl x ≡ push y j) 
+        (EqWitness→Path x y (EqWitness-splitSupport x y a)) 
+        (EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) 
+        (PT.map (EqWitness-push→ x y) a))) 
+    f a = {! !} 
+    {- 
     c' : Code n x (push y i)
     c' = c 
     cAt0' : Code n x (incl y) 
@@ -247,13 +267,15 @@ module FiniteSeqColim
     --     |    |
     --     ιx---ι(m y)     
     --        x=my
+    --
+    --  goal : x = push y i with these end points. 
     -}
     x=pushyi : incl x ≡ push y i
     x=pushyi = x=y ∙ λ j → push y (i ∧ j) 
     
     pushyi=my : (push y i) ≡ incl (Xmap y)
     pushyi=my = λ j → push y (i ∨ j) 
-
+-}
     {-
 
 
