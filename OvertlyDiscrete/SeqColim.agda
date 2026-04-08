@@ -67,8 +67,8 @@ module SeqColimMaps {ℓ : Level} (S : Sequence ℓ) where
   ι≤ : {n m : ℕ} → n ≤ m → X n → X m
   ι≤ p = ι (≤→≤E p)
 
-  ι-propIrrel : {n m : ℕ} (p q : n ≤E m) (x : X n) → ι p x ≡ ι q x
-  ι-propIrrel p q x = cong (λ r → ι r x) (isProp≤E p q)
+  ι-propIrrel : {n m : ℕ} (n≤m n≤m' : n ≤E m) (x : X n) → ι n≤m x ≡ ι n≤m' x
+  ι-propIrrel n≤m n≤m' x = cong (λ r → ι r x) (isProp≤E n≤m n≤m')
 
   ι-comp : {n m k : ℕ} (p : n ≤E m) (q : m ≤E k) (x : X n)
     → ι q (ι p x) ≡ ι (≤E-trans p q) x
@@ -80,6 +80,9 @@ module SeqColimMaps {ℓ : Level} (S : Sequence ℓ) where
   ι-incl ≤E-refl x = refl
   ι-incl (≤E-step p) x =
     ι-incl p x ∙ push (ι p x)
+  -- so as a matter of fact, ι-incl is a lot of compositions with push. 
+  -- And actually, it's the only equality in X∞ we actually use. 
+  -- Shouldn't this be sufficient somehow to prove that in the end, we only pick out one equality, namely one that comes from composing many pushes? 
 
   ι≤-incl : {n m : ℕ} (p : n ≤ m) (x : X n)
     → incl {X = S} x ≡ incl (ι≤ p x)
@@ -160,7 +163,7 @@ module FiniteSeqColim
   EqWitness-sym _ _ (k , p , q , e) = k , q , p , sym e
 
   EqWitness-suc : {n : ℕ} (x : X n) → EqWitness x (Xmap x)
-  EqWitness-suc x = _ , ≤E-step ≤E-refl , ≤E-refl , refl
+  EqWitness-suc {n = n} x = suc n , ≤E-step ≤E-refl , ≤E-refl , refl
 
   EqWitness-trans : {n m l : ℕ} (x : X n) (y : X m) (z : X l)
     → EqWitness x y → EqWitness y z → EqWitness x z
@@ -185,7 +188,55 @@ module FiniteSeqColim
     incl (ι n≤k x) ≡⟨ cong incl p ⟩
     incl (ι m≤k y) ≡⟨ sym (ι-incl m≤k y) ⟩ 
     incl y ∎
+  -- We thus have a composition of ι-incl, then conging with equality, and then a flipped around ι-incl. Thus we have many pushes, then cong incl p, then some push backs. 
+  -- But if p = refl, then we have only a composition of ι-incl. 
+  -- Even better, p is equal to refl, as it's an equality in a set. 
+  -- So we should be able to prove by induction that if y = Xmap y, the difference is composing with push. 
+  --
 
+  module helpWithPaths where
+    repPush : {n : ℕ} (x : X n) (y : X n) (k : ℕ) (n≤k : n ≤E k) → 
+      (p : x ≡ y) → (q : ι n≤k x ≡ ι n≤k y) → 
+      (cong incl p) ∙ (ι-incl n≤k y) ≡ (ι-incl n≤k x) ∙ cong incl q
+    repPush x y k n≤k p q = naturality ∙ cong (λ h → ι-incl n≤k x ∙ cong incl h) qirrel where
+      naturality : (cong incl p) ∙ (ι-incl n≤k y) ≡ (ι-incl n≤k x) ∙ cong incl (cong (ι n≤k) p)
+      naturality = sym $ homotopyNatural (ι-incl n≤k) p
+      qirrel : cong (ι n≤k) p ≡ q
+      qirrel = isFinSet→isSet (isFin k) _ _ (cong (ι n≤k) p) q 
+  
+  EqWitnessDon'tCareHelper : {n m : ℕ} (x : X n) (y : X m)
+    (k  : ℕ) → (n≤k  : n ≤E k ) → (m≤k  : m ≤E k ) → (p : ι n≤k  x ≡ ι m≤k  y) → 
+    (k' : ℕ) → (n≤k' : n ≤E k') → (m≤k' : m ≤E k') → (q : ι n≤k' x ≡ ι m≤k' y) → 
+    EqWitness→Path x y (k  , n≤k  , m≤k  , p) ≡ 
+    EqWitness→Path x y (k' , n≤k' , m≤k' , q)
+  EqWitnessDon'tCareHelper x y k n≤k m≤k p k' n≤k' m≤k' q = {! !}
+
+  EqWitnessDon'tCare : {n m : ℕ} (x : X n) (y : X m) → 
+    (a b : EqWitness x y) → EqWitness→Path x y a ≡ EqWitness→Path x y b
+  EqWitnessDon'tCare  x y (k , n≤k , m≤k , p) (k' , n≤k' , m≤k' , q) = 
+    EqWitnessDon'tCareHelper x y k n≤k m≤k p k' n≤k' m≤k' q 
+
+
+
+    
+
+
+        
+
+
+  EqWitnessPathIsPushComposition : {n m : ℕ} (x : X n) (y : X m)
+    (k  : ℕ) → (n≤k  : n ≤E k ) → (m≤k  : m ≤E k ) → (p : ι n≤k  x ≡ ι m≤k  y) → 
+    (k' : ℕ) → (n≤k' : n ≤E k') → (m≤k' : suc m ≤E k') → (q : ι n≤k' x ≡ ι m≤k' (Xmap y)) → 
+    EqWitness→Path x y (k , n≤k , m≤k , p) ∙ push y ≡ 
+    EqWitness→Path x (Xmap y) (k' , n≤k' , m≤k' , q)
+  EqWitnessPathIsPushComposition x y k n≤k m≤k p k' n≤k' m≤k' q = {! !}
+
+  EqWitnessPathComp : {n m : ℕ} (x : X n) (y : X m) → 
+   (a : EqWitness x y) → (b : EqWitness x (Xmap y)) → 
+   EqWitness→Path x y a ∙ push y ≡ EqWitness→Path x (Xmap y) b 
+
+  EqWitnessPathComp x y (k , n≤k , m≤k , p) (k' , n≤k' , m≤k' , q) = 
+    EqWitnessPathIsPushComposition x y k n≤k m≤k p k' n≤k' m≤k' q 
 
   EqWitness-push→ : {n m : ℕ} (x : X n) (y : X m)
     → EqWitness x y → EqWitness x (Xmap y)
@@ -197,6 +248,7 @@ module FiniteSeqColim
   EqWitness-push← x y w = 
     EqWitness-trans x (Xmap y) y w 
     (EqWitness-sym y _ (EqWitness-suc y))
+
   Code : (n : ℕ) → X n → X∞ → Type
   Code n x (incl y) = ∥ EqWitness x y ∥₁
   Code n x (push y i) =
@@ -204,9 +256,13 @@ module FiniteSeqColim
       (PT.map (EqWitness-push→ x y))
       (PT.map (EqWitness-push← x y)) i 
 
-
   encode : (n : ℕ) (x : X n) (y : X∞) → incl x ≡ y → Code n x y
   encode n x y p = J (λ y _ → Code n x y) ∣ EqWitness-refl x ∣₁ p
+  -- inzicht: gebruik splitsupport om dingen gelijk te krijgen in EqWitness x y en EqWitness x (Xmap y)
+  -- Kan je niet ervoor zorgen dat EqWitness altijd k gebruikt zodat die ook werkt voor Xmap y. 
+  -- Of makkelijker geval, wat als je alleen bewijst dat 
+  -- EqWitness x x en EqWitness x (Xmap x) behandelt?
+  -- 
 
 --  y=pushyi : {n : ℕ} → (y : X n) → (i : I)  → PathP (λ j → X∞) (incl y) (push y i) 
 --  y=pushyi {n = n} y i j = push {n = n} y (i ∧ j) 
@@ -226,15 +282,17 @@ module FiniteSeqColim
         {f₁  = λ c → EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) c )} 
         f i c where 
 --    f' : (a : ∥ EqWitness x y ∥₁) → PathP (λ j → incl x ≡ push y j) 
---        (EqWitness→Path x y (EqWitness-splitSupport x y a)) 
---        (EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) {! !})) 
---    f' a = {!  !} 
+--         (EqWitness→Path x y (EqWitness-splitSupport x y a)) 
+--         (EqWitness→Path x (Xmap y) (EqWitness-push→ x y (EqWitness-splitSupport x y a))) 
+--    f' a = {!   !} 
 
     f : (a : ∥ EqWitness x y ∥₁) → PathP (λ j → incl x ≡ push y j) 
         (EqWitness→Path x y (EqWitness-splitSupport x y a)) 
         (EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) 
         (PT.map (EqWitness-push→ x y) a))) 
-    f a = {! !} 
+    f a = {! EqWitnessPathComp !} where -- J {! !} {! !} (snd $ snd $ snd sup)  where
+      sup = EqWitness-splitSupport x y a
+      
     {- 
     c' : Code n x (push y i)
     c' = c 
