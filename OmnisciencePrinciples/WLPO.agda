@@ -1,5 +1,3 @@
-
-
 module OmnisciencePrinciples.WLPO where 
 
 open import Cubical.Data.Sigma
@@ -29,8 +27,8 @@ open import Cubical.Algebra.CommRing.Polynomials.Typevariate.Base as TV
 zeroSequence : binarySequence 
 zeroSequence _ = false
 
-evaluate : {A : Type} → (A → Bool) → BoolHom ( freeBA A ) BoolBR
-evaluate {A} α = inducedBAHom A BoolBR α 
+evaluate : {A : Type} → (A → Bool) → BoolHom (freeBA A) BoolBR
+evaluate {A} = inducedBAHom A BoolBR 
 
 _$freeℕ_ : binarySequence → freeBATerms ℕ → Bool
 _$freeℕ_ α a = evaluate α $cr fst includeBATermsSurj a 
@@ -66,7 +64,7 @@ opaque
   unfolding TV.var
   unfolding equalityFromEqualityOnGenerators 
   unfolding inducedBAHom
-  ignoreAtoms : (n m : ℕ) → (suc m ≤ n) → δ n ignores (Tvar m)
+  ignoreAtoms : (n m : ℕ) → (m < n) → δ n ignores (Tvar m)
   ignoreAtoms zero _          x = ex-falso (¬-<-zero x)
   ignoreAtoms (suc n) zero    _ = refl 
   ignoreAtoms (suc n) (suc m) x = ignoreAtoms n m (predℕ-≤-predℕ x) 

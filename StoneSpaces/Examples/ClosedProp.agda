@@ -1,10 +1,13 @@
 
 module StoneSpaces.Examples.ClosedProp where
 
+open import AntiEquivalence
+open import BasicDefinitions
 open import StoneSpaces.Spectrum
+open import PropositionalTopology.Definitions
+
 open import Cubical.Data.Unit
 open import Cubical.Data.Sum
-open import PropositionalTopology.OpenClosedProps
 
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
 open import Cubical.Data.Empty
@@ -31,8 +34,6 @@ open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
 open import Cubical.Foundations.Equiv
 open import Cubical.Foundations.Structure
-open import AntiEquivalence
-open import BasicDefinitions
 
 -- Goal : lemma 1.1.9 of the paper. 
 module ClosedPropIsStone (α : binarySequence) where

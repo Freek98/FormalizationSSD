@@ -56,3 +56,14 @@ module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  
   idealDecomp .(s · t) (IQ.mul {r = s} {x = t} t∈I )    = PT.map  (isMul (s · t) s t refl) (idealDecomp t t∈I)
   idealDecomp r        (IQ.squash r∈I r∈I' i)           = ∥∥-isPropDep isInIdeal 
                                                           (idealDecomp r r∈I) (idealDecomp r r∈I') refl i 
+
+  addSquash : (r : ⟨ R ⟩) → isInIdeal r → IQ.generatedIdeal R f r 
+  addSquash r (isImage .r x fx=r) = subst (IQ.generatedIdeal R f) fx=r (IQ.single x) 
+  addSquash r (iszero .r 0=r) = subst (IQ.generatedIdeal R f) 0=r IQ.zero
+  addSquash r (isSum .r s t r=s+t s∈I t∈I) = subst (IQ.generatedIdeal R f) (sym r=s+t) 
+    (IQ.add (addSquash s s∈I) (addSquash t t∈I))
+  addSquash r (isMul .r s t r=s·t t∈I) = 
+    subst (IQ.generatedIdeal R f) (sym r=s·t) 
+    (IQ.mul (addSquash t t∈I)) 
+
+

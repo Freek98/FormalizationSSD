@@ -1,11 +1,18 @@
-
-
 module OmnisciencePrinciples.Markov where 
 
 open import Axioms.StoneDuality
-open import StoneSpaces.Spectrum
 open import AntiEquivalence
 open import BinarySequences 
+
+open import StoneSpaces.Spectrum
+open import StoneSpaces.Examples.ClosedProp
+
+open import CommRingQuotients.ZeroInQuotient
+
+open import CountablyPresentedBooleanRings.Examples.BoolQuotientByBinarySequence
+open import CountablyPresentedBooleanRings.Definitions
+
+
 open import Cubical.Functions.Fixpoint
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
@@ -23,6 +30,7 @@ open import Cubical.Foundations.HLevels
 
 open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.BooleanRing
+open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Algebra.BooleanRing.Instances.Bool
 open import Cubical.Algebra.CommRing.Instances.Bool
 open import Cubical.Relation.Nullary
@@ -30,7 +38,6 @@ open import Cubical.Relation.Nullary
 open import Cubical.HITs.PropositionalTruncation as PT
 
 open  import BooleanRing.FreeBooleanRing.FreeBool
-
 open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
 open  import BooleanRing.FreeBooleanRing.freeBATerms
 
@@ -51,12 +58,18 @@ MarkovPrinciple = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ
 weakMarkovPrinciple : Type₀ 
 weakMarkovPrinciple = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → ∃[ n ∈ ℕ ] α n ≡ true
 
+weakMP→MP : weakMarkovPrinciple → MarkovPrinciple
+weakMP→MP wMP α = extractFirstHitInBinarySequence.extract α ∘ wMP α
+
 module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
-  2/α : BooleanRing _
-  2/α = BoolBR /Im α 
+  2/Thisα : BooleanRing _
+  2/Thisα = BoolBR /Im α 
+
+  2/αAsBA : countablyPresentedBooleanRing 
+  2/αAsBA = 2/α α 
  
-  module _ (f : BoolHom 2/α BoolBR) where
-    open BooleanRingStr (snd 2/α)
+  module _ (f : Sp 2/αAsBA) where
+    open BooleanRingStr (snd 2/Thisα)
     open IsCommRingHom
     
     f' : BoolHom BoolBR BoolBR
@@ -77,7 +90,17 @@ module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
 
     emptySp : ⊥
     emptySp = α≠0 αn=0 
+ 
+  module _ where
+    open BooleanRingStr (snd (fst 2/αAsBA))
+    0=1In2/α : StoneDualityAxiom → 𝟘 ≡ 𝟙
+    0=1In2/α sd = 0≡1-in-B sd 2/αAsBA emptySp where
+      open SpectrumEmptyImpliesTrivial
 
+--  open BooleanRingStr (snd BoolBR)
+--  1inαIdeal : StoneDualityAxiom → IQ.generatedIdeal BoolCR α 𝟙
+--  1inαIdeal sd = zeroInQuotient→inIdeal {! !} 𝟙 {! 0=1In2/α !}
+  
 module _ (α : binarySequence)  where
   t∈I→αn : isInIdeal BoolCR α true → Σ[ n ∈ ℕ ] α n ≡ true
   t∈I→αn (isImage .true n αn=true)          = n , αn=true
@@ -93,9 +116,20 @@ module _ (α : binarySequence)  where
   
   ∃αn : αI true → ∃[ n ∈ ℕ ] α n ≡ true 
   ∃αn x = PT.map t∈I→αn (idealDecomp BoolCR α true x) 
+  
+  open BooleanRingStr (snd BoolBR)
+--  𝟙inIdealα : αI true
+--  𝟙inIdealα = zeroInQuotient→inIdeal {! !} {! !} {! 0=1In2/α !} 
 
-weakMP→MP : weakMarkovPrinciple → MarkovPrinciple
-weakMP→MP wMP α = extractFirstHitInBinarySequence.extract α ∘ wMP α
+
+
+
+
+
+
+
+
+
 
 
 --mp-from-SD : StoneDualityAxiom → MarkovPrinciple

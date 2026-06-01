@@ -1,6 +1,8 @@
 module PropositionalTopology.Definitions where
 
+open import BasicDefinitions
 open import BinarySequences
+open import QuickFixes
 open import Cubical.Foundations.Isomorphism
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
@@ -17,12 +19,10 @@ open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
 
 open import Cubical.Relation.Nullary hiding (¬_)
-open import QuickFixes
 open import Cubical.HITs.PropositionalTruncation as PT
 
 open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.BooleanRing
-open import BasicDefinitions
 
 import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 import Cubical.Data.Sum as ⊎
