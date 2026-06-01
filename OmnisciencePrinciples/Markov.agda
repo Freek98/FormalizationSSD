@@ -7,7 +7,7 @@ open import BinarySequences
 open import StoneSpaces.Spectrum
 open import StoneSpaces.Examples.ClosedProp
 
-open import CommRingQuotients.ZeroInQuotient
+open import CommRingQuotients.TrivialIdeal
 
 open import CountablyPresentedBooleanRings.Examples.BoolQuotientByBinarySequence
 open import CountablyPresentedBooleanRings.Definitions
@@ -62,14 +62,11 @@ weakMP→MP : weakMarkovPrinciple → MarkovPrinciple
 weakMP→MP wMP α = extractFirstHitInBinarySequence.extract α ∘ wMP α
 
 module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
-  2/Thisα : BooleanRing _
-  2/Thisα = BoolBR /Im α 
-
   2/αAsBA : countablyPresentedBooleanRing 
   2/αAsBA = 2/α α 
  
   module _ (f : Sp 2/αAsBA) where
-    open BooleanRingStr (snd 2/Thisα)
+    open BooleanRingStr (snd (fst 2/αAsBA))
     open IsCommRingHom
     
     f' : BoolHom BoolBR BoolBR
@@ -91,15 +88,18 @@ module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
     emptySp : ⊥
     emptySp = α≠0 αn=0 
  
-  module _ where
-    open BooleanRingStr (snd (fst 2/αAsBA))
-    0=1In2/α : StoneDualityAxiom → 𝟘 ≡ 𝟙
-    0=1In2/α sd = 0≡1-in-B sd 2/αAsBA emptySp where
-      open SpectrumEmptyImpliesTrivial
-
---  open BooleanRingStr (snd BoolBR)
---  1inαIdeal : StoneDualityAxiom → IQ.generatedIdeal BoolCR α 𝟙
---  1inαIdeal sd = zeroInQuotient→inIdeal {! !} 𝟙 {! 0=1In2/α !}
+  open BooleanRingStr (snd (fst 2/αAsBA))
+  0=1In2/α : StoneDualityAxiom → 𝟘 ≡ 𝟙
+  0=1In2/α sd = 0≡1-in-B sd 2/αAsBA emptySp where
+    open SpectrumEmptyImpliesTrivial
+  
+  αIdeal : IdealsIn BoolCR
+  αIdeal = IQ.genIdeal BoolCR α
+  
+  opaque 
+    unfolding _/Im_
+    1inαIdeal : StoneDualityAxiom → IQ.generatedIdeal BoolCR α true
+    1inαIdeal sd = trivialQuotient→1∈I BoolCR αIdeal (sym $ 0=1In2/α sd) 
   
 module _ (α : binarySequence)  where
   t∈I→αn : isInIdeal BoolCR α true → Σ[ n ∈ ℕ ] α n ≡ true
@@ -116,33 +116,9 @@ module _ (α : binarySequence)  where
   
   ∃αn : αI true → ∃[ n ∈ ℕ ] α n ≡ true 
   ∃αn x = PT.map t∈I→αn (idealDecomp BoolCR α true x) 
-  
-  open BooleanRingStr (snd BoolBR)
---  𝟙inIdealα : αI true
---  𝟙inIdealα = zeroInQuotient→inIdeal {! !} {! !} {! 0=1In2/α !} 
+ 
+weakMP : StoneDualityAxiom → weakMarkovPrinciple
+weakMP sd α α≠0 = ∃αn α (1inαIdeal α α≠0 sd)
 
-
-
-
-
-
-
-
-
-
-
-
---mp-from-SD : StoneDualityAxiom → MarkovPrinciple
---mp-from-SD SD α α≠0 = extractFirst α (∃αn α (trivialQuotient→1∈I BoolCR (IQ.genIdeal BoolCR α) (sym 0≡1-CR)))
---  where
---  open import Axioms.StoneDuality using (evaluationMap)
---  open import CommRingQuotients.TrivialIdeal using (trivialQuotient→1∈I)
---  import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
---
---  0≡1-BR : BooleanRingStr.𝟘 (snd (BoolBR QB./Im α)) ≡ BooleanRingStr.𝟙 (snd (BoolBR QB./Im α))
---  0≡1-BR = SpectrumEmptyImpliesTrivial.0≡1-in-B SD (2/α-Booleω α) (MarkovLib.emptySp α α≠0)
---  open import BooleanRing.BooleanRingQuotients.QuotientBool using (_/Im_)
---  opaque
---    unfolding _/Im_
---    0≡1-CR : CommRingStr.0r (snd (BoolCR IQ./Im α)) ≡ CommRingStr.1r (snd (BoolCR IQ./Im α))
---    0≡1-CR = 0≡1-BR
+MP : StoneDualityAxiom → MarkovPrinciple 
+MP = weakMP→MP ∘ weakMP 
