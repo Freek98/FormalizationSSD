@@ -27,9 +27,12 @@ open import BasicDefinitions
 freeℕCP : countablyPresentedBooleanRing
 freeℕCP = freeBA ℕ , ∣ free-on-countable-has-freeℕ-presentation ℕ countℕ ∣₁ 
 
+freeℕUP : Iso binarySequence (Sp freeℕCP)
+freeℕUP = freeBA-universal-property ℕ BoolBR 
+
 CantorIsStone : hasStoneStr binarySequence
 CantorIsStone .fst = freeℕCP
-CantorIsStone .snd = sym $ ua (isoToEquiv (freeBA-universal-property ℕ BoolBR)) 
+CantorIsStone .snd = sym $ ua (isoToEquiv freeℕUP) 
 
 CantorSpace : StoneSpace
 CantorSpace = binarySequence , CantorIsStone
