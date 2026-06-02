@@ -53,21 +53,21 @@ module BRProduct (B : BooleanRing ℓ) (C : BooleanRing ℓ') where
       (BooleanRingStr.·Idem (snd B) b) 
       (BooleanRingStr.·Idem (snd C) c) 
   open IsCommRingHom ⦃...⦄
-  πB : BoolHom product B
-  πB .fst = fst
-  πB .snd .pres0 = refl
-  πB .snd .pres1 = refl
-  πB .snd .pres+ _ _ = refl
-  πB .snd .pres· _ _ = refl
-  πB .snd .pres- _ = refl 
+  fstBA : BoolHom product B
+  fstBA .fst = fst
+  fstBA .snd .pres0 = refl
+  fstBA .snd .pres1 = refl
+  fstBA .snd .pres+ _ _ = refl
+  fstBA .snd .pres· _ _ = refl
+  fstBA .snd .pres- _ = refl 
   
-  πC : BoolHom product C
-  πC .fst = snd
-  πC .snd .pres0 = refl
-  πC .snd .pres1 = refl
-  πC .snd .pres+ _ _ = refl
-  πC .snd .pres· _ _ = refl
-  πC .snd .pres- _ = refl 
+  sndBA : BoolHom product C
+  sndBA .fst = snd
+  sndBA .snd .pres0 = refl
+  sndBA .snd .pres1 = refl
+  sndBA .snd .pres+ _ _ = refl
+  sndBA .snd .pres· _ _ = refl
+  sndBA .snd .pres- _ = refl 
   
   module UP {D : BooleanRing ℓ''} (f : BoolHom D B) (g : BoolHom D C) where
     instance 
@@ -81,12 +81,12 @@ module BRProduct (B : BooleanRing ℓ) (C : BooleanRing ℓ') where
     ⟨f,g⟩ .snd .pres· x y = cong₂ _,_ (pres· x y) (pres· x y)
     ⟨f,g⟩ .snd .pres- x   = cong₂ _,_ (pres- x) (pres- x) 
 
-    extensionπB : πB ∘cr ⟨f,g⟩ ≡ f
-    extensionπB = CommRingHom≡ refl 
-    extensionπC : πC ∘cr ⟨f,g⟩ ≡ g
-    extensionπC = CommRingHom≡ refl 
+    extensionfstBA : fstBA ∘cr ⟨f,g⟩ ≡ f
+    extensionfstBA = CommRingHom≡ refl 
+    extensionsndBA : sndBA ∘cr ⟨f,g⟩ ≡ g
+    extensionsndBA = CommRingHom≡ refl 
 
-    uniqueness : (h : BoolHom D product) → (πB ∘cr h ≡ f) → (πC ∘cr h ≡ g) → ⟨f,g⟩ ≡ h
+    uniqueness : (h : BoolHom D product) → (fstBA ∘cr h ≡ f) → (sndBA ∘cr h ≡ g) → ⟨f,g⟩ ≡ h
     uniqueness h Bh=f Ch=g = CommRingHom≡ (funExt λ d → cong₂ _,_ 
       (cong (λ k → fst k d) (sym Bh=f)) (cong (λ k → fst k d) (sym Ch=g))) 
 
@@ -97,10 +97,10 @@ module BACatProduct {ℓ : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ) wh
     open Category 
     catProduct : BinProduct BACat B C 
     catProduct .binProdOb = product
-    catProduct .binProdPr₁ = πB
-    catProduct .binProdPr₂ = πC
+    catProduct .binProdPr₁ = fstBA
+    catProduct .binProdPr₂ = sndBA
     catProduct .univProp f g .fst .fst = ⟨f,g⟩ f g
-    catProduct .univProp f g .fst .snd = extensionπB f g , extensionπC f g
+    catProduct .univProp f g .fst .snd = extensionfstBA f g , extensionsndBA f g
     catProduct .univProp f g .snd (h , Bh=f , Ch=g) = Σ≡Prop 
       (λ _ → isProp× (isSetHom BACat _ _) (isSetHom BACat _ _)) 
       -- Note that this argument works for any category, and always needs to be provided.
