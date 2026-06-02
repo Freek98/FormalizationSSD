@@ -1,4 +1,6 @@
 {-# OPTIONS  --lossy-unification #-}
+-- This file has partially been created with an LLM. The conclusions are what I wanted. 
+
 module CountablyPresentedBooleanRings.Examples.NFinCofin where
 
 open import BooleanRing.SubBooleanRing
