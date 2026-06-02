@@ -40,10 +40,6 @@ instance
   _ = snd $ freeBA ℕ
   _ = snd $ presentation
 
-
-
-
-
 hits1AtMostOnce : binarySequence → Type 
 hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n ≡ m 
 
@@ -123,25 +119,12 @@ hits1AtMostOnce→respectsRelations α α1atmostOnce n m with (discreteℕ n m)
                 ≡⟨ atMostOnce→NotTwice α α1atmostOnce m n ¬p ⟩ 
               false ∎ 
 
+neededIso : Iso SpB∞ ℕ∞
+neededIso .Iso.fun f = Sp→BinarySequence f , SpHits1AtMostOnce f
+neededIso .Iso.inv (α , α1atmostOnce) = inducedHom BoolBR (BinarySequence→SpFreeℕ α)
+  λ n → hits1AtMostOnce→respectsRelations α α1atmostOnce (fst $ Iso.inv ℕ×ℕ≅ℕ n) (snd $ Iso.inv ℕ×ℕ≅ℕ n)
+neededIso .Iso.sec (α , α1atmostOnce) = Σ≡Prop isPropHits1AtMostOnce
+  (funExt (λ n → cong (λ h → h $cr generator n) (evalInduce BoolBR)) ∙ evalBAInduce ℕ BoolBR α)
+neededIso .Iso.ret f = inducedHomUnique BoolBR _ _ f
+  (inducedBAHomUnique ℕ BoolBR (Sp→BinarySequence f) (f ∘cr quotientImageHom) refl)
 
-
---neededIso : Iso SpB∞ ℕ∞
---neededIso .Iso.fun f = Sp→BinarySequence f  , SpHits1AtMostOnce f
---neededIso .Iso.inv (α , α1atmostOnce) = inducedHom BoolBR (BinarySequence→SpFreeℕ α) 
---  λ n → hits1AtMostOnce→respectsRelations α α1atmostOnce (fst $ Iso.inv ℕ×ℕ≅ℕ n) (snd $ Iso.inv ℕ×ℕ≅ℕ n)
---neededIso .Iso.sec (α , α1atmostOnce) = Σ≡Prop isPropHits1AtMostOnce (funExt (λ n → {!   !}) ∙ evalBAInduce ℕ BoolBR α)
---neededIso .Iso.ret f = {! !} 
---
-
-
-
---freeℕCP : countablyPresentedBooleanRing
---freeℕCP = freeBA ℕ , ∣ free-on-countable-has-freeℕ-presentation ℕ countℕ ∣₁ 
---
---CantorIsStone : hasStoneStr binarySequence
---CantorIsStone .fst = freeℕCP
---CantorIsStone .snd = sym $ ua (isoToEquiv (freeBA-universal-property ℕ BoolBR)) 
---
---CantorSpace : StoneSpace
---CantorSpace = binarySequence , CantorIsStone
---
