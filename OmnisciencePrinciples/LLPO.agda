@@ -139,7 +139,7 @@ module LLPOProof (sd : StoneDualityAxiom) (fs : formalSurjectionsAreSurjectionsA
             (fInj : isInjectiveBoolHom (B∞ , presented) ((B∞ ×BR B∞) , prodPresented presented presented) f) 
             (fcorrespondsToe : prodIso .Iso.fun f ≡ e ) where
             esurj : isSurjection e
-            esurj = {! !} 
+            esurj = {! fs ? ? f !} 
             llpop : LLPO 
             llpop = e-surj→LLPO esurj 
 
