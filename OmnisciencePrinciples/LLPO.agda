@@ -103,9 +103,7 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   oddPart : binarySequence → binarySequence
   oddPart α k = α (suc (double k))
 
-  -- ───────────────────────────────────────────────────────────────
-  -- Both halves preserve finiteness, cofiniteness, hence isFiniteOrCofinite
-  -- ───────────────────────────────────────────────────────────────
+  -- We will show that evenPart and oddPart restrict to sequences corresponding to finite/cofinite subsets
   k≤double : (k : ℕ) → k ≤ double k
   k≤double k = k , sym (double≡+self k)
 
@@ -141,11 +139,6 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   oddPart-FC α (Fin f) = Fin (oddPart-fin α f)
   oddPart-FC α (Cof c) = Cof (oddPart-cofin α c)
 
-  -- ───────────────────────────────────────────────────────────────
-  -- The split map and its trivial kernel
-  -- ───────────────────────────────────────────────────────────────
-
-  -- the two halves as Boolean-algebra homs ℕfinCofinBA → ℕfinCofinBA
   --   evenHom : I ↦ I₀ = {k | 2k   ∈ I}     oddHom : I ↦ I₁ = {k | 2k+1 ∈ I}
   evenHom : BoolHom ℕfinCofinBA ℕfinCofinBA
   fst evenHom (α , w) = evenPart α , evenPart-FC α w
@@ -155,17 +148,14 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   fst oddHom (α , w) = oddPart α , oddPart-FC α w
   snd oddHom = makeIsCommRingHom (FC≡ refl) (λ _ _ → FC≡ refl) (λ _ _ → FC≡ refl)
 
-  -- the split map is now literally the universal product map of its two halves
-  -- (I ↦ (I₀ , I₁)).  Realizes the old `splitFun`, now for free from the product.
   splitHom : BoolHom ℕfinCofinBA (ℕfinCofinBA ×BR ℕfinCofinBA)
   splitHom = induceProdMapBR evenHom oddHom
+  -- we will now use the above to show that splitHom is injective
 
-  -- sends a finite set to a pair of finite sets
   splitHom-finite : (α : binarySequence) → isFinite α
     → isFinite (evenPart α) × isFinite (oddPart α)
   splitHom-finite α fin = evenPart-fin α fin , oddPart-fin α fin
 
-  -- sends a cofinite set to a pair of cofinite sets
   splitHom-cofinite : (α : binarySequence) → isCofinite α
     → isCofinite (evenPart α) × isCofinite (oddPart α)
   splitHom-cofinite α cof = evenPart-cofin α cof , oddPart-cofin α cof
@@ -194,11 +184,13 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
 
   evenPart-δ-odd : (k : ℕ) → evenPart (δSequence (suc (double k))) ≡ (λ _ → false)
   evenPart-δ-odd k = funExt λ j → odd≠even k j
+
   oddPart-δ-even : (k : ℕ) → oddPart (δSequence (double k)) ≡ (λ _ → false)
   oddPart-δ-even k = funExt λ j → even≠odd k j
 
   evenHom-sing-odd : (k : ℕ) → evenHom $cr singleton (suc (double k)) ≡ 𝟘
   evenHom-sing-odd k = FC≡ (evenPart-δ-odd k)
+
   oddHom-sing-even : (k : ℕ) → oddHom $cr singleton (double k) ≡ 𝟘
   oddHom-sing-even k = FC≡ (oddPart-δ-even k)
 
@@ -229,8 +221,6 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   SpSplitSurj : isSurjection SpSplit
   SpSplitSurj = formalSurjections B∞ B∞xB∞ splitHom splitInj
 
-  -- ── Spf, by definition the coproduct (copairing) of the two Stone halves ────
-  -- The two halves `Sp evenHom`, `Sp oddHom` transported along SpB∞≃ℕ∞ to maps ℕ∞ → ℕ∞:
   evenStone oddStone : ℕ∞ → ℕ∞
   evenStone β = Iso.fun SpB∞≃ℕ∞ (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom)   
   oddStone  β = Iso.fun SpB∞≃ℕ∞ (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom)   
@@ -238,10 +228,6 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   Spf : ℕ∞ ⊎ ℕ∞ → ℕ∞
   Spf = ⊎.rec evenStone oddStone
 
-  -- Surjectivity is inherited from the composite presentation
-  -- `Iso.fun SpB∞≃ℕ∞ ∘ SpSplit ∘ Iso.inv SpB∞≃ℕ∞⊎`, to which Spf is equal: under SpB∞≃ℕ∞⊎ the inl/inr
-  -- inclusion is precomposition with fstBA/sndBA, and `fstBA ∘cr splitHom = evenHom`
-  -- (resp. sndBA) holds *definitionally* (since `splitHom = induceProdMapBR evenHom oddHom`).
   Spf-comp : ℕ∞ ⊎ ℕ∞ → ℕ∞
   Spf-comp = Iso.fun SpB∞≃ℕ∞ ∘ SpSplit ∘ Iso.inv SpB∞≃ℕ∞⊎
 
@@ -262,24 +248,21 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
           (SpSplit , SpSplitSurj)
           (Iso→↠ SpB∞≃ℕ∞)))
 
-  -- ── each half vanishes on the opposite parity ──────────────────────────────
-  -- `evenHom` kills the odd singletons, so its Stone image is 0 on every odd
-  -- coordinate; dually `oddHom` gives 0 on every even coordinate.
 
   evenStone-odd0 : (β : ℕ∞) (k : ℕ) → fst (evenStone β) (suc (double k)) ≡ false
   evenStone-odd0 β k =
       fst (evenStone β) (suc (double k))
-    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom)) (suc (double k)) ⟩   -- SpB∞≃ℕ∞ reads off on singletons
+    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom)) (suc (double k)) ⟩   
       B∞eval (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom) (suc (double k))
-    ≡⟨ SpEvenHom-odd0 (Iso.inv SpB∞≃ℕ∞ β) k ⟩                                       -- evenHom kills the odd singleton
+    ≡⟨ SpEvenHom-odd0 (Iso.inv SpB∞≃ℕ∞ β) k ⟩
       false ∎
 
   oddStone-even0 : (β : ℕ∞) (k : ℕ) → fst (oddStone β) (double k) ≡ false
   oddStone-even0 β k =
       fst (oddStone β) (double k)
-    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom)) (double k) ⟩          -- SpB∞≃ℕ∞ reads off on singletons
+    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom)) (double k) ⟩          
       B∞eval (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom) (double k)
-    ≡⟨ SpOddHom-even0 (Iso.inv SpB∞≃ℕ∞ β) k ⟩                                       -- oddHom kills the even singleton
+    ≡⟨ SpOddHom-even0 (Iso.inv SpB∞≃ℕ∞ β) k ⟩                                    
       false ∎
 
   Spf-fibre→LLPO : (α : ℕ∞) → fiber Spf α → LLPOExplicitAt α
