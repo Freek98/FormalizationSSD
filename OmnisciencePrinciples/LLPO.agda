@@ -1,6 +1,7 @@
 {-# OPTIONS --lossy-unification #-}
 module OmnisciencePrinciples.LLPO where
 -- made in collaboration with LLM. 
+-- Note that LLPO does not relly on stone duality. We only relly on the observation that Sp(A x B) = Sp A + Sp B. Thus the Stone duality axiom is not used in this formalisation. This is something we did not mention in the paper and is a consequence of the (auto)formalisation.
 open import CountablyPresentedBooleanRings.Examples.NFinCofin
 open NFinCofinPresentation 
 open DefinitionFinCofin
@@ -9,7 +10,7 @@ open import Cubical.Algebra.CommRing
 open import Cubical.Data.Nat.Order
 open import Cubical.Algebra.BooleanRing
 
-open import Parity
+open import LLMGeneratedFixes.Parity
 open import BooleanRing.FreeBooleanRing.FreeBool
 open import BooleanRing.BooleanRingQuotients.QuotientBool using (quotientImageHom ; evalInduce)
 open import BasicDefinitions

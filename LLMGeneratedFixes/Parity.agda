@@ -1,4 +1,4 @@
-module Parity where
+module LLMGeneratedFixes.Parity where
 -- AI generated, lightly skimmed. Needed things at the end. 
 -- ═══════════════════════════════════════════════════════════════
 -- Even/Odd library for natural numbers
