@@ -23,6 +23,6 @@ isSurjectiveSpMap {B} {C} = isSurjection
 LocalChoiceAxiom : Type (ℓ-suc ℓ-zero)
 LocalChoiceAxiom = (B : Booleω) (P : Sp B → Type ℓ-zero)
   → ((s : Sp B) → ∥ P s ∥₁)
-  → ∥ Σ[ C ∈ Booleω ] Σ[ q ∈ (Sp C → Sp B) ]
-      (isSurjection q × ((t : Sp C) → P (q t))) ∥₁
+  → ∃[ C ∈ Booleω ] Σ[ q ∈ (Sp C → Sp B) ]
+     (isSurjection q × ((t : Sp C) → P (q t)))
 

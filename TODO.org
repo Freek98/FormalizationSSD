@@ -1,9 +1,4 @@
 + StoneDuality currently contains a bunch of stuff on the Sp-decidable-subsets adjunction and anti-equivalence. This should move to a seperate file. The whole Category theory folder and everything in it is also in this field. I think it's most convenient to let the AI handle this, while I continue with the examples of countably presented Boolean rings.  
-+ Countably presented Boolean rings should include Bool, 2/1, 2^Cantor space, B_infty
-  + I'm working on B_infty. I now have NFinCofin, but not yet a proof that it agrees with the generated thing. 
-  + I gave some of that work to the AI, I gave the homomorphism and what should be it's inverse. I want it to finish the proof it's an equivalence. That didn't work very well, and I will give it slightly more framework to prove this. One direction is very annoying and tedious, and I'll leave that to the AI. I will try to do the other direction myself today, but I do want to switch to writing more about the spectrum and giving examples of Stone spaces. 
-  + after some help it finished B_infty, but it can be done in more elegant ways, and I'm asking it to do that now. I did copy the results here as a nice snapshot of what it could achieve. 
-  + I have added the spectra of these rings, except N\infty for now. 
 
 * Re-organizing the repo so the dependency structure (what imports what) makes more sense. 
 + I made a new directory for Stone spaces. There was a lot more stuff in StoneDuality though, and I split that into two files in CategoryTheory. Might be that I need to come back to it later, but for now it's clean enough. 
@@ -12,8 +7,5 @@
 + I completely forgot why there is a guardedness flag. Something breaks if I remove it, don't get why
 
 * LLPO
-+ there is an autoformalized proof of LLPO that I don't follow. It was made by me first writing an informal sketch in tex and feeding this to the AI. I think I want to do this in more detail, but it's nice to know it can be done (although I don't follow it compeletely). 
-+ We need that the Category of countably presented Boolean rings has products, hence Stone has Pushouts (so this argument needs to use the antiequivalence) and then we wish to construct the map and proof it is injective. 
-+ to show a map f is injective, we need that f(x) = 0 -> x = 0. 
-+ to show this it's nice to have a case distinction on finite /cofinite sets. 
-+ In particular, we need to show that a finite set is not sent to 1 to make sure a cofinite set is not sent to 0. to be one. 
++ there is an autoformalized proof of LLPO that I don't follow. It was made by me first writing an informal sketch in tex and feeding this to the AI. I think I want to do this in more detail, but it's nice to know it can be done (although I don't follow it compeletely). I've now had a "conversation" and follow the proof, but am not completely happy with two aspects (as is noted in that file).
++ We need that the Category of countably presented Boolean rings has products, hence Stone has Pushouts (so this argument needs to use the antiequivalence). This now has a direct proof, and I think it factors over the adjunction, but I'm not sure that's actually the nices presentation in agda, as there's not all the category theory background that I think is needed. 
