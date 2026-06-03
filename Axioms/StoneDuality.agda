@@ -91,6 +91,3 @@ module _ (SD : StoneDualityAxiom) where
   isPropHasStoneStr : (S : Type ℓ-zero) → isProp (hasStoneStr S)
   isPropHasStoneStr = isEmbedding→hasPropFibers SpEmbedding 
 
-StoneCat : Category (ℓ-suc ℓ-zero) ℓ-zero 
-StoneCat = ImageFunctor.Image SpFunctor  
-
