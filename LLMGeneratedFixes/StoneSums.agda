@@ -1,5 +1,9 @@
-{-# OPTIONS --lossy-unification #-}
--- This LLM generated file shows algebraically that the spectrum of the product of two countably presented boolean algebras is the sum of the spectra. I would prefer a categorical proof of this fact. So this should be seen as a hacky, temporary solution. Therefore I haven't read this LLM-generated file in full details, only checked that it makes no postulates and the end conclusion is what I want. 
+-- This file shows algebraically that the spectrum of the product of two Boolean algebras is the sum of the spectra. The proof was written by an LLM. 
+--
+-- Note that this file does not depend on Stone duality. Also, the result is not a corollary of the adjunction between Sp and 2^. This I personally found surprising and confusing for some time. 
+-- Rather, it's an application of an exercise in ring theory. See for example exercise 22 in chapter 1 of Atiyah-MacDonald, or https://stacks.math.columbia.edu/tag/00ED
+--
+--
 module LLMGeneratedFixes.StoneSums where
 
 open import Cubical.Foundations.Prelude
@@ -21,20 +25,9 @@ open import BooleanRing.BooleanRingMaps
 open import BooleanRing.ProductBA
 open import StoneSpaces.Spectrum
 
--- The anti-equivalence (contravariant equivalence) Boole ↔ Stone is reused,
--- not reproved, from here.  (The transferred binary products on `StoneCat` live
--- in `AntiEquivalence.Products` as `StoneCat-BinProducts`; we do NOT import that
--- module here only because it currently transitively depends on a module
--- — `CountablyPresentedBooleanRings.ProductClosure` — that fails to typecheck
--- independently of this work.  See the comments in Part 1 below.)
-
 private
   variable
     ℓ ℓ' : Level
-
--- ════════════════════════════════════════════════════════════════════════════
--- A few Bool facts we need: 2 is "connected" / indecomposable.
--- ════════════════════════════════════════════════════════════════════════════
 
 private
   -- If x ≡ true and x and y ≡ false then y ≡ false.
