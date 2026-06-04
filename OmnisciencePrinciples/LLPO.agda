@@ -42,8 +42,9 @@ open import Cubical.Categories.Isomorphism using (op-Iso⁻)
 open import Cubical.Categories.Instances.Sets using (SET ; CatIso→Iso)
 open import CategoryTheory.StuffFromStoneAboutBAs using (BACat ; SpGeneralFunctor ; BAIso≅BAEquiv)
 
+import StoneSums as SpProdSum -- Sp(A ×BR B) ≅ Sp A ⊎ Sp B  (see SpB∞≃ℕ∞⊎)
+
 -- temporary less elegant solutions
-import LLMGeneratedFixes.StoneSums as SpProdSum -- Sp(A ×BR B) ≅ Sp A ⊎ Sp B  (see SpB∞≃ℕ∞⊎)
 import LLMGeneratedFixes.ProductBooleExplicit as ProductFix -- algebraic product-closure (fixes ProductClosure)
 
 LLPOExplicitAt : ℕ∞ → Type
