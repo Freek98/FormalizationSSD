@@ -158,3 +158,6 @@ module _ (A : BooleanRing ℓ) (B : BooleanRing ℓ') (f : ⟨ A ⟩ → ⟨ B �
         ≡⟨⟩
       (f x) ∨ (f y) ∎
 
+module IsBoolAlgHom {A : BooleanRing ℓ} {B : BooleanRing ℓ'} (f : BoolHom A B) where
+  open isBoolAlgHom A B (fst f) (snd f) public
+ 
