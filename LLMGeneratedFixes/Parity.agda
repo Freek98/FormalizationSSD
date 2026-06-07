@@ -21,26 +21,21 @@ open import Cubical.Data.Sigma
 open import Cubical.Relation.Nullary
 
 -- ───────────────────────────────────────────────────────────────
--- Section 1: Core functions (double, half)
+-- Section 1: Core functions (doubleℕ, half)
 -- ───────────────────────────────────────────────────────────────
-
-double : ℕ → ℕ
-double zero = zero
-double (suc n) = suc (suc (double n))
-
 half : ℕ → ℕ
 half zero = zero
 half (suc zero) = zero
 half (suc (suc n)) = suc (half n)
 
 -- ───────────────────────────────────────────────────────────────
--- Section 2: double n ≡ n +ℕ n
+-- Section 2: doubleℕ n ≡ n +ℕ n
 -- ───────────────────────────────────────────────────────────────
 
-double≡+self : (n : ℕ) → double n ≡ n +ℕ n
-double≡+self zero = refl
-double≡+self (suc n) =
-  cong suc (cong suc (double≡+self n) ∙ sym (+-suc n n))
+doubleℕ≡+self : (n : ℕ) → doubleℕ n ≡ n +ℕ n
+doubleℕ≡+self zero = refl
+doubleℕ≡+self (suc n) =
+  cong suc (cong suc (doubleℕ≡+self n) ∙ sym (+-suc n n))
 
 -- ───────────────────────────────────────────────────────────────
 -- Section 3: Bool-valued parity identities
@@ -69,53 +64,53 @@ isOdd-false→isEven-true : {n : ℕ} → isOdd n ≡ false → isEven n ≡ tru
 isOdd-false→isEven-true {n} p = isEven≡not-isOdd n ∙ cong not p
 
 -- ───────────────────────────────────────────────────────────────
--- Section 4: isEven/isOdd of double and suc∘double
+-- Section 4: isEven/isOdd of doubleℕ and suc∘doubleℕ
 -- ───────────────────────────────────────────────────────────────
 
-isEven-double : (k : ℕ) → isEven (double k) ≡ true
-isEven-double zero = refl
-isEven-double (suc k) = isEven-double k
+isEven-doubleℕ : (k : ℕ) → isEven (doubleℕ k) ≡ true
+isEven-doubleℕ zero = refl
+isEven-doubleℕ (suc k) = isEven-doubleℕ k
 
-isEven-suc-double : (k : ℕ) → isEven (suc (double k)) ≡ false
-isEven-suc-double zero = refl
-isEven-suc-double (suc k) = isEven-suc-double k
+isEven-suc-doubleℕ : (k : ℕ) → isEven (suc (doubleℕ k)) ≡ false
+isEven-suc-doubleℕ zero = refl
+isEven-suc-doubleℕ (suc k) = isEven-suc-doubleℕ k
 
-isOdd-double : (k : ℕ) → isOdd (double k) ≡ false
-isOdd-double zero = refl
-isOdd-double (suc k) = isOdd-double k
+isOdd-doubleℕ : (k : ℕ) → isOdd (doubleℕ k) ≡ false
+isOdd-doubleℕ zero = refl
+isOdd-doubleℕ (suc k) = isOdd-doubleℕ k
 
-isOdd-suc-double : (k : ℕ) → isOdd (suc (double k)) ≡ true
-isOdd-suc-double k = isEven-double k
+isOdd-suc-doubleℕ : (k : ℕ) → isOdd (suc (doubleℕ k)) ≡ true
+isOdd-suc-doubleℕ k = isEven-doubleℕ k
 
 -- ───────────────────────────────────────────────────────────────
--- Section 5: half ∘ double and double ∘ half round-trips
+-- Section 5: half ∘ doubleℕ and doubleℕ ∘ half round-trips
 -- ───────────────────────────────────────────────────────────────
 
-half-double : (k : ℕ) → half (double k) ≡ k
-half-double zero = refl
-half-double (suc k) = cong suc (half-double k)
+half-doubleℕ : (k : ℕ) → half (doubleℕ k) ≡ k
+half-doubleℕ zero = refl
+half-doubleℕ (suc k) = cong suc (half-doubleℕ k)
 
-half-suc-double : (k : ℕ) → half (suc (double k)) ≡ k
-half-suc-double zero = refl
-half-suc-double (suc k) = cong suc (half-suc-double k)
+half-suc-doubleℕ : (k : ℕ) → half (suc (doubleℕ k)) ≡ k
+half-suc-doubleℕ zero = refl
+half-suc-doubleℕ (suc k) = cong suc (half-suc-doubleℕ k)
 
-double-half-even : (n : ℕ) → isEven n ≡ true → double (half n) ≡ n
-double-half-even zero _ = refl
-double-half-even (suc zero) p = ⊥.rec (false≢true p)
-double-half-even (suc (suc n)) p = cong (suc ∘ suc) (double-half-even n p)
+doubleℕ-half-even : (n : ℕ) → isEven n ≡ true → doubleℕ (half n) ≡ n
+doubleℕ-half-even zero _ = refl
+doubleℕ-half-even (suc zero) p = ⊥.rec (false≢true p)
+doubleℕ-half-even (suc (suc n)) p = cong (suc ∘ suc) (doubleℕ-half-even n p)
 
-suc-double-half-odd : (n : ℕ) → isEven n ≡ false → suc (double (half n)) ≡ n
-suc-double-half-odd zero p = ⊥.rec (true≢false p)
-suc-double-half-odd (suc zero) _ = refl
-suc-double-half-odd (suc (suc n)) p = cong (suc ∘ suc) (suc-double-half-odd n p)
+suc-doubleℕ-half-odd : (n : ℕ) → isEven n ≡ false → suc (doubleℕ (half n)) ≡ n
+suc-doubleℕ-half-odd zero p = ⊥.rec (true≢false p)
+suc-doubleℕ-half-odd (suc zero) _ = refl
+suc-doubleℕ-half-odd (suc (suc n)) p = cong (suc ∘ suc) (suc-doubleℕ-half-odd n p)
 
 -- ───────────────────────────────────────────────────────────────
 -- Section 6: Inductive data type for parity
 -- ───────────────────────────────────────────────────────────────
 
 data Parity : ℕ → Type where
-  even : (k : ℕ) → Parity (double k)
-  odd  : (k : ℕ) → Parity (suc (double k))
+  even : (k : ℕ) → Parity (doubleℕ k)
+  odd  : (k : ℕ) → Parity (suc (doubleℕ k))
 
 parity : (n : ℕ) → Parity n
 parity zero = even zero
@@ -127,13 +122,13 @@ parity (suc n) with parity n
 -- Section 7: Σ-type witnesses
 -- ───────────────────────────────────────────────────────────────
 
--- n is even ↔ ∃ k, n ≡ double k
+-- n is even ↔ ∃ k, n ≡ doubleℕ k
 Even : ℕ → Type
-Even n = Σ[ k ∈ ℕ ] n ≡ double k
+Even n = Σ[ k ∈ ℕ ] n ≡ doubleℕ k
 
--- n is odd ↔ ∃ k, n ≡ suc (double k)
+-- n is odd ↔ ∃ k, n ≡ suc (doubleℕ k)
 Odd : ℕ → Type
-Odd n = Σ[ k ∈ ℕ ] n ≡ suc (double k)
+Odd n = Σ[ k ∈ ℕ ] n ≡ suc (doubleℕ k)
 
 -- n is even ↔ ∃ k, n ≡ k + k
 Even+ : ℕ → Type
@@ -152,22 +147,22 @@ Odd+' n = Σ[ k ∈ ℕ ] n ≡ 1 +ℕ (k +ℕ k)
 -- ───────────────────────────────────────────────────────────────
 
 Even→Even+ : {n : ℕ} → Even n → Even+ n
-Even→Even+ (k , p) = k , p ∙ double≡+self k
+Even→Even+ (k , p) = k , p ∙ doubleℕ≡+self k
 
 Even+→Even : {n : ℕ} → Even+ n → Even n
-Even+→Even (k , p) = k , p ∙ sym (double≡+self k)
+Even+→Even (k , p) = k , p ∙ sym (doubleℕ≡+self k)
 
 Odd→Odd+ : {n : ℕ} → Odd n → Odd+ n
-Odd→Odd+ (k , p) = k , p ∙ cong suc (double≡+self k) ∙ +-comm 1 (k +ℕ k)
+Odd→Odd+ (k , p) = k , p ∙ cong suc (doubleℕ≡+self k) ∙ +-comm 1 (k +ℕ k)
 
 Odd+→Odd : {n : ℕ} → Odd+ n → Odd n
-Odd+→Odd (k , p) = k , p ∙ +-comm (k +ℕ k) 1 ∙ cong suc (sym (double≡+self k))
+Odd+→Odd (k , p) = k , p ∙ +-comm (k +ℕ k) 1 ∙ cong suc (sym (doubleℕ≡+self k))
 
 Odd→Odd+' : {n : ℕ} → Odd n → Odd+' n
-Odd→Odd+' (k , p) = k , p ∙ cong suc (double≡+self k)
+Odd→Odd+' (k , p) = k , p ∙ cong suc (doubleℕ≡+self k)
 
 Odd+'→Odd : {n : ℕ} → Odd+' n → Odd n
-Odd+'→Odd (k , p) = k , p ∙ cong suc (sym (double≡+self k))
+Odd+'→Odd (k , p) = k , p ∙ cong suc (sym (doubleℕ≡+self k))
 
 -- ───────────────────────────────────────────────────────────────
 -- Section 9: Bool-valued ↔ Σ-witness conversions
@@ -175,19 +170,19 @@ Odd+'→Odd (k , p) = k , p ∙ cong suc (sym (double≡+self k))
 
 -- isEven true → Even (using half)
 isEven→Even : {n : ℕ} → isEven n ≡ true → Even n
-isEven→Even {n} p = half n , sym (double-half-even n p)
+isEven→Even {n} p = half n , sym (doubleℕ-half-even n p)
 
 -- Even → isEven true
 Even→isEven : {n : ℕ} → Even n → isEven n ≡ true
-Even→isEven (k , p) = subst (λ m → isEven m ≡ true) (sym p) (isEven-double k)
+Even→isEven (k , p) = subst (λ m → isEven m ≡ true) (sym p) (isEven-doubleℕ k)
 
 -- isEven false → Odd (using half)
 isEvenFalse→Odd : {n : ℕ} → isEven n ≡ false → Odd n
-isEvenFalse→Odd {n} p = half n , sym (suc-double-half-odd n p)
+isEvenFalse→Odd {n} p = half n , sym (suc-doubleℕ-half-odd n p)
 
 -- Odd → isEven false
 Odd→isEvenFalse : {n : ℕ} → Odd n → isEven n ≡ false
-Odd→isEvenFalse (k , p) = subst (λ m → isEven m ≡ false) (sym p) (isEven-suc-double k)
+Odd→isEvenFalse (k , p) = subst (λ m → isEven m ≡ false) (sym p) (isEven-suc-doubleℕ k)
 
 -- isOdd true → Odd
 isOdd→Odd : {n : ℕ} → isOdd n ≡ true → Odd n
@@ -235,7 +230,7 @@ even-xor-odd n with even-or-odd n
 ... | inr o = inr (o , λ e → ¬Even∧Odd e o)
 
 -- ───────────────────────────────────────────────────────────────
--- Section 12: Even/Odd of zero, suc, double
+-- Section 12: Even/Odd of zero, suc, doubleℕ
 -- ───────────────────────────────────────────────────────────────
 
 Even-zero : Even zero
@@ -244,11 +239,11 @@ Even-zero = 0 , refl
 Odd-one : Odd 1
 Odd-one = 0 , refl
 
-Even-double : (k : ℕ) → Even (double k)
-Even-double k = k , refl
+Even-doubleℕ : (k : ℕ) → Even (doubleℕ k)
+Even-doubleℕ k = k , refl
 
-Odd-suc-double : (k : ℕ) → Odd (suc (double k))
-Odd-suc-double k = k , refl
+Odd-suc-doubleℕ : (k : ℕ) → Odd (suc (doubleℕ k))
+Odd-suc-doubleℕ k = k , refl
 
 -- suc swaps parity
 Even-suc→Odd : {n : ℕ} → Even (suc n) → Odd n
@@ -265,28 +260,28 @@ Odd→Even-suc : {n : ℕ} → Odd n → Even (suc n)
 Odd→Even-suc (k , p) = suc k , cong suc p
 
 -- ───────────────────────────────────────────────────────────────
--- Section 13: Injectivity of double
+-- Section 13: Injectivity of doubleℕ
 -- ───────────────────────────────────────────────────────────────
 
-double-inj : (m n : ℕ) → double m ≡ double n → m ≡ n
-double-inj zero zero _ = refl
-double-inj zero (suc n) p = ⊥.rec (znots p)
-double-inj (suc m) zero p = ⊥.rec (snotz p)
-double-inj (suc m) (suc n) p = cong suc (double-inj m n (injSuc (injSuc p)))
+doubleℕ-inj : (m n : ℕ) → doubleℕ m ≡ doubleℕ n → m ≡ n
+doubleℕ-inj zero zero _ = refl
+doubleℕ-inj zero (suc n) p = ⊥.rec (znots p)
+doubleℕ-inj (suc m) zero p = ⊥.rec (snotz p)
+doubleℕ-inj (suc m) (suc n) p = cong suc (doubleℕ-inj m n (injSuc (injSuc p)))
 
-suc-double-inj : (m n : ℕ) → suc (double m) ≡ suc (double n) → m ≡ n
-suc-double-inj m n p = double-inj m n (injSuc p)
+suc-doubleℕ-inj : (m n : ℕ) → suc (doubleℕ m) ≡ suc (doubleℕ n) → m ≡ n
+suc-doubleℕ-inj m n p = doubleℕ-inj m n (injSuc p)
 
--- double k ≠ suc (double j) : even ≠ odd
-double≢suc-double : (j k : ℕ) → double k ≡ suc (double j) → ⊥
-double≢suc-double j k p = true≢false (sym (isEven-double k) ∙ subst (λ m → isEven m ≡ false) (sym p) (isEven-suc-double j))
+-- doubleℕ k ≠ suc (doubleℕ j) : even ≠ odd
+doubleℕ≢suc-doubleℕ : (j k : ℕ) → doubleℕ k ≡ suc (doubleℕ j) → ⊥
+doubleℕ≢suc-doubleℕ j k p = true≢false (sym (isEven-doubleℕ k) ∙ subst (λ m → isEven m ≡ false) (sym p) (isEven-suc-doubleℕ j))
 
 -- Even and Odd witnesses are unique
 Even-unique : {n : ℕ} → (e₁ e₂ : Even n) → fst e₁ ≡ fst e₂
-Even-unique (j , p) (k , q) = double-inj j k (sym p ∙ q)
+Even-unique (j , p) (k , q) = doubleℕ-inj j k (sym p ∙ q)
 
 Odd-unique : {n : ℕ} → (o₁ o₂ : Odd n) → fst o₁ ≡ fst o₂
-Odd-unique (j , p) (k , q) = suc-double-inj j k (sym p ∙ q)
+Odd-unique (j , p) (k , q) = suc-doubleℕ-inj j k (sym p ∙ q)
 
 -- ───────────────────────────────────────────────────────────────
 -- Section 14: Reconstruction from parity and half
@@ -295,11 +290,11 @@ Odd-unique (j , p) (k , q) = suc-double-inj j k (sym p ∙ q)
 -- If two numbers have the same parity and same half, they are equal
 even→eq : (n m : ℕ) → isEven n ≡ true → isEven m ≡ true → half n ≡ half m → n ≡ m
 even→eq n m en em hq =
-  sym (double-half-even n en) ∙ cong double hq ∙ double-half-even m em
+  sym (doubleℕ-half-even n en) ∙ cong doubleℕ hq ∙ doubleℕ-half-even m em
 
 odd→eq : (n m : ℕ) → isEven n ≡ false → isEven m ≡ false → half n ≡ half m → n ≡ m
 odd→eq n m on om hq =
-  sym (suc-double-half-odd n on) ∙ cong (suc ∘ double) hq ∙ suc-double-half-odd m om
+  sym (suc-doubleℕ-half-odd n on) ∙ cong (suc ∘ doubleℕ) hq ∙ suc-doubleℕ-half-odd m om
 
 -- ───────────────────────────────────────────────────────────────
 -- Section 15: half is bounded
@@ -313,19 +308,19 @@ half≤ (suc (suc n)) =
   in suc d , cong suc (+-suc d (half n)) ∙ cong (suc ∘ suc) p
 
 -- ───────────────────────────────────────────────────────────────
--- Section 16: double is monotone
+-- Section 16: doubleℕ is monotone
 -- ───────────────────────────────────────────────────────────────
 
-double-suc : (n : ℕ) → double (suc n) ≡ suc (suc (double n))
-double-suc n = refl
+doubleℕ-suc : (n : ℕ) → doubleℕ (suc n) ≡ suc (suc (doubleℕ n))
+doubleℕ-suc n = refl
 
 private
-  double-+ : (a b : ℕ) → double (a +ℕ b) ≡ double a +ℕ double b
-  double-+ zero b = refl
-  double-+ (suc a) b = cong (suc ∘ suc) (double-+ a b)
+  doubleℕ-+ : (a b : ℕ) → doubleℕ (a +ℕ b) ≡ doubleℕ a +ℕ doubleℕ b
+  doubleℕ-+ zero b = refl
+  doubleℕ-+ (suc a) b = cong (suc ∘ suc) (doubleℕ-+ a b)
 
-double-mono : (m n : ℕ) → m ≤ n → double m ≤ double n
-double-mono m n (d , p) = double d , sym (double-+ d m) ∙ cong double p
+doubleℕ-mono : (m n : ℕ) → m ≤ n → doubleℕ m ≤ doubleℕ n
+doubleℕ-mono m n (d , p) = doubleℕ d , sym (doubleℕ-+ d m) ∙ cong doubleℕ p
 
 -- ───────────────────────────────────────────────────────────────
 -- Section 17: Parity of addition
@@ -333,29 +328,29 @@ double-mono m n (d , p) = double d , sym (double-+ d m) ∙ cong double p
 
 Even+Even→Even : {m n : ℕ} → Even m → Even n → Even (m +ℕ n)
 Even+Even→Even {m} {n} (j , p) (k , q) =
-  j +ℕ k , cong (_+ℕ n) p ∙ cong (double j +ℕ_) q ∙ sym (double-+ j k)
+  j +ℕ k , cong (_+ℕ n) p ∙ cong (doubleℕ j +ℕ_) q ∙ sym (doubleℕ-+ j k)
 
 Odd+Odd→Even : {m n : ℕ} → Odd m → Odd n → Even (m +ℕ n)
 Odd+Odd→Even {m} {n} (j , p) (k , q) =
-  suc (j +ℕ k) , cong (_+ℕ n) p ∙ cong (suc (double j) +ℕ_) q ∙ lem j k
+  suc (j +ℕ k) , cong (_+ℕ n) p ∙ cong (suc (doubleℕ j) +ℕ_) q ∙ lem j k
   where
-  lem : (a b : ℕ) → suc (double a) +ℕ suc (double b) ≡ double (suc (a +ℕ b))
+  lem : (a b : ℕ) → suc (doubleℕ a) +ℕ suc (doubleℕ b) ≡ doubleℕ (suc (a +ℕ b))
   lem zero b = refl
   lem (suc a) b = cong (suc ∘ suc) (lem a b)
 
 Even+Odd→Odd : {m n : ℕ} → Even m → Odd n → Odd (m +ℕ n)
 Even+Odd→Odd {m} {n} (j , p) (k , q) =
-  j +ℕ k , cong (_+ℕ n) p ∙ cong (double j +ℕ_) q ∙ lem j k
+  j +ℕ k , cong (_+ℕ n) p ∙ cong (doubleℕ j +ℕ_) q ∙ lem j k
   where
-  lem : (a b : ℕ) → double a +ℕ suc (double b) ≡ suc (double (a +ℕ b))
+  lem : (a b : ℕ) → doubleℕ a +ℕ suc (doubleℕ b) ≡ suc (doubleℕ (a +ℕ b))
   lem zero b = refl
   lem (suc a) b = cong (suc ∘ suc) (lem a b)
 
 Odd+Even→Odd : {m n : ℕ} → Odd m → Even n → Odd (m +ℕ n)
 Odd+Even→Odd {m} {n} (j , p) (k , q) =
-  j +ℕ k , cong (_+ℕ n) p ∙ cong (suc (double j) +ℕ_) q ∙ lem j k
+  j +ℕ k , cong (_+ℕ n) p ∙ cong (suc (doubleℕ j) +ℕ_) q ∙ lem j k
   where
-  lem : (a b : ℕ) → suc (double a) +ℕ double b ≡ suc (double (a +ℕ b))
+  lem : (a b : ℕ) → suc (doubleℕ a) +ℕ doubleℕ b ≡ suc (doubleℕ (a +ℕ b))
   lem zero b = refl
   lem (suc a) b = cong (suc ∘ suc) (lem a b)
 
@@ -365,8 +360,8 @@ Odd+Even→Odd {m} {n} (j , p) (k , q) =
 
 -- Eliminate by parity into any type family
 parityElim : ∀ {ℓ} {A : ℕ → Type ℓ}
-  → ((k : ℕ) → A (double k))
-  → ((k : ℕ) → A (suc (double k)))
+  → ((k : ℕ) → A (doubleℕ k))
+  → ((k : ℕ) → A (suc (doubleℕ k)))
   → (n : ℕ) → A n
 parityElim fe fo n with parity n
 ... | even k = fe k
@@ -393,16 +388,16 @@ evenOddElim-even : ∀ {ℓ} {A : ℕ → Type ℓ}
   → {fe : (n : ℕ) → Even n → A n}
   → {fo : (n : ℕ) → Odd n → A n}
   → (k : ℕ)
-  → evenOddElim fe fo (double k) ≡ fe (double k) (Even-double k)
-evenOddElim-even {fe = fe} {fo = fo} k with even-or-odd (double k)
-... | inl e = cong (fe (double k)) (Σ≡Prop (λ j → isSetℕ _ _) (Even-unique e (Even-double k)))
-... | inr o = ⊥.rec (¬Even∧Odd (Even-double k) o)
+  → evenOddElim fe fo (doubleℕ k) ≡ fe (doubleℕ k) (Even-doubleℕ k)
+evenOddElim-even {fe = fe} {fo = fo} k with even-or-odd (doubleℕ k)
+... | inl e = cong (fe (doubleℕ k)) (Σ≡Prop (λ j → isSetℕ _ _) (Even-unique e (Even-doubleℕ k)))
+... | inr o = ⊥.rec (¬Even∧Odd (Even-doubleℕ k) o)
 
 evenOddElim-odd : ∀ {ℓ} {A : ℕ → Type ℓ}
   → {fe : (n : ℕ) → Even n → A n}
   → {fo : (n : ℕ) → Odd n → A n}
   → (k : ℕ)
-  → evenOddElim fe fo (suc (double k)) ≡ fo (suc (double k)) (Odd-suc-double k)
-evenOddElim-odd {fe = fe} {fo = fo} k with even-or-odd (suc (double k))
-... | inl e = ⊥.rec (¬Even∧Odd e (Odd-suc-double k))
-... | inr o = cong (fo (suc (double k))) (Σ≡Prop (λ j → isSetℕ _ _) (Odd-unique o (Odd-suc-double k)))
+  → evenOddElim fe fo (suc (doubleℕ k)) ≡ fo (suc (doubleℕ k)) (Odd-suc-doubleℕ k)
+evenOddElim-odd {fe = fe} {fo = fo} k with even-or-odd (suc (doubleℕ k))
+... | inl e = ⊥.rec (¬Even∧Odd e (Odd-suc-doubleℕ k))
+... | inr o = cong (fo (suc (doubleℕ k))) (Σ≡Prop (λ j → isSetℕ _ _) (Odd-unique o (Odd-suc-doubleℕ k)))
