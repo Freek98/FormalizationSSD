@@ -1,7 +1,9 @@
 module PropositionalTopology.Properties where
 open import PropositionalTopology.Definitions
 
+open import BinarySequences.Definitions
 open import BinarySequences
+open import BinarySequences.Properties
 open import Cubical.Foundations.Isomorphism
 open Iso
 open import Cubical.Foundations.Prelude
@@ -33,7 +35,7 @@ isOpenPropHelperConstructor : (P : hProp ℓ-zero) →
   (α : binarySequence) → (Σℕ α → ⟨ P ⟩) → (⟨ P ⟩ → ∥ Σℕ α ∥₁) → isOpenProp P 
 isOpenPropHelperConstructor P α Σα→P P→∃α = ∣ α , P→Σα , Σα→P ∣₁ where
   P→Σα : ⟨ P ⟩ → Σℕ α
-  P→Σα p = extractFirstHitInBinarySequence.extract α (P→∃α p)
+  P→Σα p = hasSplitSupportΣℕ1 α (P→∃α p)
 
 
 OpenWitnessBinary⊔ : (P Q : hProp ℓ-zero) → isOpenWitness P → isOpenWitness Q → isOpenProp (P ⊔ Q)

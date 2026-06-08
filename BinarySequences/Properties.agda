@@ -145,5 +145,5 @@ module extractFirstHitInBinarySequence (α : binarySequence) where
   extract : ∃[ n ∈ ℕ ] (α n ≡ true)  → Σ[ n ∈ ℕ ] (α n ≡ true) 
   extract = firstHit→Witness ∘ extractFirst
 
-hasSplitSupportΣℕ : (α : binarySequence) → SplitSupport (Σℕ1 α)
-hasSplitSupportΣℕ = extractFirstHitInBinarySequence.extract 
+hasSplitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
+hasSplitSupportΣℕ1 = extractFirstHitInBinarySequence.extract 
