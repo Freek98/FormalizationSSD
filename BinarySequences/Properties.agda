@@ -107,11 +107,7 @@ private
   
   ¬true→not≡true : (b : Bool) → ¬ b ≡ true → not b ≡ true
   ¬true→not≡true b p = cong not $ ¬true→false b p
-
   
-  <help : {m n k : ℕ} → (m < n) → n < suc k → m < k 
-  <help {m} {n} {k} m<n n<Sk = pred-≤-pred (suc (suc m) ≤⟨ suc-≤-suc m<n ⟩ suc n ≤≡⟨ n<Sk ⟩ suc k ∎) 
-
 module AtMostOneHit (α : binarySequence) where
   noHitBefore : binarySequence
   noHitBefore zero = true
@@ -147,12 +143,6 @@ module AtMostOneHit (α : binarySequence) where
       (allFalseBefore→noHitBefore n (λ k k<n → all0 k (≤-suc k<n)))
       (cong not (all0 n ≤-refl))
 
---  nonoHitBefore→Hit : (n : ℕ) → noHitBefore n ≡ false → Σℕ1 α
---  nonoHitBefore→Hit zero p = ex-falso (true≢false p) 
---  nonoHitBefore→Hit (suc n) p = case deMorganBool (noHitBefore n) (not $ α n) p of λ 
---    { (inl noHitBeforen=false ) → nonoHitBefore→Hit n noHitBeforen=false
---    ; (inr notα=false) → n , sym (notnot $ α n) ∙ cong not notα=false } 
-
   noHitBeforePred : (n : ℕ) → noHitBefore (suc n) ≡ true → noHitBefore n ≡ true
   noHitBeforePred n = and-elim-left (noHitBefore n) (not $ α n)
 
@@ -185,6 +175,8 @@ module AtMostOneHit (α : binarySequence) where
             splitSupportΣℕ1 ∘ 
             PT.map αToOnlyFirstHit where
     open ℕ∞SequenceProperties onlyFirstHit atMostOneHitInOnlyFirstHit 
+
+
 
 splitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
 splitSupportΣℕ1 = AtMostOneHit.extract 

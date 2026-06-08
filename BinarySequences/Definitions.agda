@@ -37,6 +37,6 @@ hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n �
 ℕ∞ : Type ℓ-zero
 ℕ∞ = Σ[ α ∈ binarySequence ] hits1AtMostOnce α
 
-
 hits1NotTwice : binarySequence → Type 
 hits1NotTwice α = ∀ (n m : ℕ) → ¬ (m ≡ n) → α m and α n ≡ false
+
