@@ -41,11 +41,13 @@ OpenWitnessBinary⊔ P Q (α , P→α , α→P) (β , Q→β , β→Q) = isOpenP
   (P ⊔ Q) γ γ→P∨Q (PT.map P⊎Q→γ) where
   γ : binarySequence 
   γ k = α k or β k 
+
   P⊎Q→γ : ⟨ P ⟩ ⊎ ⟨ Q ⟩  → Σ[ n ∈ ℕ ] γ n ≡ true
   P⊎Q→γ (⊎.inl p) = case P→α p return (λ _ → Σ-syntax ℕ λ n → γ n ≡ true) of λ 
     (n , αn=1) → n , cong (λ a → a or (β n)) αn=1
   P⊎Q→γ (⊎.inr q) = case Q→β q return (λ _ → Σ-syntax ℕ λ n → γ n ≡ true) of λ 
     (n , βn=1) → n , cong (λ b → (α n) or b) βn=1 ∙ or-zeroʳ (α n) 
+
   γ→P⊎Q : Σ[ n ∈ ℕ ] γ n ≡ true → ⟨ P ⟩ ⊎ ⟨ Q ⟩
   γ→P⊎Q (n , γn=1) = case or-true→⊎ (α n) (β n) γn=1 of λ 
     { (⊎.inl αn=1) → ⊎.inl (α→P (n , αn=1))
@@ -131,6 +133,7 @@ isPropIsClosedProp = squash₁
 
 isPropIsOpenProp : {P : hProp ℓ-zero} → isProp (isOpenProp P)
 isPropIsOpenProp = squash₁
+
 negOpenWitnessIsClosedWitness : (P : hProp ℓ-zero) → isOpenWitness P → isClosedWitness (¬ P) 
 negOpenWitnessIsClosedWitness P (α , P→Σα , Σα→P) = 
   α , ¬P→∀α , ∀α→¬P where

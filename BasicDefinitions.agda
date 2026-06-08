@@ -10,20 +10,10 @@ open import Cubical.Foundations.Function
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Foundations.Isomorphism
 
+open import BinarySequences.Definitions public renaming (Σℕ1 to Σℕ)
+
 _↔_ : {ℓ ℓ' : Level} → Type ℓ → Type ℓ' → Type (ℓ-max ℓ ℓ')
 A ↔ B = (A → B) × (B → A)
-
-binarySequence : Type 
-binarySequence = ℕ → Bool
-
-bitFlip : binarySequence → binarySequence
-bitFlip α = not ∘ α 
-
-δSequence : ℕ → binarySequence
-δSequence = _≡ᵇ_
-
-Σℕ : binarySequence → Type 
-Σℕ α = Σ[ n ∈ ℕ ] α n ≡ true
 
 has-Countability-structure : {ℓ : Level} → (A : Type ℓ) → Type ℓ
 has-Countability-structure A = Σ[ α ∈ binarySequence ] Iso A (Σℕ α)

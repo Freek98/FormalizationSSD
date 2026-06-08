@@ -33,39 +33,14 @@ open import Cubical.Data.Nat.Bijections.Product using (ℕ×ℕ≅ℕ)
 open import CountablyPresentedBooleanRings.Examples.NFinCofin
 open import BooleanRing.BooleanRingQuotients.QuotientBool
 open import BooleanRing.BoolAlgMorphism
+open import BinarySequences.Definitions public 
+open import BinarySequences.Properties public 
 
 open BooleanAlgebraStr ⦃...⦄
 open BooleanRingStr ⦃...⦄
 instance 
   _ = snd $ freeBA ℕ
   _ = snd $ presentation
-
-hits1AtMostOnce : binarySequence → Type 
-hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n ≡ m 
-
-isPropHits1AtMostOnce : (α : binarySequence) → isProp (hits1AtMostOnce α)
-isPropHits1AtMostOnce α = isPropΠ4 λ n m _ _ → isSetℕ n m 
-
-hits1NotTwice : binarySequence → Type 
-hits1NotTwice α = ∀ (n m : ℕ) → ((m ≡ n) → ⊥) → α m and α n ≡ false
-
-atMostOnce→NotTwice : (α : binarySequence) → hits1AtMostOnce α → hits1NotTwice α 
-atMostOnce→NotTwice α atMostOnce n m n≢m = case (α m =B false , α n =B false) 
-  return (λ _ → α m and α n ≡ false) of λ 
-    { (yes p , yes p₁) → cong₂ _and_ p p₁
-    ; (yes p , no ¬p) → cong (λ b → b and α n) p
-    ; (no ¬p , yes p) → cong (_and_ (α m)) p ∙ and-zeroʳ (α m)
-    ; (no ¬p , no ¬p₁) → ex-falso (n≢m (atMostOnce m n (¬false→true (α m) ¬p) (¬false→true (α n) ¬p₁))) } 
-
-notTwice→AtMostOnce : (α : binarySequence) → hits1NotTwice α → hits1AtMostOnce α 
-notTwice→AtMostOnce α notTwice m n αm=1 αn=1 = case discreteℕ m n return (λ _ → m ≡ n) of 
-  λ { (yes p) → p
-    ; (no ¬p) → ex-falso (true≢false $ 
-      true 
-        ≡⟨ sym $ cong₂ _and_ αm=1 αn=1 ⟩ 
-      α m and α n 
-        ≡⟨ notTwice n m ¬p ⟩ 
-      false ∎ ) } 
 
 ℕ∞ : Type ℓ-zero
 ℕ∞ = Σ[ α ∈ binarySequence ] hits1AtMostOnce α
