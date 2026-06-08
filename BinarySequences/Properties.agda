@@ -119,12 +119,42 @@ module AtMostOneHit (α : binarySequence) where
   noHitBefore : binarySequence
   noHitBefore zero = true
   noHitBefore (suc n) = (noHitBefore n) and (not $ α n)
+  
+  onlyFirstHit : binarySequence
+  onlyFirstHit n = (α n) and (noHitBefore n)
+    
+  getEarlierHit : (n : ℕ) → noHitBefore n ≡ false → Σ[ k ∈ ℕ ] (k < n) × (α k ≡ true)
+  getEarlierHit zero    p = ex-falso (true≢false p)         
+  getEarlierHit (suc n) p = case deMorganBool (noHitBefore n) (not (α n)) p of λ
+    { (inl nHBn)  → let (k , k<n , αk) = getEarlierHit n nHBn in k , ≤-suc k<n , αk
+    ; (inr notαn) → n , ≤-refl , not≡false→≡true (α n) notαn }
+  
+  boundedαToFirstHit : (bound n : ℕ) → n < bound → α n ≡ true → Σℕ1 onlyFirstHit
+  boundedαToFirstHit zero    n n<0  _  = ex-falso (¬-<-zero n<0)
+  boundedαToFirstHit (suc b) n n<sb αn = case noHitBefore n =B true of λ
+    { (yes nHBn) → n , cong₂ _and_ αn nHBn
+    ; (no ¬nHBn) → let (k , k<n , αk) = getEarlierHit n (¬true→false (noHitBefore n) ¬nHBn)
+                   in boundedαToFirstHit b k (≤-trans k<n (pred-≤-pred n<sb)) αk }
+                   -- Note that in this final call, the bound is smaller!
+  
+  αToOnlyFirstHit : Σℕ1 α → Σℕ1 onlyFirstHit
+  αToOnlyFirstHit (n , αn) = boundedαToFirstHit (suc n) n ≤-refl αn
+  
+  onlyFirstHitToα : (n : ℕ) → onlyFirstHit n ≡ true → α n ≡ true
+  onlyFirstHitToα n = and-elim-left (α n) (noHitBefore n) 
+ 
+  allFalseBefore→noHitBefore : (n : ℕ) → ((k : ℕ) → k < n → α k ≡ false) → noHitBefore n ≡ true
+  allFalseBefore→noHitBefore zero    _    = refl
+  allFalseBefore→noHitBefore (suc n) all0 =
+    cong₂ _and_
+      (allFalseBefore→noHitBefore n (λ k k<n → all0 k (≤-suc k<n)))
+      (cong not (all0 n ≤-refl))
 
-  nonoHitBefore→Hit : (n : ℕ) → noHitBefore n ≡ false → Σℕ1 α
-  nonoHitBefore→Hit zero p = ex-falso (true≢false p) 
-  nonoHitBefore→Hit (suc n) p = case deMorganBool (noHitBefore n) (not $ α n) p of λ 
-    { (inl noHitBeforen=false ) → nonoHitBefore→Hit n noHitBeforen=false
-    ; (inr notα=false) → n , sym (notnot $ α n) ∙ cong not notα=false } 
+--  nonoHitBefore→Hit : (n : ℕ) → noHitBefore n ≡ false → Σℕ1 α
+--  nonoHitBefore→Hit zero p = ex-falso (true≢false p) 
+--  nonoHitBefore→Hit (suc n) p = case deMorganBool (noHitBefore n) (not $ α n) p of λ 
+--    { (inl noHitBeforen=false ) → nonoHitBefore→Hit n noHitBeforen=false
+--    ; (inr notα=false) → n , sym (notnot $ α n) ∙ cong not notα=false } 
 
   noHitBeforePred : (n : ℕ) → noHitBefore (suc n) ≡ true → noHitBefore n ≡ true
   noHitBeforePred n = and-elim-left (noHitBefore n) (not $ α n)
@@ -139,92 +169,93 @@ module AtMostOneHit (α : binarySequence) where
       noHitBefore→SoFarAll0 n (noHitBeforePred n noHitBeforeSn=1) k (pred-≤-pred Sk<Sn)
       ; (inr Sk=Sn) → 
       noHitBeforeToNoTα k (cong noHitBefore Sk=Sn ∙ noHitBeforeSn=1) } 
-  
-  onlyFirstHit : binarySequence
-  onlyFirstHit n = (α n) and (noHitBefore n)
-
-  onlyFirstHitToα : (n : ℕ) → onlyFirstHit n ≡ true → α n ≡ true
-  onlyFirstHitToα n = and-elim-left (α n) (noHitBefore n) 
 
   onlyFirstHitToNoEarlierHit : (n : ℕ) → onlyFirstHit n ≡ true → (k : ℕ) → k < n → α k ≡ false 
   onlyFirstHitToNoEarlierHit n = noHitBefore→SoFarAll0 n ∘ and-elim-right (α n) (noHitBefore n) 
   atMostOneHitInOnlyFirstHit : hits1AtMostOnce onlyFirstHit
   atMostOneHitInOnlyFirstHit m n fHm fHn = case (m =ℕTrich n) return (λ _ → m ≡ n) of 
-    λ { (lt m<n) → ex-falso $ helper m n fHm fHn m<n
+    λ { (lt m<n) → ex-falso $ <case m n fHm fHn m<n
       ; (eq m=n) → m=n
-      ; (gt n<m) → ex-falso $ helper n m fHn fHm n<m } where
-      helper : (k l : ℕ) → onlyFirstHit k ≡ true → onlyFirstHit l ≡ true → ¬ k < l
-      helper k l fHk fHl k<l = true≢false $ 
-        true ≡⟨ sym $ onlyFirstHitToα k fHk ⟩ 
-        α k  ≡⟨ onlyFirstHitToNoEarlierHit l fHl k k<l ⟩ 
-        false ∎ 
+      ; (gt n<m) → ex-falso $ <case n m fHn fHm n<m } where
+        <case : (k l : ℕ) → onlyFirstHit k ≡ true → onlyFirstHit l ≡ true → ¬ k < l
+        <case k l fHk fHl k<l = true≢false $ 
+          true ≡⟨ sym $ onlyFirstHitToα k fHk ⟩ 
+          α k  ≡⟨ onlyFirstHitToNoEarlierHit l fHl k k<l ⟩ 
+          false ∎ 
   
+  extract : ∃ℕ1 α → Σℕ1 α
+  extract = (λ ((n , p)) → n , onlyFirstHitToα n p) ∘ 
+            splitSupportΣℕ1 ∘ 
+            PT.map αToOnlyFirstHit where
+    open ℕ∞SequenceProperties onlyFirstHit atMostOneHitInOnlyFirstHit 
+
 --  αToFirstHit : Σℕ1 α → Σℕ1 onlyFirstHit 
 --  αToFirstHit (zero , α0)  = zero , cong (_and true) α0
 --  αToFirstHit (suc n , αSn) = case noHitBefore n of λ 
 --    { false → {!  !}
 --    ; true → {!  !} } 
   
-  firstHitAt : (n : ℕ) → Type
-  firstHitAt m = (α m ≡ true) × ((k : ℕ) → k < m → α k ≡ false)
-    
-  firstSeenBefore : ℕ → Type
-  firstSeenBefore n = (Σ[ m ∈ ℕ ] (m < n) × firstHitAt m)
-  
-  first-hit : Type
-  first-hit = Σ[ m ∈ ℕ ] firstHitAt m
-  
-  pred¬firstSeenBefore : (n : ℕ) → (¬ firstSeenBefore (suc n) ) → ¬ firstSeenBefore n
-  pred¬firstSeenBefore n nothingBeforeSn (m , m<n , αm , notbeforem) = nothingBeforeSn (m , ≤-suc m<n , αm , notbeforem) 
+--  firstHitAt : (n : ℕ) → Type
+--  firstHitAt m = (α m ≡ true) × ((k : ℕ) → k < m → α k ≡ false)
+--    
+--  firstSeenBefore : ℕ → Type
+--  firstSeenBefore n = (Σ[ m ∈ ℕ ] (m < n) × firstHitAt m)
+--  
+--  first-hit : Type
+--  first-hit = Σ[ m ∈ ℕ ] firstHitAt m
+--
+--  
+--  pred¬firstSeenBefore : (n : ℕ) → (¬ firstSeenBefore (suc n) ) → ¬ firstSeenBefore n
+--  pred¬firstSeenBefore n nothingBeforeSn (m , m<n , αm , notbeforem) = nothingBeforeSn (m , ≤-suc m<n , αm , notbeforem) 
+--
+--  isPropFirstHitAt : (n : ℕ) → isProp (firstHitAt n)
+--  isPropFirstHitAt n (p , nF) (p' , nF') = Σ≡Prop 
+--    (λ αn → isPropΠ2 λ n _ → isSetBool (α n) false) 
+--    (isSetBool (α n) true p p') 
+--
+--  isPropFirstHit : isProp first-hit
+--  isPropFirstHit (m , αm , mFirst) (n , αn , nFirst ) with (m =ℕTrich n ) 
+--  ... | lt m<n = ex-falso (true≢false (sym αm ∙ nFirst m m<n))
+--  ... | eq m=n = Σ≡Prop (λ n → isPropFirstHitAt n) m=n
+--  ... | gt n<m = ex-falso (true≢false (sym αn ∙ mFirst n n<m )) 
+--
+--  notSeenAtToNoHitBefore : (n : ℕ) → ¬ firstSeenBefore n → (k : ℕ) → k < n → α k ≡ false 
+--  notSeenAtToNoHitBefore zero _ _ k<0            = ex-falso $ ¬-<-zero k<0
+--  notSeenAtToNoHitBefore (suc n) noBefore k k<Sn = ¬true→false (α k) λ { αk → noBefore 
+--    (k , k<Sn , αk , λ { l l<k → notSeenAtToNoHitBefore n (pred¬firstSeenBefore n noBefore) l (<help l<k k<Sn) }) } 
+--
+--  decidableFirst : (n : ℕ ) → Dec (firstSeenBefore n)
+--  decidableFirst zero    = no λ { ( _ , m<0 , _) → ¬-<-zero m<0 }
+--  decidableFirst (suc n) with (decidableFirst n)
+--  ... | yes (m , m<n , first) = yes (m , (m <⟨ m<n ⟩ n <≡⟨ 0 , refl ⟩ suc n ∎) , first)
+--  ... | no noEarlierFirst with (α n =B true) 
+--  ...     | yes αn = yes 
+--               (n , (0 , refl) , αn , notSeenAtToNoHitBefore n noEarlierFirst )
+--  ...     | no ¬αn = no caseSplit where
+--             caseSplit : firstSeenBefore (suc n)  → ⊥ 
+--             caseSplit (m , m<Sn , αm , x) with <-split m<Sn 
+--             ... | inl m<n = noEarlierFirst (m , m<n , αm , x)
+--             ... | inr m=n = ¬αn (cong α (sym m=n) ∙ αm)  
+--
+--  findFirst : (n : ℕ) → α n ≡ true → firstSeenBefore (suc n)
+--  findFirst n αn with decidableFirst (suc n) 
+--  ... | yes p = p
+--  ... | no ¬p = ex-falso (¬p (n , (0 , refl) , αn , (notSeenAtToNoHitBefore n $ pred¬firstSeenBefore n ¬p)))
+--  
+--  extractFirst : ∃[ n ∈ ℕ ] α n ≡ true → first-hit
+--  extractFirst = PT.rec isPropFirstHit (uncurry goback) where
+--   
+--    spot : (n : ℕ) → firstSeenBefore n → first-hit
+--    spot n (m , _ , αm , mfirst) = m , αm , mfirst 
+--
+--    goback : (n : ℕ) → α n ≡ true → first-hit
+--    goback n αn = spot (suc n) (findFirst n αn) 
+--  
+--  firstHit→Witness : first-hit → Σ[ n ∈ ℕ ] α n ≡ true
+--  firstHit→Witness (n , αn , _ ) = n , αn 
 
-  isPropFirstHitAt : (n : ℕ) → isProp (firstHitAt n)
-  isPropFirstHitAt n (p , nF) (p' , nF') = Σ≡Prop 
-    (λ αn → isPropΠ2 λ n _ → isSetBool (α n) false) 
-    (isSetBool (α n) true p p') 
-
-  isPropFirstHit : isProp first-hit
-  isPropFirstHit (m , αm , mFirst) (n , αn , nFirst ) with (m =ℕTrich n ) 
-  ... | lt m<n = ex-falso (true≢false (sym αm ∙ nFirst m m<n))
-  ... | eq m=n = Σ≡Prop (λ n → isPropFirstHitAt n) m=n
-  ... | gt n<m = ex-falso (true≢false (sym αn ∙ mFirst n n<m )) 
-
-  notSeenAtToNoHitBefore : (n : ℕ) → ¬ firstSeenBefore n → (k : ℕ) → k < n → α k ≡ false 
-  notSeenAtToNoHitBefore zero _ _ k<0            = ex-falso $ ¬-<-zero k<0
-  notSeenAtToNoHitBefore (suc n) noBefore k k<Sn = ¬true→false (α k) λ { αk → noBefore 
-    (k , k<Sn , αk , λ { l l<k → notSeenAtToNoHitBefore n (pred¬firstSeenBefore n noBefore) l (<help l<k k<Sn) }) } 
-
-  decidableFirst : (n : ℕ ) → Dec (firstSeenBefore n)
-  decidableFirst zero    = no λ { ( _ , m<0 , _) → ¬-<-zero m<0 }
-  decidableFirst (suc n) with (decidableFirst n)
-  ... | yes (m , m<n , first) = yes (m , (m <⟨ m<n ⟩ n <≡⟨ 0 , refl ⟩ suc n ∎) , first)
-  ... | no noEarlierFirst with (α n =B true) 
-  ...     | yes αn = yes 
-               (n , (0 , refl) , αn , notSeenAtToNoHitBefore n noEarlierFirst )
-  ...     | no ¬αn = no caseSplit where
-             caseSplit : firstSeenBefore (suc n)  → ⊥ 
-             caseSplit (m , m<Sn , αm , x) with <-split m<Sn 
-             ... | inl m<n = noEarlierFirst (m , m<n , αm , x)
-             ... | inr m=n = ¬αn (cong α (sym m=n) ∙ αm)  
-
-  findFirst : (n : ℕ) → α n ≡ true → firstSeenBefore (suc n)
-  findFirst n αn with decidableFirst (suc n) 
-  ... | yes p = p
-  ... | no ¬p = ex-falso (¬p (n , (0 , refl) , αn , (notSeenAtToNoHitBefore n $ pred¬firstSeenBefore n ¬p)))
-  
-  extractFirst : ∃[ n ∈ ℕ ] α n ≡ true → first-hit
-  extractFirst = PT.rec isPropFirstHit (uncurry goback) where
-   
-    spot : (n : ℕ) → firstSeenBefore n → first-hit
-    spot n (m , _ , αm , mfirst) = m , αm , mfirst 
-
-    goback : (n : ℕ) → α n ≡ true → first-hit
-    goback n αn = spot (suc n) (findFirst n αn) 
-  
-  firstHit→Witness : first-hit → Σ[ n ∈ ℕ ] α n ≡ true
-  firstHit→Witness (n , αn , _ ) = n , αn 
-
-  extract : ∃[ n ∈ ℕ ] (α n ≡ true)  → Σ[ n ∈ ℕ ] (α n ≡ true) 
-  extract = firstHit→Witness ∘ extractFirst
-
-hasSplitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
-hasSplitSupportΣℕ1 = AtMostOneHit.extract 
+--  extract : ∃[ n ∈ ℕ ] (α n ≡ true)  → Σ[ n ∈ ℕ ] (α n ≡ true) 
+--  extract = firstHit→Witness ∘ extractFirst
+--
+--hasSplitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
+--hasSplitSupportΣℕ1 = AtMostOneHit.extract 
