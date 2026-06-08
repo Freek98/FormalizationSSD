@@ -2,10 +2,9 @@
 
 * Re-organizing the repo so the dependency structure (what imports what) makes more sense. 
 + I made a new directory for Stone spaces. There was a lot more stuff in StoneDuality though, and I split that into two files in CategoryTheory. Might be that I need to come back to it later, but for now it's clean enough. 
-+ So we should then factor out Sp and put it into a file on Stone spaces, 
-+ One of the things that's annoying is that instances for BooleanAlgebraStr don't work well. I think they might work if you derive only the second part (right now both A and the Structure on A are part of the instances), I'll think about why. This is now fixed, waiting for the PR to be accepted in the cubical library. 
-+ I completely forgot why there is a guardedness flag. Something breaks if I remove it, don't get why
 
-* LLPO
-+ there is an autoformalized proof of LLPO that I don't follow. It was made by me first writing an informal sketch in tex and feeding this to the AI. I think I want to do this in more detail, but it's nice to know it can be done (although I don't follow it compeletely). I've now had a "conversation" and follow the proof, but am not completely happy with two aspects (as is noted in that file).
-+ We need that the Category of countably presented Boolean rings has products, hence Stone has Pushouts (so this argument needs to use the antiequivalence). This now has a direct proof, and I think it factors over the adjunction, but I'm not sure that's actually the nices presentation in agda, as there's not all the category theory background that I think is needed. 
++ So we should then factor out Sp and put it into a file on Stone spaces, 
+
++ One of the things that's annoying is that instances for BooleanAlgebraStr don't work well. I think they might work if you derive only the second part (right now both A and the Structure on A are part of the instances), I'll think about why. This is now fixed, waiting for the PR to be accepted in the cubical library. 
+
++ I completely forgot why there is a guardedness flag. Something breaks if I remove it, don't get why
