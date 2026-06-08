@@ -16,6 +16,9 @@ binarySequence = ℕ → Bool
 bitFlip : binarySequence → binarySequence
 bitFlip = not ∘_ 
 
+tail : binarySequence → binarySequence
+tail α n = α (suc n)
+
 δSequence : ℕ → binarySequence
 δSequence = _≡ᵇ_
 

@@ -81,7 +81,44 @@ notTwice→AtMostOnce α notTwice m n αm=1 αn=1 = case discreteℕ m n return 
 -- 
 -- firstHitAt is actually a binary sequence, one that is constructed from conjunction of the binary sequence witnessing that there have only been zeros before n and alpha itself. (the LLM formalization called this "noHitBefore" and "firstHitOnly"). I think it's better to define those sequences and derive the noHitBefore property on itself. 
 -- 
-module extractFirstHitInBinarySequence (α : binarySequence) where
+
+private 
+  and-elim-left : (a b : Bool) → a and b ≡ true → a ≡ true 
+  and-elim-left false b p = ex-falso (false≢true p)
+  and-elim-left true _  _ = refl 
+
+  and-elim-right : (a b : Bool) → a and b ≡ true → b ≡ true 
+  and-elim-right a false p = ex-falso (true≢false (sym p ∙ and-comm a false))
+  and-elim-right _ true  _ = refl
+
+  not≡true→≡false : (b : Bool) → not b ≡ true → b ≡ false
+  not≡true→≡false false _ = refl
+  not≡true→≡false true  p = ex-falso (false≢true p)
+
+  not≡false→≡true : (b : Bool) → not b ≡ false → b ≡ true
+  not≡false→≡true false p = ex-falso (true≢false p)  
+  not≡false→≡true true  _ = refl
+  
+  <help : {m n k : ℕ} → (m < n) → n < suc k → m < k 
+  <help {m} {n} {k} m<n n<Sk = pred-≤-pred (suc (suc m) ≤⟨ suc-≤-suc m<n ⟩ suc n ≤≡⟨ n<Sk ⟩ suc k ∎) 
+
+module AtMostOneHit (α : binarySequence) where
+  noHitBefore : binarySequence
+  noHitBefore zero = false
+  noHitBefore (suc n) = (noHitBefore n) and (not $ α n)
+
+  noHitBeforePred : (n : ℕ) → noHitBefore (suc n) ≡ true → noHitBefore n ≡ true
+  noHitBeforePred n = and-elim-left _ _ 
+
+  noHitBefore→SoFarAll0 : (n : ℕ) → noHitBefore n ≡ true → (k : ℕ) → k < n → α k ≡ false 
+  noHitBefore→SoFarAll0 zero _ k k<n = ex-falso (¬-<-zero k<n)
+  noHitBefore→SoFarAll0 (suc n) noHitBeforeSn=1 k k<sucn = case ≤-split k<sucn of 
+    λ { (inl Sk<Sn) → noHitBefore→SoFarAll0 n (noHitBeforePred n noHitBeforeSn=1) k {! !}
+      ; (inr Sk=Sn) → {! !} } 
+
+  onlyFirstHit : binarySequence
+  onlyFirstHit n = (α n) and (noHitBefore n)
+  
   firstHitAt : (n : ℕ) → Type
   firstHitAt m = (α m ≡ true) × ((k : ℕ) → k < m → α k ≡ false)
     
@@ -108,9 +145,7 @@ module extractFirstHitInBinarySequence (α : binarySequence) where
   notSeenAtToNoHitBefore : (n : ℕ) → ¬ firstSeenBefore n → (k : ℕ) → k < n → α k ≡ false 
   notSeenAtToNoHitBefore zero _ _ k<0            = ex-falso $ ¬-<-zero k<0
   notSeenAtToNoHitBefore (suc n) noBefore k k<Sn = ¬true→false (α k) λ { αk → noBefore 
-    (k , k<Sn , αk , λ { l l<k → notSeenAtToNoHitBefore n (pred¬firstSeenBefore n noBefore) l (<help l<k k<Sn) }) }  where
-      <help : {m n k : ℕ} → (m < n) → n < suc k → m < k 
-      <help {m} {n} {k} m<n n<Sk = pred-≤-pred (suc (suc m) ≤⟨ suc-≤-suc m<n ⟩ suc n ≤≡⟨ n<Sk ⟩ suc k ∎) 
+    (k , k<Sn , αk , λ { l l<k → notSeenAtToNoHitBefore n (pred¬firstSeenBefore n noBefore) l (<help l<k k<Sn) }) } 
 
   decidableFirst : (n : ℕ ) → Dec (firstSeenBefore n)
   decidableFirst zero    = no λ { ( _ , m<0 , _) → ¬-<-zero m<0 }
@@ -146,4 +181,4 @@ module extractFirstHitInBinarySequence (α : binarySequence) where
   extract = firstHit→Witness ∘ extractFirst
 
 hasSplitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
-hasSplitSupportΣℕ1 = extractFirstHitInBinarySequence.extract 
+hasSplitSupportΣℕ1 = AtMostOneHit.extract 
