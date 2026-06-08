@@ -34,5 +34,9 @@ tail α n = α (suc n)
 hits1AtMostOnce : binarySequence → Type 
 hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n ≡ m 
 
+ℕ∞ : Type ℓ-zero
+ℕ∞ = Σ[ α ∈ binarySequence ] hits1AtMostOnce α
+
+
 hits1NotTwice : binarySequence → Type 
 hits1NotTwice α = ∀ (n m : ℕ) → ¬ (m ≡ n) → α m and α n ≡ false

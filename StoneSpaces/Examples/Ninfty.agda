@@ -42,9 +42,6 @@ instance
   _ = snd $ freeBA ℕ
   _ = snd $ presentation
 
-ℕ∞ : Type ℓ-zero
-ℕ∞ = Σ[ α ∈ binarySequence ] hits1AtMostOnce α
-
 SpB∞ : Type ℓ-zero
 SpB∞ = SpGeneralBooleanRing presentation
 
@@ -65,7 +62,7 @@ SpHits1AtMostOnce f n m αn=1 αm=1 = case discreteℕ n m return (λ _ → n �
   λ { (yes p) → p
     ; (no ¬p) → ex-falso (true≢false $ 
       true and true 
-        ≡⟨ cong₂ _and_ (sym αn=1) (sym αm=1) ⟩  
+        ≡⟨ sym $ cong₂ _and_ αn=1 αm=1 ⟩  
       (Sp→BinarySequence f n) and (Sp→BinarySequence f m)
         ≡⟨ sym $ pres∧ (freeBA ℕ) BoolBR (fst (f ∘cr quotientImageHom)) 
                 (snd (f ∘cr quotientImageHom)) (generator n) (generator m) ⟩ 
