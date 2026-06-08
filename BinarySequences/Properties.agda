@@ -66,9 +66,6 @@ module _ (α : binarySequence) where
     splitSupportΣℕ1 : SplitSupport $ Σℕ1 α
     splitSupportΣℕ1 = PT.rec isPropΣℕ1 λ x → x 
 
-
-
-
 atMostOnce→NotTwice : (α : binarySequence) → hits1AtMostOnce α → hits1NotTwice α 
 atMostOnce→NotTwice α atMostOnce n m n≢m = case (α m =B false , α n =B false) 
   return (λ _ → α m and α n ≡ false) of λ 
@@ -189,73 +186,5 @@ module AtMostOneHit (α : binarySequence) where
             PT.map αToOnlyFirstHit where
     open ℕ∞SequenceProperties onlyFirstHit atMostOneHitInOnlyFirstHit 
 
---  αToFirstHit : Σℕ1 α → Σℕ1 onlyFirstHit 
---  αToFirstHit (zero , α0)  = zero , cong (_and true) α0
---  αToFirstHit (suc n , αSn) = case noHitBefore n of λ 
---    { false → {!  !}
---    ; true → {!  !} } 
-  
---  firstHitAt : (n : ℕ) → Type
---  firstHitAt m = (α m ≡ true) × ((k : ℕ) → k < m → α k ≡ false)
---    
---  firstSeenBefore : ℕ → Type
---  firstSeenBefore n = (Σ[ m ∈ ℕ ] (m < n) × firstHitAt m)
---  
---  first-hit : Type
---  first-hit = Σ[ m ∈ ℕ ] firstHitAt m
---
---  
---  pred¬firstSeenBefore : (n : ℕ) → (¬ firstSeenBefore (suc n) ) → ¬ firstSeenBefore n
---  pred¬firstSeenBefore n nothingBeforeSn (m , m<n , αm , notbeforem) = nothingBeforeSn (m , ≤-suc m<n , αm , notbeforem) 
---
---  isPropFirstHitAt : (n : ℕ) → isProp (firstHitAt n)
---  isPropFirstHitAt n (p , nF) (p' , nF') = Σ≡Prop 
---    (λ αn → isPropΠ2 λ n _ → isSetBool (α n) false) 
---    (isSetBool (α n) true p p') 
---
---  isPropFirstHit : isProp first-hit
---  isPropFirstHit (m , αm , mFirst) (n , αn , nFirst ) with (m =ℕTrich n ) 
---  ... | lt m<n = ex-falso (true≢false (sym αm ∙ nFirst m m<n))
---  ... | eq m=n = Σ≡Prop (λ n → isPropFirstHitAt n) m=n
---  ... | gt n<m = ex-falso (true≢false (sym αn ∙ mFirst n n<m )) 
---
---  notSeenAtToNoHitBefore : (n : ℕ) → ¬ firstSeenBefore n → (k : ℕ) → k < n → α k ≡ false 
---  notSeenAtToNoHitBefore zero _ _ k<0            = ex-falso $ ¬-<-zero k<0
---  notSeenAtToNoHitBefore (suc n) noBefore k k<Sn = ¬true→false (α k) λ { αk → noBefore 
---    (k , k<Sn , αk , λ { l l<k → notSeenAtToNoHitBefore n (pred¬firstSeenBefore n noBefore) l (<help l<k k<Sn) }) } 
---
---  decidableFirst : (n : ℕ ) → Dec (firstSeenBefore n)
---  decidableFirst zero    = no λ { ( _ , m<0 , _) → ¬-<-zero m<0 }
---  decidableFirst (suc n) with (decidableFirst n)
---  ... | yes (m , m<n , first) = yes (m , (m <⟨ m<n ⟩ n <≡⟨ 0 , refl ⟩ suc n ∎) , first)
---  ... | no noEarlierFirst with (α n =B true) 
---  ...     | yes αn = yes 
---               (n , (0 , refl) , αn , notSeenAtToNoHitBefore n noEarlierFirst )
---  ...     | no ¬αn = no caseSplit where
---             caseSplit : firstSeenBefore (suc n)  → ⊥ 
---             caseSplit (m , m<Sn , αm , x) with <-split m<Sn 
---             ... | inl m<n = noEarlierFirst (m , m<n , αm , x)
---             ... | inr m=n = ¬αn (cong α (sym m=n) ∙ αm)  
---
---  findFirst : (n : ℕ) → α n ≡ true → firstSeenBefore (suc n)
---  findFirst n αn with decidableFirst (suc n) 
---  ... | yes p = p
---  ... | no ¬p = ex-falso (¬p (n , (0 , refl) , αn , (notSeenAtToNoHitBefore n $ pred¬firstSeenBefore n ¬p)))
---  
---  extractFirst : ∃[ n ∈ ℕ ] α n ≡ true → first-hit
---  extractFirst = PT.rec isPropFirstHit (uncurry goback) where
---   
---    spot : (n : ℕ) → firstSeenBefore n → first-hit
---    spot n (m , _ , αm , mfirst) = m , αm , mfirst 
---
---    goback : (n : ℕ) → α n ≡ true → first-hit
---    goback n αn = spot (suc n) (findFirst n αn) 
---  
---  firstHit→Witness : first-hit → Σ[ n ∈ ℕ ] α n ≡ true
---  firstHit→Witness (n , αn , _ ) = n , αn 
-
---  extract : ∃[ n ∈ ℕ ] (α n ≡ true)  → Σ[ n ∈ ℕ ] (α n ≡ true) 
---  extract = firstHit→Witness ∘ extractFirst
---
---hasSplitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
---hasSplitSupportΣℕ1 = AtMostOneHit.extract 
+splitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
+splitSupportΣℕ1 = AtMostOneHit.extract 
