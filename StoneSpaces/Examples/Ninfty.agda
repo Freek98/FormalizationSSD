@@ -1,4 +1,3 @@
-
 module StoneSpaces.Examples.Ninfty where
 
 open import StoneSpaces.Spectrum

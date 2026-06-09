@@ -101,7 +101,7 @@ module quotientByCountable (γ : binarySequence) (A : BooleanRing ℓ-zero) wher
     A/g→A/f = QB.inducedHom A/f QB.quotientImageHom fZeroOnG
     
     gZeroOnF : (x : X) → QB.quotientImageHom {f = g} $cr f x ≡ 𝟘 
-    gZeroOnF x@(n , p) = cong (fst QB.quotientImageHom) (sym $ gYesCase n p) ∙ QB.zeroOnImage n 
+    gZeroOnF (n , p) = cong (fst QB.quotientImageHom) (sym $ gYesCase n p) ∙ QB.zeroOnImage n 
     A/f→A/g : BoolHom A/f A/g
     A/f→A/g = QB.inducedHom A/g QB.quotientImageHom gZeroOnF 
     

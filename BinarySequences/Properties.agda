@@ -189,4 +189,3 @@ module Interleave (α β : binarySequence) where
     α n ∎  
   sndOnOdds : (n : ℕ) → interleave α β (suc (doubleℕ n)) ≡ β n
   sndOnOdds n = cong (⊎.rec α β) (Iso.ret ℕ⊎ℕ≅ℕ (inr n)) 
-

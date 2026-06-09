@@ -8,3 +8,5 @@
 + One of the things that's annoying is that instances for BooleanAlgebraStr don't work well. I think they might work if you derive only the second part (right now both A and the Structure on A are part of the instances), I'll think about why. This is now fixed, waiting for the PR to be accepted in the cubical library. 
 
 + I completely forgot why there is a guardedness flag. Something breaks if I remove it, don't get why
+* Making LLM generated and old-me generated stuff more now-me readable. 
++ Countability.Properties contains some helper functions I don't trust. 

@@ -1,0 +1,7 @@
+- equivalent versions of axiom 2 propositional completeness vs surjections formal surjections vs truncation of stone is closed. 
+- closure properties of open/closed propositions. (Plumbing of binary sequence results)
+- ODisc classification
+- ODisc + BA = BooleOmega
+- Sequential limits as Stone
+- equality in Odisc is open, equality in Stone is closed. 
+- classification of closed in Stone via local choice. 

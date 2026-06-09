@@ -67,6 +67,7 @@ module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩
     quotientImageHomEpi : {ℓ' : Level} → (S : hSet ℓ') → {f' g' : ⟨ B /Im f ⟩ → ⟨ S ⟩} → 
                           f' ∘ quotientImageHom .fst ≡ g' ∘ quotientImageHom .fst → f' ≡ g'
     quotientImageHomEpi S {f'} {g'} = quotientHomEpi (BooleanRing→CommRing B) (IQ.genIdeal (BooleanRing→CommRing B) f) S f' g'
+
   
     open BooleanRingStr (snd $ B /Im f)
     zeroOnImage : (x : X) → (quotientImageHom $cr (f x)) ≡ 𝟘
