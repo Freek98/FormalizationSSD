@@ -46,19 +46,30 @@ module surjectionsAxiomToPropositionalCompleteness
   isInjective! true false  = ex-falso ∘ 0≠1 ∘ sym
   isInjective! true true   = λ _ → refl 
   
-  isSurjective→1 : isSurjection {A = Sp B} {B = Unit} λ _ → tt 
-  isSurjective→1 = {! !} 
+  isSurjSp! : isSurjection $ SpAction BoolCP B (BoolBR→ (fst B)) 
+  isSurjSp! = FS BoolCP B (BoolBR→ (fst B)) isInjective! 
 
-  SpBInhabited : ∥ Sp B ∥₁ 
-  SpBInhabited = PT.map fst (isSurjective→1 tt)
+  spBool : Sp BoolCP
+  spBool = BoolBR→ BoolBR
+
+  spB : ∥ Sp B ∥₁
+  spB = PT.map fst (isSurjSp! spBool)
 
 FormalSurjectionsToPropositionalCompleteness : StoneDualityAxiom → formalSurjectionsAreSurjectionsAxiom → PropositonalCompleteness
-FormalSurjectionsToPropositionalCompleteness SD FS (S , B , SpB=S) = {!  !} where 
-  open surjectionsAxiomToPropositionalCompleteness SD FS B
+FormalSurjectionsToPropositionalCompleteness SD FS (S , B , SpB=S) ¬¬S =
+  subst ∥_∥₁ SpB=S spB where
+  ¬¬SpB : ¬ ¬ Sp B
+  ¬¬SpB = subst (¬_ ∘ ¬_) (sym SpB=S) ¬¬S
+  open surjectionsAxiomToPropositionalCompleteness SD FS B ¬¬SpB
 
---module propositionalCompletenessToSurjectionFormalSurjections 
---  (SD : StoneDualityAxiom)  
---  (PC : PropositonalCompleteness) where
+module propositionalCompletenessToSurjectionFormalSurjections 
+  (SD : StoneDualityAxiom)  
+  (PC : PropositonalCompleteness) 
+  (B C : Booleω) 
+  (f : BoolHom (fst B) (fst C)) 
+  (finj : isInjectiveBoolHom B C f) where
+  fiberfBoole : ⟨ fst C ⟩  → Booleω
+  fiberfBoole = {! !} 
   
 
 
