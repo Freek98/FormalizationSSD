@@ -1,12 +1,14 @@
 module Axioms.SurjectionsAreFormalSurjections where
 
 open import BasicDefinitions
+open import BooleanRing.FreeBooleanRing.FreeBool
+
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Function
 
 open import Cubical.Data.Sigma
+open import Cubical.Data.Unit
 open import Cubical.Functions.Surjection
-
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
@@ -41,9 +43,14 @@ formalSurjectionsAreSurjectionsAxiom =
   (B C : Booleω) (g : BoolHom (fst B) (fst C)) →
   isInjectiveBoolHom B C g → isSurjectiveSpHom B C g
 
---
---surjectionsAreFormallySurjecive : (B C : Booleω) (g : BoolHom (fst B) (fst C)) → isSurjectiveSpHom B C g → isInjectiveBoolHom B C g 
---surjectionsAreFormallySurjecive B C g ∘gSurj = {! !} 
----- This should be a standard categorical fact. 
+surjectionsAreFormallySurjecive : (B C : Booleω) (g : BoolHom (fst B) (fst C)) → isSurjectiveSpHom B C g → isInjectiveBoolHom B C g 
+surjectionsAreFormallySurjecive B C g ∘gSurj b c gb=gc = {! ∘gSurj   !} where
+  pick : ⟨ fst B ⟩ → BoolHom (freeBA Unit) (fst B)
+  pick x = inducedBAHom Unit (fst B) λ _ → x 
+  gpickx=gpicky : g ∘cr pick b ≡ g ∘cr pick c
+  gpickx=gpicky = {! gb=gc !} 
+
+
+-- This should be a standard categorical fact if we replace surjective by epi and injective by mono. But we should be able to see it via the free BA on 1 generator, and the morphisms sending that one generator to x and to y. 
 
 

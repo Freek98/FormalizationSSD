@@ -1,5 +1,3 @@
-
-
 module BooleanRing.FreeBooleanRing.FreeBool where
 
 {- This file, which has been adapted from an assignment for Advanced Functional Programming at Chalmers by Daniel Apol, Freek Geerligs and David Warn, aims to describe 

@@ -35,7 +35,7 @@ isOpenPropHelperConstructor : (P : hProp ℓ-zero) →
   (α : binarySequence) → (Σℕ α → ⟨ P ⟩) → (⟨ P ⟩ → ∥ Σℕ α ∥₁) → isOpenProp P 
 isOpenPropHelperConstructor P α Σα→P P→∃α = ∣ α , P→Σα , Σα→P ∣₁ where
   P→Σα : ⟨ P ⟩ → Σℕ α
-  P→Σα p = hasSplitSupportΣℕ1 α (P→∃α p)
+  P→Σα p = splitSupportΣℕ1 α (P→∃α p)
 
 
 OpenWitnessBinary⊔ : (P Q : hProp ℓ-zero) → isOpenWitness P → isOpenWitness Q → isOpenProp (P ⊔ Q)
@@ -223,4 +223,4 @@ OpenWitnessℕ⊔ P w = β , ∃P→Σβ , ∣_∣₁ ∘ Σβ→ΣP  where
 
   ∃P→Σβ :  ∃[ n ∈ ℕ ] ⟨ P n ⟩ → Σℕ β
   ∃P→Σβ = extract ∘ ∃P→∃β where
-    open extractFirstHitInBinarySequence β
+    open AtMostOneHit β
