@@ -25,7 +25,7 @@ open import BooleanRing.BooleanRingQuotients.QuotientBool
 open import Countability.Properties 
 open import BooleanRing.FreeBooleanRing.freeBATerms
 
-module _ 
+module RepresentedBooleanRing
   {G : Type} {R : Type}
   (rel : R → ⟨ freeBA G ⟩) where
   private  
@@ -42,5 +42,7 @@ module _
       open BooleanRingStr (snd C)
       απ≡βπ : α ∘cr π ≡ β ∘cr π
       απ≡βπ = equalityFromEqualityOnGenerators C (α ∘cr π) (β ∘cr π) agree
-
+  
+  _$gen_ : {ℓ : Level} {C : BooleanRing ℓ} → (f : BoolHom B C) → G → ⟨ C ⟩
+  f $gen g = (f ∘cr π) $cr generator g 
 
