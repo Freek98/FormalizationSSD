@@ -1,8 +1,10 @@
 module BinarySequences.Definitions where 
 
 open import Cubical.Data.Sigma
+open import Cubical.Data.Sum as ⊎
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
 open import Cubical.Data.Nat
+open import Cubical.Data.Nat.Bijections.Sum
 
 open import Cubical.Foundations.Function
 
@@ -39,4 +41,7 @@ hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n �
 
 hits1NotTwice : binarySequence → Type 
 hits1NotTwice α = ∀ (n m : ℕ) → ¬ (m ≡ n) → α m and α n ≡ false
+
+interleave : binarySequence → binarySequence → binarySequence
+interleave α β = ⊎.rec α β ∘ Iso.inv ℕ⊎ℕ≅ℕ 
 

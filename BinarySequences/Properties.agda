@@ -5,6 +5,7 @@ open import BinarySequences.Definitions
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool renaming ( _≤_ to _≤B_ ; _≥_ to _≥B_ ; _≟_ to _=B_)
 open import Cubical.Data.Nat
+open import Cubical.Data.Nat.Bijections.Sum
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
@@ -176,7 +177,16 @@ module AtMostOneHit (α : binarySequence) where
             PT.map αToOnlyFirstHit where
     open ℕ∞SequenceProperties onlyFirstHit atMostOneHitInOnlyFirstHit 
 
-
-
 splitSupportΣℕ1 : (α : binarySequence) → SplitSupport (Σℕ1 α)
 splitSupportΣℕ1 = AtMostOneHit.extract 
+
+module Interleave (α β : binarySequence) where 
+  fstOnEvens : (n : ℕ) → interleave α β (doubleℕ n) ≡ α n 
+  fstOnEvens n = 
+    interleave α β (doubleℕ n) ≡⟨⟩ 
+    ⊎.rec α β (Iso.inv ℕ⊎ℕ≅ℕ (doubleℕ n)) ≡⟨ cong (⊎.rec α β) (Iso.ret ℕ⊎ℕ≅ℕ (inl n)) ⟩ 
+    ⊎.rec α β (inl n) ≡⟨⟩ 
+    α n ∎  
+  sndOnOdds : (n : ℕ) → interleave α β (suc (doubleℕ n)) ≡ β n
+  sndOnOdds n = cong (⊎.rec α β) (Iso.ret ℕ⊎ℕ≅ℕ (inr n)) 
+
