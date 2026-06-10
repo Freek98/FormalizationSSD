@@ -40,7 +40,7 @@ module surjectionsAxiomToPropositionalCompleteness
   0≠1 : ¬ (𝟘 ≡ 𝟙)
   0≠1 = SpBnonEmpty ∘ TrivialImpliesSpEmpty.spEmpty B 
   open IsCommRingHom (snd $ BoolBR→ (fst B))
-  isInjective! : isInjectiveBoolHom BoolCP B (BoolBR→ (fst B)) 
+  isInjective! : isInjectiveBoolHom BoolBR (fst B) (BoolBR→ (fst B)) 
   isInjective! false false = λ _ → refl
   isInjective! false true  = ex-falso ∘ 0≠1 
   isInjective! true false  = ex-falso ∘ 0≠1 ∘ sym
@@ -67,7 +67,7 @@ module propositionalCompletenessToSurjectionFormalSurjections
   (PC : PropositonalCompleteness) 
   (B C : Booleω) 
   (f : BoolHom (fst B) (fst C)) 
-  (finj : isInjectiveBoolHom B C f) where
+  (finj : isInjectiveBoolHom (fst B) (fst C) f) where
   fiberfBoole : ⟨ fst C ⟩  → Booleω
   fiberfBoole = {! !} 
   

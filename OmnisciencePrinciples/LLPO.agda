@@ -213,8 +213,8 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
     ≡⟨ IsCommRingHom.pres0 (snd γ) ⟩
       false ∎
 
-  splitInj : isInjectiveBoolHom B∞ B∞xB∞ splitHom
-  splitInj = ker≡0→injBoolHom B∞ B∞xB∞ splitHom splitHom-kernel 
+  splitInj : isInjectiveBoolHom _ _ splitHom
+  splitInj = ker≡0→injBoolHom _ _ splitHom splitHom-kernel 
   
   SpSplit : Sp B∞xB∞ → Sp B∞
   SpSplit γ = γ ∘cr splitHom

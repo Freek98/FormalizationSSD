@@ -18,25 +18,27 @@ open import Cubical.Algebra.BooleanRing
 open import Cubical.Algebra.BooleanRing.Instances.Bool
 open import StoneSpaces.Spectrum
 
-isInjectiveBoolHom : (B C : Booleω) → BoolHom (fst B) (fst C) → Type ℓ-zero
-isInjectiveBoolHom B C g = (x y : ⟨ fst B ⟩) → g $cr x ≡ g $cr y → x ≡ y
--- Fact : it's sufficient to show that f x = 0 → x = 0. 
+-- RENAMING FLAG
 
-module _ (B C : Booleω) where
+module _ {ℓ ℓ' : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ') (f : BoolHom B C) where
   open BooleanRingStr ⦃...⦄
   instance 
-    _ = snd $ fst B
-    _ = snd $ fst C
+    _ = snd B
+    _ = snd C
   open RingHomTheory
+  isInjectiveBoolHom : Type _
+  isInjectiveBoolHom = (x y : ⟨ B ⟩) → (f $cr x) ≡ (f $cr y) → x ≡ y 
+  
   ker≡0→injBoolHom : 
-    (f : BoolHom (fst B) (fst C) ) → 
-    ((b : ⟨ fst B ⟩) → f $cr b ≡ 𝟘 → b ≡ 𝟘) → 
-    isInjectiveBoolHom B C f
-  ker≡0→injBoolHom f fb=0→b=0 x y = ker≡0→inj (CommRingHom→RingHom f) (λ {b} → fb=0→b=0 b) {x} {y}
+    ((b : ⟨ B ⟩) → f $cr b ≡ 𝟘 → b ≡ 𝟘) → 
+    isInjectiveBoolHom
+  ker≡0→injBoolHom fb=0→b=0 x y = ker≡0→inj (CommRingHom→RingHom f) (λ {b} → fb=0→b=0 b) {x} {y}
 
+  SpGeneralAction : SpGeneralBooleanRing C → SpGeneralBooleanRing B
+  SpGeneralAction = _∘cr f 
 
-SpAction : (B C : Booleω) → BoolHom (fst B) (fst C) → Sp C → Sp B
-SpAction B C f γ = γ ∘cr f 
+SpAction : (B C : Booleω) → BoolHom (fst B) (fst C) → Sp C → Sp B 
+SpAction B C = SpGeneralAction  (fst B) (fst C)
 
 isSurjectiveSpHom : (B C : Booleω) → BoolHom (fst B) (fst C) → Type ℓ-zero
 isSurjectiveSpHom B C f = isSurjection (SpAction B C f) 
@@ -44,16 +46,4 @@ isSurjectiveSpHom B C f = isSurjection (SpAction B C f)
 formalSurjectionsAreSurjectionsAxiom : Type (ℓ-suc ℓ-zero)
 formalSurjectionsAreSurjectionsAxiom = 
   (B C : Booleω) (g : BoolHom (fst B) (fst C)) →
-  isInjectiveBoolHom B C g → isSurjectiveSpHom B C g
-
---surjectionsAreFormallySurjecive : (B C : Booleω) (g : BoolHom (fst B) (fst C)) → isSurjectiveSpHom B C g → isInjectiveBoolHom B C g 
---surjectionsAreFormallySurjecive B C g ∘gSurj b c gb=gc = {! ∘gSurj   !} where
---  pick : ⟨ fst B ⟩ → BoolHom (freeBA Unit) (fst B)
---  pick x = inducedBAHom Unit (fst B) λ _ → x 
---  gpickx=gpicky : g ∘cr pick b ≡ g ∘cr pick c
---  gpickx=gpicky = {! gb=gc !} 
-
-
--- This should be a standard categorical fact if we replace surjective by epi and injective by mono. But we should be able to see it via the free BA on 1 generator, and the morphisms sending that one generator to x and to y. 
-
-
+  isInjectiveBoolHom (fst B) (fst C) g → isSurjectiveSpHom B C g
