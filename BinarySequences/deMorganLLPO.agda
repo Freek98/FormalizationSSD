@@ -1,6 +1,5 @@
 module BinarySequences.deMorganLLPO where
 
-
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.HLevels using (hProp)
 open import Cubical.Foundations.Structure using (⟨_⟩)
@@ -63,3 +62,4 @@ LLPO→deMorganOpen : LLPO → (α β : binarySequence) →
   (hits1AtMostOnce α) → hits1AtMostOnce β → 
   ¬ (Σℕ1 α × Σℕ1 β) → ∥(¬ Σℕ1 α) ⊎ (¬ Σℕ1 β) ∥₁ 
 LLPO→deMorganOpen llpo α β α1 β1 nb = deMorganOpen.LLPO→deMorganOpen α β α1 β1 nb llpo 
+
