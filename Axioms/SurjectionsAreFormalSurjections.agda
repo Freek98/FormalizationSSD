@@ -34,6 +34,7 @@ module _ (B C : Booleω) where
     isInjectiveBoolHom B C f
   ker≡0→injBoolHom f fb=0→b=0 x y = ker≡0→inj (CommRingHom→RingHom f) (λ {b} → fb=0→b=0 b) {x} {y}
 
+
 SpAction : (B C : Booleω) → BoolHom (fst B) (fst C) → Sp C → Sp B
 SpAction B C f γ = γ ∘cr f 
 

@@ -1,14 +1,18 @@
 module Axioms.DependentChoice where
-
+open import BasicDefinitions
+open import Cubical.Data.Bool renaming ( _≤_ to _≤B_ ; _≥_ to _≥B_ ; _≟_ to _=B_)
 open import Cubical.Functions.Surjection
 open import Cubical.Foundations.Function
+open import Cubical.Foundations.Isomorphism
 open import Cubical.HITs.PropositionalTruncation using (∣_∣₁ ; ∥_∥₁)
 import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.HITs.PropositionalTruncation.Monad
 open import Cubical.Data.Nat
 open import Cubical.Data.Nat.Order
 open import Cubical.Data.Sigma
+open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Foundations.Prelude
+open import Cubical.Relation.Nullary
 
 -- dual to Sequence as SequentialColimit
 record Tower (ℓ : Level) : Type (ℓ-suc ℓ) where
@@ -47,17 +51,37 @@ DependentChoiceFor P = ((n : ℕ) → P n → ∥ P (suc n) ∥₁) → ∥ P 0 
 DependentChoice : {ℓ : Level} → Type _
 DependentChoice {ℓ} = (P : ℕ → Type ℓ) → DependentChoiceFor P
 
-CountableChoiceFor : (P : ℕ → Type ℓ) → Type _
-CountableChoiceFor P = (∀ (n : ℕ) → ∥ P n ∥₁) → ∥ ((n : ℕ) → P n) ∥₁ 
 
-DependentChoiceForToCountableChoiceFor : (P : ℕ → Type ℓ) → DependentChoiceFor P → CountableChoiceFor P
-DependentChoiceForToCountableChoiceFor P dc ∀∃ = dc (λ n _ → ∀∃ (suc n)) (∀∃ zero) 
+ℕChoiceFor : (P : ℕ → Type ℓ) → Type _
+ℕChoiceFor P = (∀ (n : ℕ) → ∥ P n ∥₁) → ∥ ((n : ℕ) → P n) ∥₁ 
 
-CountableChoice : {ℓ : Level} → Type _ 
-CountableChoice {ℓ} = (P : ℕ → Type ℓ) → CountableChoiceFor P
+DependentChoiceForToℕChoiceFor : (P : ℕ → Type ℓ) → DependentChoiceFor P → ℕChoiceFor P
+DependentChoiceForToℕChoiceFor P dc ∀∃ = dc (λ n _ → ∀∃ (suc n)) (∀∃ zero) 
 
-DependentChoiceToCountableChoice : {ℓ : Level} → DependentChoice {ℓ} → CountableChoice {ℓ}
-DependentChoiceToCountableChoice dc P = DependentChoiceForToCountableChoiceFor P (dc P) 
+ℕChoice : {ℓ : Level} → Type _ 
+ℕChoice {ℓ} = (P : ℕ → Type ℓ) → ℕChoiceFor P
+
+CountableChoice : {ℓ ℓ' : Level} → Type _
+CountableChoice {ℓ} {ℓ'} = (A : Type ℓ) → has-Countability-structure A → 
+  (P : A → Type ℓ') → ((a : A) → ∥ P a ∥₁) → ∥ ((a : A) → P a) ∥₁
+
+ℕChoiceToCountableChoice : {ℓ ℓ' : Level} → ℕChoice {ℓ'} → CountableChoice {ℓ} {ℓ'}
+ℕChoiceToCountableChoice ℕchoice A (α , A=Σα) P ∀a|Pa| = PT.map Pℕ→PA (ℕchoice Pℕ ∀n|Pℕn|) where
+  PAℕ : (n : ℕ) → (αn : α n ≡ true) → Type _
+  PAℕ n αn = P $ Iso.inv A=Σα (n , αn)
+  Pℕ : ℕ → Type _ 
+  Pℕ n = (αn : α n ≡ true) → PAℕ n αn
+  ∀n|Pℕn| : (n : ℕ) → ∥ Pℕ n ∥₁ 
+  ∀n|Pℕn| n with (α n =B true) 
+  ... | yes αn = PT.map 
+    (λ pn αn' → subst (PAℕ n) (isSetBool (α n) true αn αn') pn) 
+    (∀a|Pa| (Iso.inv A=Σα (n , αn))) 
+  ... | no ¬αn = ∣ ex-falso ∘ ¬αn ∣₁
+  Pℕ→PA : ((n : ℕ) → Pℕ n) → (a : A) → P a
+  Pℕ→PA Pn a = subst P (Iso.ret A=Σα a) (uncurry Pn (Iso.fun A=Σα a)) 
+
+DependentChoiceToℕChoice : {ℓ : Level} → DependentChoice {ℓ} → ℕChoice {ℓ}
+DependentChoiceToℕChoice dc P = DependentChoiceForToℕChoiceFor P (dc P) 
 
 module TowerChoiceToDependentChoice {ℓ : Level} (dc : DependentChoiceTowerAxiom {ℓ})
   (P : ℕ → Type ℓ) (pSuc : (n : ℕ) → P n → ∥ P (suc n) ∥₁) (p0 : ∥ P 0 ∥₁ )   where
@@ -96,3 +120,5 @@ module TowerChoiceToDependentChoice {ℓ : Level} (dc : DependentChoiceTowerAxio
 
 DependentChoiceTowerAxiomToDependentChoice : DependentChoiceTowerAxiom {ℓ} → DependentChoice {ℓ}
 DependentChoiceTowerAxiomToDependentChoice = TowerChoiceToDependentChoice.infiniteBranch 
+
+
