@@ -3,7 +3,7 @@
 - ODisc + BA = BooleOmega
 
 - Sequential limits as Stone
-   -- WKL equivalent to Propositional completeness 
+  WKL equivalent to Propositional completeness /surjections formal surjections. 
 
 - equivalent versions of axiom 2 propositional completeness vs surjections formal surjections vs truncation of stone is closed. 
 - equality in Odisc is open, equality in Stone is closed. 
