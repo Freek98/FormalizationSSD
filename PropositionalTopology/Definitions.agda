@@ -27,17 +27,33 @@ open import Cubical.Algebra.BooleanRing
 import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 import Cubical.Data.Sum as ⊎
 
-isOpenWitness : hProp ℓ-zero → Type₀
+private 
+  variable 
+    ℓ : Level
+
+isOpenWitness : hProp ℓ → Type _
 isOpenWitness P = Σ[ α ∈ binarySequence ] ⟨ P ⟩ ↔ (Σ[ n ∈ ℕ ] α n ≡ true)
 
-isOpenProp : hProp ℓ-zero → Type₀
+isOpenProp : hProp ℓ → Type _ 
 isOpenProp P = ∥ isOpenWitness P ∥₁
 
-isClosedWitness : hProp ℓ-zero → Type₀
+hasOpenStr : (P : Type ℓ) → Type _ 
+hasOpenStr P = Σ[ Pprop ∈ isProp P ] isOpenWitness (P , Pprop)
+
+isOpen : (P : Type ℓ) → Type _ 
+isOpen P = ∥ hasOpenStr P ∥₁ 
+
+isClosedWitness : hProp ℓ → Type _ 
 isClosedWitness P = Σ[ α ∈ binarySequence ] ⟨ P ⟩ ↔ ((n : ℕ) →  α n ≡ false)
 
-isClosedProp : hProp ℓ-zero → Type₀
+isClosedProp : hProp ℓ → Type _ 
 isClosedProp P = ∥ isClosedWitness P ∥₁ 
+
+hasClosedStr : (P : Type ℓ) → Type _ 
+hasClosedStr P = Σ[ Pprop ∈ isProp P ] isClosedWitness (P , Pprop)
+
+isClosed : (P : Type ℓ) → Type _ 
+isClosed P = ∥ hasClosedStr P ∥₁ 
 
 Open : Type₁
 Open = Σ[ P ∈ hProp ℓ-zero ] isOpenProp P
