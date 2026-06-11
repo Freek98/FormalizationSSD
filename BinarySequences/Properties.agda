@@ -5,6 +5,7 @@ open import BinarySequences.Definitions
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool renaming ( _≤_ to _≤B_ ; _≥_ to _≥B_ ; _≟_ to _=B_)
 open import Cubical.Data.Nat
+open import LLMGeneratedFixes.BoolProperties
 open import Cubical.Data.Nat.Bijections.Sum
 
 open import Cubical.Foundations.Prelude
@@ -85,30 +86,6 @@ notTwice→AtMostOnce α notTwice m n αm=1 αn=1 = case discreteℕ m n return 
         ≡⟨ notTwice n m ¬p ⟩ 
       false ∎ ) } 
 
-private 
-  and-elim-left : (a b : Bool) → a and b ≡ true → a ≡ true 
-  and-elim-left false b p = ex-falso (false≢true p)
-  and-elim-left true _  _ = refl 
-
-  and-elim-right : (a b : Bool) → a and b ≡ true → b ≡ true 
-  and-elim-right a false p = ex-falso (true≢false (sym p ∙ and-comm a false))
-  and-elim-right _ true  _ = refl
-
-  deMorganBool : (a b : Bool) → a and b ≡ false → (a ≡ false) ⊎ (b ≡ false)
-  deMorganBool false _ _ = inl refl
-  deMorganBool true  b p = inr p
-
-  not≡true→≡false : (b : Bool) → not b ≡ true → b ≡ false
-  not≡true→≡false false _ = refl
-  not≡true→≡false true  p = ex-falso (false≢true p)
-
-  not≡false→≡true : (b : Bool) → not b ≡ false → b ≡ true
-  not≡false→≡true false p = ex-falso (true≢false p)  
-  not≡false→≡true true  _ = refl
-  
-  ¬true→not≡true : (b : Bool) → ¬ b ≡ true → not b ≡ true
-  ¬true→not≡true b p = cong not $ ¬true→false b p
-  
 module AtMostOneHit (α : binarySequence) where
   noHitBefore : binarySequence
   noHitBefore zero = true
