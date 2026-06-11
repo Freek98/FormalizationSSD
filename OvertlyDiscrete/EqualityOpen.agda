@@ -1,6 +1,7 @@
 {-# OPTIONS --lossy-unification #-}
-module OvertlyDiscrete.SeqColim where
+module OvertlyDiscrete.EqualityOpen where
 -- at some points cleaned up with AI help. See 9cfdd16c9820ce97dbb46cb70846233738f5c184 for the version that was human
+-- Goal of this file: show that for sequential colimits of finite sets, equality is open. 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Univalence 
 open import Cubical.Foundations.Function
@@ -19,7 +20,8 @@ open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Data.Nat.Order.Recursive using (Decidable→Collapsible)
 
 -- ════════════════════════════════════════════════════════════════
--- § Inductive ≤ (≤E) — better for recursion/induction on proofs
+-- § Inductively defined ≤. Standard ≤ is defined using the difference, 
+-- but it's annoyting to do induction over this difference. 
 -- ════════════════════════════════════════════════════════════════
 
 data _≤E_ : ℕ → ℕ → Type where
