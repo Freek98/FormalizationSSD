@@ -72,4 +72,3 @@ module propositionalCompletenessToSurjectionFormalSurjections
   fiberfBoole = {! !} 
   
 
-
