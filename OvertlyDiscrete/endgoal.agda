@@ -20,6 +20,7 @@ open import Cubical.Data.FinSet
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Data.Nat.Order.Recursive using (Decidable→Collapsible)
 open import BasicDefinitions
+open import LLMGeneratedFixes.EqualityOpenLLMFinished
 
 open Sequence 
 private  
@@ -41,8 +42,18 @@ hasCountableCover {ℓ} A = Σ[ B ∈ Type ℓ ] has-Countability-structure B ×
 hasOpenEqualityStr : Type ℓ → Type _
 hasOpenEqualityStr A = (x y : A) → hasOpenStr (x ≡ y)
 
-ODiscHasOpenEquality : (A : Type ℓ) → hasODiscStr A → hasOpenEqualityStr A
-ODiscHasOpenEquality = {! !} 
+hasOpenEquality : Type ℓ → Type _ 
+hasOpenEquality A = (x y : A) → isOpen (x ≡ y) 
+
+ODiscHasOpenEquality : (A : Type ℓ) → hasODiscStr A → hasOpenEquality A
+ODiscHasOpenEquality A ((sequence objA mapA , AnFinite) , A=ColimAn) = 
+  subst hasOpenEquality (sym A=ColimAn) equalityIsOpen where
+  open FiniteSeqColim objA mapA AnFinite
+
+
+
+
+  
 
 ODiscHasCountableCover : (A : Type ℓ) → hasODiscStr A → hasCountableCover A
 ODiscHasCountableCover = {! !} 

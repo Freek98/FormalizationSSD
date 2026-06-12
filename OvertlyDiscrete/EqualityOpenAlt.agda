@@ -3,6 +3,7 @@ module OvertlyDiscrete.EqualityOpenAlt where
 -- at some points cleaned up with AI help. See 9cfdd16c9820ce97dbb46cb70846233738f5c184 for the version that was human
 -- Goal of this file: show that for sequential colimits of finite sets, equality is open. 
 open import Cubical.Foundations.Prelude
+open import Cubical.Foundations.Path
 open import Cubical.Foundations.Univalence 
 open import Cubical.Foundations.Function
 open import Cubical.Foundations.Equiv
@@ -220,11 +221,18 @@ module FiniteSeqColim
   Code n x (incl y) = ∥ EqWitness x y ∥₁
   Code n x (push y i) =
     hPropExt squash₁ squash₁
-      (PT.map (EqWitness-push→ x y))
-      (PT.map (EqWitness-push← x y)) i 
+      (PT.map (EqWitness-push→standard x y))
+      (PT.map (EqWitness-push←standard x y)) i 
 
   encode : (n : ℕ) (x : X n) (y : X∞) → incl x ≡ y → Code n x y
   encode n x y p = J (λ y _ → Code n x y) ∣ EqWitness-refl x ∣₁ p
+
+  module decodeHelper {n m : ℕ} (x : X n) (y : X m) ( mereWitness : ∥ EqWitness x y ∥₁) where
+    pathAt0 : incl x ≡ incl y  
+    pathAt0 = EqWitness→StandardPath x y (EqWitness-splitSupport x y mereWitness)
+
+    pathAt1 : incl x ≡ incl (Xmap y)
+    pathAt1 = EqWitness→StandardPath x (Xmap y) (EqWitness-splitSupport x (Xmap y) (PT.map (EqWitness-push→standard x y )  mereWitness))
   
   decode : (n : ℕ) (x : X n) (y : X∞) → Code n x y → incl x ≡ y
   decode n x (incl y) c = EqWitness→StandardPath x y (EqWitness-splitSupport x y c)
@@ -235,32 +243,31 @@ module FiniteSeqColim
         {B = λ j → incl x ≡ (push y j) } 
         {f₀ = λ c → EqWitness→StandardPath x y (EqWitness-splitSupport x y c)} 
         {f₁ = λ c → EqWitness→StandardPath x (Xmap y) (EqWitness-splitSupport x (Xmap y) c )} 
-        f i {! c !} where 
+        f i c where 
+          x=y : ∥ EqWitness x y ∥₁ → incl x ≡ incl y  
+          x=y a = EqWitness→StandardPath x y (EqWitness-splitSupport x y a)
+
+          x=my : ∥ EqWitness x y ∥₁ → incl x ≡ incl (Xmap y)
+          x=my a = (EqWitness→StandardPath x (Xmap y) 
+            (EqWitness-splitSupport x (Xmap y) (PT.map (EqWitness-push→standard x y) a)))
+
+          massagePath : (a : ∥ EqWitness x y ∥₁) → 
+            (PathP (λ i → incl x ≡ (push y i)) (x=y a) (x=my a) ≡ ((x=y a) ∙ (push y) ≡ (x=my a)))
+
           f : (a : ∥ EqWitness x y ∥₁) → PathP (λ j → incl x ≡ push y j) 
-            (EqWitness→StandardPath x y        (EqWitness-splitSupport x y a)) 
-            (EqWitness→StandardPath x (Xmap y) (EqWitness-splitSupport x (Xmap y) 
-            (PT.map (EqWitness-push→standard x y) a))) 
-          f = {! !}
-
-
-
-
-    
-
-
-        
-
+            (x=y a) (x=my a)
+          f a = transport (sym (PathP≡compPath (x=y a) (push y) ?)) {! EqWitnessPathIsPushComposition!}
 
   EqWitnessPathIsPushComposition : {n m : ℕ} (x : X n) (y : X m)
     (k  : ℕ) → (n≤k  : n ≤E k ) → (m≤k  : m ≤E k ) → (p : ι n≤k  x ≡ ι m≤k  y) → 
     (k' : ℕ) → (n≤k' : n ≤E k') → (m≤k' : suc m ≤E k') → (q : ι n≤k' x ≡ ι m≤k' (Xmap y)) → 
-    EqWitness→Path x y (k , n≤k , m≤k , p) ∙ push y ≡ 
-    EqWitness→Path x (Xmap y) (k' , n≤k' , m≤k' , q)
-  EqWitnessPathIsPushComposition x y k n≤k m≤k p k' n≤k' m≤k' q = {! !}
+    EqWitness→StandardPath x y (k , n≤k , m≤k , p) ∙ push y ≡ 
+    EqWitness→StandardPath x (Xmap y) (k' , n≤k' , m≤k' , q)
+  EqWitnessPathIsPushComposition x y k n≤k m≤k p k' n≤k' m≤k' q = {!  !}
 
   EqWitnessPathComp : {n m : ℕ} (x : X n) (y : X m) → 
    (a : EqWitness x y) → (b : EqWitness x (Xmap y)) → 
-   EqWitness→Path x y a ∙ push y ≡ EqWitness→Path x (Xmap y) b 
+   EqWitness→StandardPath x y a ∙ push y ≡ EqWitness→StandardPath x (Xmap y) b 
 
   EqWitnessPathComp x y (k , n≤k , m≤k , p) (k' , n≤k' , m≤k' , q) = 
     EqWitnessPathIsPushComposition x y k n≤k m≤k p k' n≤k' m≤k' q 

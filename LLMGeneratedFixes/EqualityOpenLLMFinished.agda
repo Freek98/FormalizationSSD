@@ -1,8 +1,13 @@
 {-# OPTIONS --lossy-unification #-}
+-- started with own file and let LLM fill holes. 
 -- Goal of this file: for a sequential colimit of finite sets, equality is
 -- open: the path type (incl x ≡ y) is equivalent to the proposition
 -- ∥ Σ k . EqualAt x y k ∥₁, a countable join of decidable propositions.
 -- As a corollary, the colimit is a set (isSetX∞).
+-- The connection to PropositionalTopology.Definitions is provided by
+--   equalityIsOpen : (x y : X∞) → isOpen (x ≡ y)
+-- via the binary sequence of decision bits of EqualAt; at incl-points the
+-- open structure is given untruncated (hasOpenStrEqualityIncl).
 --
 -- Proof outline (encode/decode):
 --   * Code n x y := ∥ EqWitness x y ∥₁, where an EqWitness is a level k
@@ -19,7 +24,7 @@
 --       - pushPath: composing with push moves a witness one level up.
 --
 -- This is the completed version of EqualityOpen.agda / EqualityOpenAlt.agda;
--- the remaining holes were finished by claude fable 5. 
+-- the remaining holes were finished by claude fable 5.
 module LLMGeneratedFixes.EqualityOpenLLMFinished where
 
 open import Cubical.Foundations.Prelude
@@ -32,6 +37,7 @@ open import Cubical.Foundations.Equiv
 open import Cubical.Foundations.HLevels
 open import Cubical.Data.Nat
 open import Cubical.Data.Nat.Order
+open import Cubical.Data.Bool hiding (_≤_ ; _≥_ ; isProp≤)
 open import Cubical.Data.Sigma
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Sequence
@@ -40,6 +46,7 @@ open import Cubical.Relation.Nullary
 open import Cubical.Data.FinSet
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Data.Nat.Order.Recursive using (Decidable→Collapsible)
+open import PropositionalTopology.Definitions
 
 -- ════════════════════════════════════════════════════════════════
 -- § Inductively defined ≤. Standard ≤ is defined using the
@@ -163,6 +170,15 @@ decΣProp Ap Bp (yes a) Bd with Bd a
 ... | yes b = yes (a , b)
 ... | no ¬b = no λ (a' , b) → ¬b (subst _ (Ap a' a) b)
 decΣProp Ap Bp (no ¬a) Bd = no (¬a ∘ fst)
+
+-- a decidable proposition holds iff its decision bit is true
+Dec→Bool-true : {ℓ : Level} {A : Type ℓ} (d : Dec A) → Dec→Bool d ≡ true → A
+Dec→Bool-true (yes a) _ = a
+Dec→Bool-true (no ¬a) e = ex-falso (false≢true e)
+
+Dec→Bool-complete : {ℓ : Level} {A : Type ℓ} (d : Dec A) → A → Dec→Bool d ≡ true
+Dec→Bool-complete (yes _) _ = refl
+Dec→Bool-complete (no ¬a) a = ex-falso (¬a a)
 
 -- ════════════════════════════════════════════════════════════════
 -- § Sequential colimits of finite sets: equality is open.
@@ -494,3 +510,30 @@ module FiniteSeqColim
   isSetX∞ =
     SeqColim→Prop (λ _ → isPropΠ λ _ → isPropIsProp)
       (λ n x → isPropPathFromIncl n x)
+
+  -- ════════════════════════════════════════════════════════════════
+  -- § Equality is open in the sense of PropositionalTopology:
+  -- the sequence of decision bits of EqualAt x y is a binary sequence
+  -- whose hitting true is equivalent to incl x ≡ incl y.
+  -- ════════════════════════════════════════════════════════════════
+
+  EqualAtBool : {n m : ℕ} (x : X n) (y : X m) → ℕ → Bool
+  EqualAtBool x y k = Dec→Bool (isDecEqualAt {x = x} {y = y} k)
+
+  -- at incl-points the open structure is given untruncated
+  hasOpenStrEqualityIncl : {n m : ℕ} (x : X n) (y : X m)
+    → hasOpenStr (Path X∞ (incl x) (incl y))
+  hasOpenStrEqualityIncl {n = n} x y =
+    isPropPathFromIncl n x (incl y) ,
+    EqualAtBool x y ,
+    (λ p → witnessBit (EqWitness-splitSupport x y (encode n x (incl y) p))) ,
+    (λ (k , e) → EqWitness→Path x y (k , Dec→Bool-true (isDecEqualAt {x = x} {y = y} k) e))
+    where
+      witnessBit : EqWitness x y → Σ[ k ∈ ℕ ] EqualAtBool x y k ≡ true
+      witnessBit (k , w) = k , Dec→Bool-complete (isDecEqualAt {x = x} {y = y} k) w
+
+  equalityIsOpen : (x y : X∞) → isOpen (x ≡ y)
+  equalityIsOpen =
+    SeqColim→Prop (λ _ → isPropΠ λ _ → squash₁) λ n x →
+    SeqColim→Prop (λ _ → squash₁) λ m y →
+    ∣ hasOpenStrEqualityIncl x y ∣₁

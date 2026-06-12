@@ -32,6 +32,10 @@ data _≤E_ : ℕ → ℕ → Type where
 ≤E-trans p ≤E-refl = p
 ≤E-trans p (≤E-step q) = ≤E-step (≤E-trans p q)
 
+≤E-suc : {n m : ℕ} → n ≤E m → suc n ≤E suc m
+≤E-suc ≤E-refl = ≤E-refl
+≤E-suc (≤E-step p) = ≤E-step (≤E-suc p) 
+
 ≤E→≤ : {n m : ℕ} → n ≤E m → n ≤ m
 ≤E→≤ ≤E-refl = ≤-refl
 ≤E→≤ (≤E-step p) = ≤-suc (≤E→≤ p)
@@ -158,6 +162,12 @@ module FiniteSeqColim
   EqWitness-splitSupport x y =
     Collapsible→SplitSupport (Decidable→Collapsible isPropEqualAt isDecEqualAt)
 
+  standardizeEqWitness : {n m : ℕ} {x : X n} {y : X m} → EqWitness x y → EqWitness x y
+  standardizeEqWitness {n} {m} {x} {y} = EqWitness-splitSupport x y ∘ ∣_∣₁ 
+  
+  standardizeAlwaysEqual : {n m : ℕ} {x : X n} {y : X m} → (a b : EqWitness x y) → standardizeEqWitness a ≡ standardizeEqWitness b
+  standardizeAlwaysEqual {x = x} {y = y} a b = cong (EqWitness-splitSupport x y) (squash₁ ∣ a ∣₁ ∣ b ∣₁) 
+
   EqWitness-refl : {n : ℕ} (x : X n) → EqWitness x x
   EqWitness-refl x = _ , ≤E-refl , ≤E-refl , refl
 
@@ -217,14 +227,14 @@ module FiniteSeqColim
     (a b : EqWitness x y) → EqWitness→Path x y a ≡ EqWitness→Path x y b
   EqWitnessDon'tCare  x y (k , n≤k , m≤k , p) (k' , n≤k' , m≤k' , q) = 
     EqWitnessDon'tCareHelper x y k n≤k m≤k p k' n≤k' m≤k' q 
-
-
-
-    
-
-
+  
         
-
+  EqWitnessPathVsOnePush : {n m k : ℕ} (x : X n) (y : X m) 
+    (n≤k : n ≤E k ) (m≤k : m ≤E k ) (p : ι n≤k x ≡ ι m≤k y) → 
+    EqWitness→Path x y (k , n≤k , m≤k , p) ∙ push y ≡ 
+    EqWitness→Path x (Xmap y) (suc k , ≤E-step n≤k , ≤E-suc m≤k , 
+      (ι (≤E-step n≤k) x ≡⟨ cong Xmap p ⟩ Xmap (ι m≤k y) ≡⟨ {! ι-suc  !} ⟩ ι (≤E-suc m≤k) (Xmap y) ∎  )) 
+  EqWitnessPathVsOnePush = {! !} 
 
   EqWitnessPathIsPushComposition : {n m : ℕ} (x : X n) (y : X m)
     (k  : ℕ) → (n≤k  : n ≤E k ) → (m≤k  : m ≤E k ) → (p : ι n≤k  x ≡ ι m≤k  y) → 
@@ -262,16 +272,6 @@ module FiniteSeqColim
   encode n x y p = J (λ y _ → Code n x y) ∣ EqWitness-refl x ∣₁ p
   -- inzicht: gebruik splitsupport om dingen gelijk te krijgen in EqWitness x y en EqWitness x (Xmap y)
   -- Kan je niet ervoor zorgen dat EqWitness altijd k gebruikt zodat die ook werkt voor Xmap y. 
-  -- Of makkelijker geval, wat als je alleen bewijst dat 
-  -- EqWitness x x en EqWitness x (Xmap x) behandelt?
-  -- 
-
---  y=pushyi : {n : ℕ} → (y : X n) → (i : I)  → PathP (λ j → X∞) (incl y) (push y i) 
---  y=pushyi {n = n} y i j = push {n = n} y (i ∧ j) 
---  my=pushyi : {n : ℕ} → (y : X n) → (i : I)  → PathP (λ j → X∞) (push y i) (incl (Xmap y))
---  my=pushyi {n = n} y i j = push {n = n} y (i ∨ j) 
---  pushyi=pushyj : {n : ℕ} → (y : X n) → (i j : I) → PathP (λ k → X∞) (push y i) (push y j)
---  pushyi=pushyj y i j = (sym $ y=pushyi y i) ∙ y=pushyi y j 
 
   decode : (n : ℕ) (x : X n) (y : X∞) → Code n x y → incl x ≡ y
   decode n x (incl y) c = EqWitness→Path x y (EqWitness-splitSupport x y c)
@@ -283,16 +283,12 @@ module FiniteSeqColim
         {f₀ = λ c → EqWitness→Path x y (EqWitness-splitSupport x y c)} 
         {f₁  = λ c → EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) c )} 
         f i c where 
---    f' : (a : ∥ EqWitness x y ∥₁) → PathP (λ j → incl x ≡ push y j) 
---         (EqWitness→Path x y (EqWitness-splitSupport x y a)) 
---         (EqWitness→Path x (Xmap y) (EqWitness-push→ x y (EqWitness-splitSupport x y a))) 
---    f' a = {!   !} 
 
     f : (a : ∥ EqWitness x y ∥₁) → PathP (λ j → incl x ≡ push y j) 
         (EqWitness→Path x y (EqWitness-splitSupport x y a)) 
         (EqWitness→Path x (Xmap y) (EqWitness-splitSupport x (Xmap y) 
         (PT.map (EqWitness-push→ x y) a))) 
-    f a = {! EqWitnessPathComp !} where -- J {! !} {! !} (snd $ snd $ snd sup)  where
+    f a = {! EqWitnessPathComp !} where 
       sup = EqWitness-splitSupport x y a
       
     {- 

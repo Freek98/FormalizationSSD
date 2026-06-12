@@ -7,7 +7,7 @@ open import Cubical.Foundations.Transport using (pathToIso)
 open import Cubical.Foundations.Function
 open import Cubical.Foundations.HLevels
 
-open import Cubical.Data.Nat
+open import Cubical.Data.Nat renaming ( _≡ᵇ_ to _≡ℕ_ )
 open import Cubical.Data.Bool hiding (_≟_)
 open import Cubical.Data.Bool.Properties using (isSetBool ; false≢true)
 open import Cubical.Data.Sigma
@@ -35,10 +35,10 @@ open import BinarySequences
 ℕ×ℕ-Diag-Count : has-Countability-structure (Σ[ (n , m) ∈ ℕ × ℕ ] ((n ≡ m) → ⊥))
 ℕ×ℕ-Diag-Count = has-Countability-structure-Iso (has-Countability-structure-Σ-Bool P ℕ×ℕCount) (invIso ℕ×ℕ-Diag≃ΣℕP) where
   P : ℕ × ℕ → Bool
-  P (n , m) = not (n ≡ᵇ m)
+  P (n , m) = not (n ≡ℕ m)
   ℕ×ℕ-Diag≃ΣℕP : Iso (Σ[ (n , m)  ∈ ℕ × ℕ ] ((n ≡ m) → ⊥)) (Σ[ p ∈ (ℕ × ℕ) ] P p ≡ true)
-  ℕ×ℕ-Diag≃ΣℕP .Iso.fun ((n , m) , n≢m) = (n , m) , ¬false→true (not (n ≡ᵇ m)) λ n≡ᵇm → n≢m {!   !}
-  ℕ×ℕ-Diag≃ΣℕP .Iso.inv ((n , m) , Pnm=t) = (n , m) , λ n=m → {! case (discreteℕ n m) of ?  !} 
+  ℕ×ℕ-Diag≃ΣℕP .Iso.fun ((n , m) , n≢m) = (n , m) , ¬false→true (not (n ≡ℕ m)) λ n≡ᵇm → n≢m {!   !}
+  ℕ×ℕ-Diag≃ΣℕP .Iso.inv ((n , m) , Pnm=t) = (n , m) , λ n=m → case discreteℕ n m of {! !} 
   ℕ×ℕ-Diag≃ΣℕP .Iso.sec _ = Σ≡Prop (λ _ → isSetBool _ _) refl
   ℕ×ℕ-Diag≃ΣℕP .Iso.ret _ = Σ≡Prop (λ _ → isPropΠ λ _ → isProp⊥) refl 
 --  ℕ×ℕ-Diag≃ΣℕP : Iso ℕ×ℕ-Diag (Σ[ p ∈ (ℕ × ℕ) ] P p ≡ true)
