@@ -60,7 +60,7 @@ weakMarkovPrinciple : Type₀
 weakMarkovPrinciple = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → ∃[ n ∈ ℕ ] α n ≡ true
 
 weakMP→MP : weakMarkovPrinciple → MarkovPrinciple
-weakMP→MP wMP α = hasSplitSupportΣℕ1 α ∘ wMP α
+weakMP→MP wMP α = splitSupportΣℕ1 α ∘ wMP α
 
 module _ (α : binarySequence) (α≠0 : ¬ (∀ n → α n ≡ false)) where
   2/αAsBA : countablyPresentedBooleanRing 

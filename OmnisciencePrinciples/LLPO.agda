@@ -49,7 +49,8 @@ import LLMGeneratedFixes.ProductBooleExplicit as ProductFix
 
 LLPOExplicitAt : ℕ∞ → Type
 LLPOExplicitAt (α , _) =
-  (∀ (n : ℕ) → α (doubleℕ n) ≡ false) ⊎ (∀ (n : ℕ) → α (suc $ doubleℕ n) ≡ false)
+  (∀ (n : ℕ) → α (doubleℕ n) ≡ false) ⊎ 
+  (∀ (n : ℕ) → α (suc $ doubleℕ n) ≡ false)
 
 LLPO : Type
 LLPO = (x : ℕ∞) → ∥ LLPOExplicitAt x ∥₁
@@ -84,7 +85,7 @@ B∞xB∞ : Booleω
 B∞xB∞ = B∞ ×Booleω B∞ where 
   open ProductFix
 
--- We also use that Sp is an antiequivalence and thus 
+-- We also use that Sp is an anti-equivalence and thus 
 -- Sp(A ×BR B) ≅ Sp A ⊎ Sp B 
 -- We use an algebraic proof for this, not relying on Stone duality. 
 SpB∞≃ℕ∞⊎ : Iso (Sp B∞xB∞) (ℕ∞ ⊎ ℕ∞)
