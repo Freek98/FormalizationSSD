@@ -1,5 +1,3 @@
-
-
 module CommRingQuotients.EmptyQuotient where
 
 {- We show that quotienting over the empty function does not change the ring -}

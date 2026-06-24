@@ -37,8 +37,6 @@ open import Cubical.Algebra.Ring.Kernel as RK
 open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Tactics.CommRingSolver
 
-open import BasicDefinitions 
-
 module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  where
   open CommRingStr ⦃...⦄
   instance 
