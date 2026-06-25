@@ -69,6 +69,6 @@ module _ {ℓ : Level} (R : CommRing ℓ) where
   fiberInhabited c = transport (propTruncIdempotent (fiberProp c)) (quotientHomSurjective R I' c)
 
   emptyQuotientEquiv : CommRingEquiv R R'
-  fst (fst emptyQuotientEquiv) = fst $ π
+  fst (fst emptyQuotientEquiv) = fst π
   equiv-proof (snd (fst emptyQuotientEquiv)) y = fiberInhabited y , fiberProp y _ 
-  snd emptyQuotientEquiv = snd $ π
+  snd emptyQuotientEquiv = snd π

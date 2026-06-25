@@ -1,3 +1,4 @@
+{-# OPTIONS --lossy-unification #-}
 module CommRingQuotients.IdealTerms where 
 
 open import Cubical.Functions.Fixpoint
@@ -23,12 +24,6 @@ open import Cubical.Relation.Nullary
 
 open import Cubical.HITs.PropositionalTruncation as PT
 
-open  import BooleanRing.FreeBooleanRing.FreeBool
-
-open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
-open  import BooleanRing.FreeBooleanRing.freeBATerms
-
-open import BooleanRing.BooleanRingQuotients.QuotientBool
 import Cubical.HITs.SetQuotients as SQ
 import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
 open import Cubical.Algebra.CommRing.Ideal

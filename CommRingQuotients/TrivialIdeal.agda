@@ -1,8 +1,7 @@
-
-
+{-# OPTIONS --lossy-unification #-}
 module CommRingQuotients.TrivialIdeal where 
 {- This file shows for a Ring R and Ideal I, that if R/I is trivial, then 1 ∈ I -}
-
+-- This file is being moved to cubical agda and some names might have changed in the process. When that's done, TODO delete this file and do renamings maybe. 
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
@@ -39,17 +38,14 @@ module _ {ℓ : Level} (R : CommRing ℓ) (I : IdealsIn R) where
   opaque 
     unfolding kernel≡I 
   
-    quotientFiber : (x y : ⟨ R ⟩ ) → fst π x ≡ fst π y → (x - y) ∈ fst I 
-    quotientFiber x y p = transport (cong (λ J → (x - y) ∈ (fst J) ) kernelπ=I)  $ equalIfDiffInKernelπ x y p  where
-      kernelπ=I : CK.kernelIdeal R (R / I) π ≡ I 
-      kernelπ=I = kernel≡I I
-  
+    quotientFiber : (x y : ⟨ R ⟩ ) → π $cr x ≡ π $cr y → (x - y) ∈ fst I 
+    quotientFiber x y p = transport (cong (λ J → (x - y) ∈ (fst J) ) (kernel≡I I))  $ equalIfDiffInKernelπ x y p  where
       equalIfDiffInKernelπ :  (x y : ⟨ R ⟩ ) → π $cr x ≡ π $cr y → x - y ∈ fst (CK.kernelIdeal R (R / I ) π )
       equalIfDiffInKernelπ x y p = CK.kernelFiber R (R / I)  π  x y p 
 
   open IsCommRingHom (snd π)
   
-  trivialQuotient→1∈I : _≡_ {A = ⟨ R / I ⟩} 1r 0r → 1r ∈ fst I 
+  trivialQuotient→1∈I : Path ⟨ R / I ⟩ 1r 0r → 1r ∈ fst I 
   trivialQuotient→1∈I p = 
     transport (cong (λ a → a ∈ fst I ) q) (quotientFiber 1r 0r p')  where
       p' : π $cr 1r ≡ π  $cr 0r
