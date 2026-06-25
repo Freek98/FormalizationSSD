@@ -164,5 +164,6 @@ module Interleave (α β : binarySequence) where
     ⊎.rec α β (Iso.inv ℕ⊎ℕ≅ℕ (doubleℕ n)) ≡⟨ cong (⊎.rec α β) (Iso.ret ℕ⊎ℕ≅ℕ (inl n)) ⟩ 
     ⊎.rec α β (inl n) ≡⟨⟩ 
     α n ∎  
+
   sndOnOdds : (n : ℕ) → interleave α β (suc (doubleℕ n)) ≡ β n
   sndOnOdds n = cong (⊎.rec α β) (Iso.ret ℕ⊎ℕ≅ℕ (inr n)) 

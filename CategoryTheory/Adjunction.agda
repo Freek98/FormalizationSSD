@@ -36,7 +36,6 @@ open import Cubical.Categories.Equivalence.AdjointEquivalence hiding (adjunction
 open import Cubical.Categories.Isomorphism 
 open import Cubical.Categories.Instances.Sets
 open import Cubical.Categories.Equivalence
-open import Cubical.Categories.Constructions.Opposite
 open import Cubical.Tactics.CategorySolver.Reflection
 
 open import CategoryTheory.BasicFacts
