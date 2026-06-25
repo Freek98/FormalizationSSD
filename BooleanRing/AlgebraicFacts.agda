@@ -20,30 +20,30 @@ module _ {ℓ : Level} (B : BooleanRing ℓ) where
   open BooleanAlgebraStr (snd B)
   +FromBooleanAlgebraStr : { x y : ⟨ B ⟩ } → ((x + y) ≡ ( (x ∧ (¬ y)) ∨ ((¬ x) ∧ y)))
   +FromBooleanAlgebraStr {x} {y} = sym $
-    ((x ∧ (¬ y)) ∨ ((¬ x) ∧ y)) 
-      ≡⟨⟩ 
-    ((x ∧ (¬ y)) + ((¬ x) ∧ y)) + ((x ∧ (¬ y)) ∧ ((¬ x) ∧ y)) 
-      ≡⟨ solve! (BooleanRing→CommRing B) ⟩ 
+    ((x ∧ (¬ y)) ∨ ((¬ x) ∧ y))
+      ≡⟨⟩
+    ((x ∧ (¬ y)) + ((¬ x) ∧ y)) + ((x ∧ (¬ y)) ∧ ((¬ x) ∧ y))
+      ≡⟨ solve! (BooleanRing→CommRing B) ⟩
     ((x ∧ (¬ y)) + ((¬ x) ∧ y)) + ((x ∧ (¬ x)) ∧ ((¬ y) ∧ y))
-      ≡⟨ cong (λ b → ((x ∧ (¬ y)) + ((¬ x) ∧ y)) + (b ∧ ((¬ y) ∧ y))) ¬Cancels∧R ⟩ 
+      ≡⟨ cong (λ b → ((x ∧ (¬ y)) + ((¬ x) ∧ y)) + (b ∧ ((¬ y) ∧ y))) ¬Cancels∧R ⟩
     ((x ∧ (¬ y)) + ((¬ x) ∧ y)) + (𝟘  ∧ ((¬ y) ∧ y) )
-      ≡⟨ solve! (BooleanRing→CommRing B) ⟩ 
-    ((x ∧ (¬ y)) + ((¬ x) ∧ y)) 
-      ≡⟨⟩ 
-    ((x ∧ (𝟙 + y)) + ((𝟙 + x) ∧ y)) 
-      ≡⟨ solve! (BooleanRing→CommRing B) ⟩ 
+      ≡⟨ solve! (BooleanRing→CommRing B) ⟩
+    ((x ∧ (¬ y)) + ((¬ x) ∧ y))
+      ≡⟨⟩
+    ((x ∧ (𝟙 + y)) + ((𝟙 + x) ∧ y))
+      ≡⟨ solve! (BooleanRing→CommRing B) ⟩
     (x + (x · y)) + ( y + x · y)
-      ≡⟨ solve! (BooleanRing→CommRing B) ⟩ 
-    (x + y) + (x · y + x · y) 
-      ≡⟨ cong (λ b → (x + y) + b) characteristic2 ⟩ 
+      ≡⟨ solve! (BooleanRing→CommRing B) ⟩
+    (x + y) + (x · y + x · y)
+      ≡⟨ cong (λ b → (x + y) + b) characteristic2 ⟩
     (x + y) + 𝟘
-      ≡⟨ +IdR (x + y) ⟩ 
+      ≡⟨ +IdR (x + y) ⟩
     x + y ∎
 
 module LatticeResults {ℓ : Level} (B : BooleanRing ℓ) where
   open BooleanRingStr (snd B)
   open BooleanAlgebraStr (snd B)
-  nonzero-inc : {a b : ⟨ B ⟩ } → ((a ≡ 𝟘) → ⊥)  → (a ∨ b ≡ 𝟘) → ⊥ 
-  nonzero-inc {a} {b} a≢0 a∨b=0 = a≢0 $ 
+  nonzero-inc : {a b : ⟨ B ⟩ } → ((a ≡ 𝟘) → ⊥)  → (a ∨ b ≡ 𝟘) → ⊥
+  nonzero-inc {a} {b} a≢0 a∨b=0 = a≢0 $
     a ≡⟨ sym ∧AbsorbL∨ ⟩ a ∧ ( a ∨ b) ≡⟨ cong (_∧_ a) a∨b=0 ⟩ a ∧ 𝟘 ≡⟨ ∧AnnihilR ⟩ 𝟘 ∎
 

@@ -1,9 +1,9 @@
 {-# OPTIONS --lossy-unification #-}
 module OmnisciencePrinciples.LLPO where
--- made in collaboration with LLM. 
--- Note that LLPO does not relly on stone duality. We only rely on the observation that Sp(A x B) = Sp A + Sp B. Thus the Stone duality axiom is not used in this formalisation. This is something we did not mention in the paper. We noticed it as a consequence of using the LLM. 
+-- made in collaboration with LLM.
+-- Note that LLPO does not relly on stone duality. We only rely on the observation that Sp(A x B) = Sp A + Sp B. Thus the Stone duality axiom is not used in this formalisation. This is something we did not mention in the paper. We noticed it as a consequence of using the LLM.
 open import CountablyPresentedBooleanRings.Examples.NFinCofin
-open NFinCofinPresentation 
+open NFinCofinPresentation
 open DefinitionFinCofin
 open import StoneSpaces.Examples.Ninfty
 open import Cubical.Algebra.CommRing
@@ -44,12 +44,12 @@ open import CategoryTheory.StuffFromStoneAboutBAs using (BACat ; SpGeneralFuncto
 
 import StoneSums as SpProdSum -- Sp(A ×BR B) ≅ Sp A ⊎ Sp B  (see SpB∞≃ℕ∞⊎)
 
--- temporary less elegant solutions showing that the product of countably presented Boolean algebras is countably presented. 
+-- temporary less elegant solutions showing that the product of countably presented Boolean algebras is countably presented.
 import LLMGeneratedFixes.ProductBooleExplicit as ProductFix
 
 LLPOExplicitAt : ℕ∞ → Type
 LLPOExplicitAt (α , _) =
-  (∀ (n : ℕ) → α (doubleℕ n) ≡ false) ⊎ 
+  (∀ (n : ℕ) → α (doubleℕ n) ≡ false) ⊎
   (∀ (n : ℕ) → α (suc $ doubleℕ n) ≡ false)
 
 LLPO : Type
@@ -73,21 +73,21 @@ B∞eval γ n = γ $cr singleton n
 
 ℕ∞IsoIsEval : (γ : Sp B∞) → fst (Iso.fun SpB∞≃ℕ∞ γ) ≡ B∞eval γ
 ℕ∞IsoIsEval γ = funExt λ n → cong (fst γ) $
-   (fst (fst ℕFinCof=Presentation) (quotientImageHom $cr generator n)) 
+   (fst (fst ℕFinCof=Presentation) (quotientImageHom $cr generator n))
      ≡⟨ funExt⁻ (cong fst (evalInduce ℕfinCofinBA)) (generator n) ⟩
-   (freeℕ→ℕFinCof $cr generator n) 
+   (freeℕ→ℕFinCof $cr generator n)
      ≡⟨ eval-gen n ⟩
    singleton n ∎
 
--- We make use of the product of B∞ with itself, and we need that countably presented boolean algebras are closed under products. Right now, we use an algebraic proof for this. 
--- Another proof that we don't use is to show that a boolean algebra is countably presented iff it is overtly discrete and show that overtly discrete is closed under products. 
+-- We make use of the product of B∞ with itself, and we need that countably presented boolean algebras are closed under products. Right now, we use an algebraic proof for this.
+-- Another proof that we don't use is to show that a boolean algebra is countably presented iff it is overtly discrete and show that overtly discrete is closed under products.
 B∞xB∞ : Booleω
-B∞xB∞ = B∞ ×Booleω B∞ where 
+B∞xB∞ = B∞ ×Booleω B∞ where
   open ProductFix
 
--- We also use that Sp is an anti-equivalence and thus 
--- Sp(A ×BR B) ≅ Sp A ⊎ Sp B 
--- We use an algebraic proof for this, not relying on Stone duality. 
+-- We also use that Sp is an anti-equivalence and thus
+-- Sp(A ×BR B) ≅ Sp A ⊎ Sp B
+-- We use an algebraic proof for this, not relying on Stone duality.
 SpB∞≃ℕ∞⊎ : Iso (Sp B∞xB∞) (ℕ∞ ⊎ ℕ∞)
 SpB∞≃ℕ∞⊎ = compIso (SpProdSum.SpProd≅SpSum ℕfinCofinBA ℕfinCofinBA) (⊎Iso SpB∞≃ℕ∞ SpB∞≃ℕ∞)
 
@@ -215,8 +215,8 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
       false ∎
 
   splitInj : isInjectiveBoolHom _ _ splitHom
-  splitInj = ker≡0→injBoolHom _ _ splitHom splitHom-kernel 
-  
+  splitInj = ker≡0→injBoolHom _ _ splitHom splitHom-kernel
+
   SpSplit : Sp B∞xB∞ → Sp B∞
   SpSplit γ = γ ∘cr splitHom
 
@@ -224,8 +224,8 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   SpSplitSurj = formalSurjections B∞ B∞xB∞ splitHom splitInj
 
   evenStone oddStone : ℕ∞ → ℕ∞
-  evenStone β = Iso.fun SpB∞≃ℕ∞ (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom)   
-  oddStone  β = Iso.fun SpB∞≃ℕ∞ (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom)   
+  evenStone β = Iso.fun SpB∞≃ℕ∞ (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom)
+  oddStone  β = Iso.fun SpB∞≃ℕ∞ (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom)
 
   Spf : ℕ∞ ⊎ ℕ∞ → ℕ∞
   Spf = ⊎.rec evenStone oddStone
@@ -254,7 +254,7 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   evenStone-odd0 : (β : ℕ∞) (k : ℕ) → fst (evenStone β) (suc (doubleℕ k)) ≡ false
   evenStone-odd0 β k =
       fst (evenStone β) (suc (doubleℕ k))
-    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom)) (suc (doubleℕ k)) ⟩   
+    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom)) (suc (doubleℕ k)) ⟩
       B∞eval (Iso.inv SpB∞≃ℕ∞ β ∘cr evenHom) (suc (doubleℕ k))
     ≡⟨ SpEvenHom-odd0 (Iso.inv SpB∞≃ℕ∞ β) k ⟩
       false ∎
@@ -262,9 +262,9 @@ module LLPOProof (formalSurjections : formalSurjectionsAreSurjectionsAxiom) wher
   oddStone-even0 : (β : ℕ∞) (k : ℕ) → fst (oddStone β) (doubleℕ k) ≡ false
   oddStone-even0 β k =
       fst (oddStone β) (doubleℕ k)
-    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom)) (doubleℕ k) ⟩          
+    ≡⟨ funExt⁻ (ℕ∞IsoIsEval (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom)) (doubleℕ k) ⟩
       B∞eval (Iso.inv SpB∞≃ℕ∞ β ∘cr oddHom) (doubleℕ k)
-    ≡⟨ SpOddHom-even0 (Iso.inv SpB∞≃ℕ∞ β) k ⟩                                    
+    ≡⟨ SpOddHom-even0 (Iso.inv SpB∞≃ℕ∞ β) k ⟩
       false ∎
 
   Spf-fibre→LLPO : (α : ℕ∞) → fiber Spf α → LLPOExplicitAt α

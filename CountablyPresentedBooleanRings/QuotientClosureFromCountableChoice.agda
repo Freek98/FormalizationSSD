@@ -83,7 +83,7 @@ module _ (cc : CountableChoice {ℓ-zero} {ℓ-zero})
 
         bigPath : (C /Im f) ≡ (D /Im (fst π ∘ f↑Exp))
         bigPath = uaBoolRing bigEquiv ∙ cong (λ h → D /Im h) (funExt commute)
-    
+
     lift-f : ∥ LiftData ∥₁
     lift-f = PT.map (Iso.fun Σ-Π-Iso)
                (cc R Rcount

@@ -11,7 +11,7 @@ open import Cubical.Tactics.CommRingSolver
 open import BooleanRing.BooleanRingMaps
 open import BooleanRing.SubBooleanRing
 open import Cubical.Data.Empty renaming (rec to ex-falso)
-open import Cubical.Data.Nat renaming (_·_ to _·ℕ_ ; _+_ to _+ℕ_) 
+open import Cubical.Data.Nat renaming (_·_ to _·ℕ_ ; _+_ to _+ℕ_)
 open import Cubical.Foundations.Prelude hiding (_∨_ ; _∧_)
 open import Cubical.Foundations.HLevels
 open import Cubical.Foundations.Function
@@ -41,5 +41,4 @@ open BooleanRingStr ⦃...⦄
 
 freeℕ : BooleanRing ℓ-zero
 ℙℕ = binarySequence , booleanStructureOnBinarySequences
-
 

@@ -22,16 +22,16 @@ private variable ℓ : Level
 open BooleanRingStr
 
 module UniversalProperty
-  {ℓ : Level} 
+  {ℓ : Level}
   (B : BooleanRing ℓ) {X : Type ℓ} (f : X → ⟨ B ⟩)
   (C : BooleanRing ℓ)
   (φ : BoolHom B C)
   (φ-zero : ∀ (x : X) → φ $cr (f x) ≡ 𝟘 (snd C))
   (extension : (S : BooleanRing ℓ) (g : BoolHom B S)
-               (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) → 
+               (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) →
                BoolHom C S)
   (commutes : (S : BooleanRing ℓ) (g : BoolHom B S)
-              (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) → 
+              (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) →
               extension S g g-zero ∘cr φ ≡ g)
   (unique : (S : BooleanRing ℓ) (g : BoolHom B S)
             (g-zero : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S))
@@ -99,12 +99,12 @@ module MapsOutOfQuotientUniversalProperty {ℓ : Level} (B : BooleanRing ℓ) {X
   mapsOutQuotientUniversalProperty : Iso (Σ[ g ∈ (BoolHom B C) ] ((x : X) → (g $cr (f x)) ≡ 𝟘 (snd C))) (BoolHom (B /Im f) C)
   mapsOutQuotientUniversalProperty .Iso.fun (g , gRespf) = inducedHom C g gRespf
   mapsOutQuotientUniversalProperty .Iso.inv h .fst = h ∘cr quotientImageHom
-  mapsOutQuotientUniversalProperty .Iso.inv h .snd x = 
-   h $cr (quotientImageHom $cr f x) 
-     ≡⟨ cong (fst h) (zeroOnImage x) ⟩ 
-   h $cr 𝟘 (snd $ (B /Im f)) 
-     ≡⟨ pres0 (snd h) ⟩ 
+  mapsOutQuotientUniversalProperty .Iso.inv h .snd x =
+   h $cr (quotientImageHom $cr f x)
+     ≡⟨ cong (fst h) (zeroOnImage x) ⟩
+   h $cr 𝟘 (snd $ (B /Im f))
+     ≡⟨ pres0 (snd h) ⟩
    𝟘 (snd C) ∎
   mapsOutQuotientUniversalProperty .Iso.sec h = inducedHomUnique C (h ∘cr quotientImageHom) _ _ refl
-  mapsOutQuotientUniversalProperty .Iso.ret (g , gRespf) = Σ≡Prop (λ _ → isPropΠ λ _ → is-set (snd C) _ _) (evalInduce C)  
+  mapsOutQuotientUniversalProperty .Iso.ret (g , gRespf) = Σ≡Prop (λ _ → isPropΠ λ _ → is-set (snd C) _ _) (evalInduce C)
 

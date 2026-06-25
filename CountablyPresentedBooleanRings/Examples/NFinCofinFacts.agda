@@ -39,35 +39,35 @@ open import CountablyPresentedBooleanRings.Definitions
 open BooleanAlgebraStr ⦃...⦄
 open BooleanRingStr ⦃...⦄
 
-module UniversalPropertyCountablyPresented 
+module UniversalPropertyCountablyPresented
   {ℓ : Level} (B : BooleanRing ℓ) where
   instance _ = snd B
   instance _ = snd (freeBA ℕ)
 --  niceType = Σ[ f ∈ (ℕ → ⟨ B ⟩) ] ((n m : ℕ) → (n ≡ m → ⊥) → (f n) ∧ (f m) ≡ 𝟘)
 --  extension : BoolHom presentation B
---  extension = {! !} 
+--  extension = {! !}
 --  goalIso : Iso niceType (BoolHom ℕfinCofinBA B)
---  goalIso = {! !} 
-  
-  smallerConditionThenRelationsOnFunctions : 
-    (f : BoolHom (freeBA ℕ) B) → 
-    (∀ (n : ℕ) → f $cr (relationsℕ n) ≡ 𝟘) → 
+--  goalIso = {! !}
+
+  smallerConditionThenRelationsOnFunctions :
+    (f : BoolHom (freeBA ℕ) B) →
+    (∀ (n : ℕ) → f $cr (relationsℕ n) ≡ 𝟘) →
     (∀ (n m : ℕ) → ((n ≡ m ) → ⊥) → f $cr ((generator n) ∧ (generator m)) ≡ 𝟘)
-  smallerConditionThenRelationsOnFunctions f frespRelations n m n≢m = 
-    f $cr ((generator n) ∧ (generator m)) 
-      ≡⟨ cong (fst f) (sym $ NFinCofinPresentation.relations-neq n m n≢m) ⟩ 
+  smallerConditionThenRelationsOnFunctions f frespRelations n m n≢m =
+    f $cr ((generator n) ∧ (generator m))
+      ≡⟨ cong (fst f) (sym $ NFinCofinPresentation.relations-neq n m n≢m) ⟩
     f $cr (relations (n , m) )
-      ≡⟨ cong (fst f ∘ relations) (sym $ ℕ×ℕ≅ℕ .Iso.ret (n , m)) ⟩ 
+      ≡⟨ cong (fst f ∘ relations) (sym $ ℕ×ℕ≅ℕ .Iso.ret (n , m)) ⟩
     f $cr (relationsℕ (ℕ×ℕ≅ℕ .Iso.fun (n , m) ) )
-      ≡⟨ frespRelations (ℕ×ℕ≅ℕ .Iso.fun (n , m)) ⟩ 
+      ≡⟨ frespRelations (ℕ×ℕ≅ℕ .Iso.fun (n , m)) ⟩
     𝟘 ∎
-  
+
   open IsCommRingHom
-  otherDirection : 
-    (f : BoolHom (freeBA ℕ) B) → 
-    (∀ (n m : ℕ) → ((n ≡ m ) → ⊥) → f $cr ((generator n) ∧ (generator m)) ≡ 𝟘) → 
+  otherDirection :
+    (f : BoolHom (freeBA ℕ) B) →
+    (∀ (n m : ℕ) → ((n ≡ m ) → ⊥) → f $cr ((generator n) ∧ (generator m)) ≡ 𝟘) →
     (∀ (n : ℕ) → f $cr (relationsℕ n) ≡ 𝟘)
   otherDirection f fzeroOnDiffGenerators n with (uncurry discreteℕ) (ℕ×ℕ≅ℕ . Iso.inv n)
   ... | yes p = pres0 (snd f)
-  ... | no ¬p = fzeroOnDiffGenerators _ _ ¬p 
+  ... | no ¬p = fzeroOnDiffGenerators _ _ ¬p
 

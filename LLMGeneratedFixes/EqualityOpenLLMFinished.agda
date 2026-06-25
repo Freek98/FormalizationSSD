@@ -1,5 +1,5 @@
 {-# OPTIONS --lossy-unification #-}
--- started with own file and let LLM fill holes. 
+-- started with own file and let LLM fill holes.
 -- Goal of this file: for a sequential colimit of finite sets, equality is
 -- open: the path type (incl x ≡ y) is equivalent to the proposition
 -- ∥ Σ k . EqualAt x y k ∥₁, a countable join of decidable propositions.

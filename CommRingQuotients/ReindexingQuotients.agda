@@ -2,7 +2,7 @@
 
 module CommRingQuotients.ReindexingQuotients where
 open import CommRingQuotients.EquivHelper
--- 
+--
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Function

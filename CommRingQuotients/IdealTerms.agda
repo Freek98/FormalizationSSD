@@ -1,5 +1,5 @@
 {-# OPTIONS --lossy-unification #-}
-module CommRingQuotients.IdealTerms where 
+module CommRingQuotients.IdealTerms where
 
 open import Cubical.Functions.Fixpoint
 
@@ -8,7 +8,7 @@ open import Cubical.Data.Sum
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Nat renaming (_+_ to _+ℕ_ ; _·_ to _·ℕ_)
-open import Cubical.Data.Nat.Order 
+open import Cubical.Data.Nat.Order
 open <-Reasoning
 
 open import Cubical.Foundations.Structure
@@ -34,8 +34,8 @@ open import Cubical.Tactics.CommRingSolver
 
 module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  where
   open CommRingStr ⦃...⦄
-  instance 
-   _ = (snd R) 
+  instance
+   _ = (snd R)
   data isInIdeal : (r : ⟨ R ⟩) → Type ℓ where
         isImage  : (r : ⟨ R ⟩) → (x : X) → (f x ≡ r) → isInIdeal r
         iszero   : (r : ⟨ R ⟩) → (0r ≡ r) → isInIdeal r
@@ -47,16 +47,15 @@ module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  
   idealDecomp .(0r)     IQ.zero                         = ∣ iszero 0r refl ∣₁
   idealDecomp .(s + t) (IQ.add {x = s} {y = t} s∈I t∈I) = PT.map2 (isSum (s + t) s t refl) (idealDecomp s s∈I) (idealDecomp t t∈I)
   idealDecomp .(s · t) (IQ.mul {r = s} {x = t} t∈I )    = PT.map  (isMul (s · t) s t refl) (idealDecomp t t∈I)
-  idealDecomp r        (IQ.squash r∈I r∈I' i)           = ∥∥-isPropDep isInIdeal 
-                                                          (idealDecomp r r∈I) (idealDecomp r r∈I') refl i 
+  idealDecomp r        (IQ.squash r∈I r∈I' i)           = ∥∥-isPropDep isInIdeal
+                                                          (idealDecomp r r∈I) (idealDecomp r r∈I') refl i
 
-  addSquash : (r : ⟨ R ⟩) → isInIdeal r → IQ.generatedIdeal R f r 
-  addSquash r (isImage .r x fx=r) = subst (IQ.generatedIdeal R f) fx=r (IQ.single x) 
+  addSquash : (r : ⟨ R ⟩) → isInIdeal r → IQ.generatedIdeal R f r
+  addSquash r (isImage .r x fx=r) = subst (IQ.generatedIdeal R f) fx=r (IQ.single x)
   addSquash r (iszero .r 0=r) = subst (IQ.generatedIdeal R f) 0=r IQ.zero
-  addSquash r (isSum .r s t r=s+t s∈I t∈I) = subst (IQ.generatedIdeal R f) (sym r=s+t) 
+  addSquash r (isSum .r s t r=s+t s∈I t∈I) = subst (IQ.generatedIdeal R f) (sym r=s+t)
     (IQ.add (addSquash s s∈I) (addSquash t t∈I))
-  addSquash r (isMul .r s t r=s·t t∈I) = 
-    subst (IQ.generatedIdeal R f) (sym r=s·t) 
-    (IQ.mul (addSquash t t∈I)) 
-
+  addSquash r (isMul .r s t r=s·t t∈I) =
+    subst (IQ.generatedIdeal R f) (sym r=s·t)
+    (IQ.mul (addSquash t t∈I))
 

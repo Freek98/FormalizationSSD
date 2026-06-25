@@ -1,6 +1,6 @@
 
 
-module Axioms.LocalChoice where 
+module Axioms.LocalChoice where
 
 open import BasicDefinitions
 open import Cubical.Foundations.Structure

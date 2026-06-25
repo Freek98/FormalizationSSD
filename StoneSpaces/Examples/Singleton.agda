@@ -14,11 +14,11 @@ open import Cubical.Foundations.Function
 open import Cubical.Foundations.Prelude
 
 only1Map : isContr (SpGeneralBooleanRing BoolBR)
-only1Map = BoolBR→ BoolBR , λ f → sym (CommRingHom≡ $ BoolBR→IsUnique BoolBR f) 
+only1Map = BoolBR→ BoolBR , λ f → sym (CommRingHom≡ $ BoolBR→IsUnique BoolBR f)
 
 UnitIsStone : hasStoneStr Unit
 UnitIsStone .fst = BoolCP
-UnitIsStone .snd = isContr→≡Unit only1Map 
+UnitIsStone .snd = isContr→≡Unit only1Map
 
 PointSpace : StoneSpace
 PointSpace = Unit , UnitIsStone

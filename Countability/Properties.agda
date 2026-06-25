@@ -1,5 +1,5 @@
 
--- AI generated, minor edits. 
+-- AI generated, minor edits.
 module Countability.Properties where
 
 open import Cubical.Foundations.Prelude
@@ -12,7 +12,7 @@ open import Cubical.Data.Bool hiding (_≟_)
 open import Cubical.Data.Bool.Properties using (isSetBool ; false≢true)
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum as ⊎
-open import Cubical.Data.Empty as ⊥ 
+open import Cubical.Data.Empty as ⊥
 
 open import Cubical.Data.Nat.Bijections.Product using (ℕ×ℕ≅ℕ)
 open import Cubical.Data.Nat.Bijections.Sum using (ℕ⊎ℕ≅ℕ)
@@ -23,18 +23,18 @@ open import BasicDefinitions
 
 open Iso
 
-private 
+private
   boolGuard : (b : Bool) → (b ≡ true → Bool) → Bool
   boolGuard true  f = f refl
   boolGuard false _ = false
-  
+
   -- If b ≡ true and f applied to that proof gives true, then boolGuard b f ≡ true
   boolGuard-intro : (b : Bool) (f : b ≡ true → Bool) (q : b ≡ true)
     → f q ≡ true → boolGuard b f ≡ true
   boolGuard-intro true f q fq =
     subst (λ r → f r ≡ true) (isSetBool _ _ q refl) fq
   boolGuard-intro false f q _ = ⊥.rec (false≢true q)
-  
+
   -- If boolGuard b f ≡ true, then b ≡ true and f refl ≡ true
   boolGuard-elim : (b : Bool) (f : b ≡ true → Bool)
     → boolGuard b f ≡ true → Σ[ q ∈ b ≡ true ] f q ≡ true
@@ -48,7 +48,7 @@ private
   and-true-left : (a b : Bool) → a and b ≡ true → a ≡ true
   and-true-left true  _ _ = refl
   and-true-left false _ p = ⊥.rec (false≢true p)
-  
+
   and-true-right : (a b : Bool) → a and b ≡ true → b ≡ true
   and-true-right true  b p = p
   and-true-right false _ p = ⊥.rec (false≢true p)
@@ -150,12 +150,12 @@ module ΣBoolCountable (α : binarySequence) where
 -- Main results: closure properties of is-countable
 -- ════════════════════════════════════════════════════════════════
 
-has-Countability-structure-Iso : {A B : Type} → has-Countability-structure A → Iso A B → has-Countability-structure B 
-has-Countability-structure-Iso (α , A≃Σℕα) A≃B = α , compIso (invIso A≃B) A≃Σℕα 
+has-Countability-structure-Iso : {A B : Type} → has-Countability-structure A → Iso A B → has-Countability-structure B
+has-Countability-structure-Iso (α , A≃Σℕα) A≃B = α , compIso (invIso A≃B) A≃Σℕα
 
 has-Countability-structure-× : {A B : Type}
   → has-Countability-structure A → has-Countability-structure B → has-Countability-structure (A × B)
-has-Countability-structure-× (α , iA) (β , iB) = 
+has-Countability-structure-× (α , iA) (β , iB) =
     let open CountableProduct α β
     in γ× , compIso (prodIso iA iB) ΣℕProd
 
@@ -186,4 +186,4 @@ has-Countability-structure-Σ-Bool {A} P (α , iA) =
 
 is-countable-Σ-Bool : {A : Type} (P : A → Bool)
   → is-countable A → is-countable (Σ[ a ∈ A ] P a ≡ true)
-is-countable-Σ-Bool P = PT.map (has-Countability-structure-Σ-Bool P) 
+is-countable-Σ-Bool P = PT.map (has-Countability-structure-Σ-Bool P)

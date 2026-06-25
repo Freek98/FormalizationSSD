@@ -1,5 +1,5 @@
 
-module CommRingQuotients.EquivHelper where 
+module CommRingQuotients.EquivHelper where
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum
@@ -18,24 +18,22 @@ module _ {ℓ ℓ' : Level} {A : CommRing ℓ} {B : CommRing ℓ'}
          (sec : section (fst hom) (inv))
          (ret : retract (fst hom) (inv)) where
   open CommRingStr (snd B)
-  opaque 
+  opaque
     isoToCommRingEquiv : CommRingEquiv A B
     isoToCommRingEquiv .fst .fst = fst hom
     isoToCommRingEquiv .fst .snd .equiv-proof b .fst .fst = inv b
     isoToCommRingEquiv .fst .snd .equiv-proof b .fst .snd = sec b
-    isoToCommRingEquiv .fst .snd .equiv-proof b .snd (a , ha=b) = Σ≡Prop (λ _ → is-set _ _) $ 
+    isoToCommRingEquiv .fst .snd .equiv-proof b .snd (a , ha=b) = Σ≡Prop (λ _ → is-set _ _) $
       cong inv (sym ha=b) ∙ ret a
-    isoToCommRingEquiv .snd = snd hom 
+    isoToCommRingEquiv .snd = snd hom
 
 opaque
-  isoHomToCommRingEquiv : 
+  isoHomToCommRingEquiv :
     {ℓ ℓ' : Level} → {A : CommRing ℓ} → {B : CommRing ℓ'} →
     (hom : CommRingHom A B) → (inv : CommRingHom B A) →
-    (sec : hom ∘cr inv ≡ idCommRingHom B ) → (ret  : inv ∘cr hom ≡ idCommRingHom A ) → 
+    (sec : hom ∘cr inv ≡ idCommRingHom B ) → (ret  : inv ∘cr hom ≡ idCommRingHom A ) →
     CommRingEquiv A B
-  isoHomToCommRingEquiv hom inv sec ret = isoToCommRingEquiv hom (fst inv) 
-    (funExt⁻ $ cong fst sec) 
-    (funExt⁻ $ cong fst ret ) 
-
-
+  isoHomToCommRingEquiv hom inv sec ret = isoToCommRingEquiv hom (fst inv)
+    (funExt⁻ $ cong fst sec)
+    (funExt⁻ $ cong fst ret )
 

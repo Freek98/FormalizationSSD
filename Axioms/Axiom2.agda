@@ -1,8 +1,8 @@
 module Axioms.Axiom2 where
--- Axiom 2 states that surjections are formal surjections. 
--- Another way to phrase this axiom is in propositional completeness. 
--- At some point I also thought this was equivalent to LLPO, I'm not sure about that exactly. 
--- So it would be good to have written down the implications between these. 
+-- Axiom 2 states that surjections are formal surjections.
+-- Another way to phrase this axiom is in propositional completeness.
+-- At some point I also thought this was equivalent to LLPO, I'm not sure about that exactly.
+-- So it would be good to have written down the implications between these.
 open import BasicDefinitions
 open import Cubical.Foundations.Prelude
 open import BooleanRing.FreeBooleanRing.FreeBool
@@ -30,24 +30,24 @@ open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Relation.Nullary
 
 PropositonalCompleteness : Type _
-PropositonalCompleteness = (S : StoneSpace) → ¬ ¬ ⟨ S ⟩ → ∥ ⟨ S ⟩ ∥₁ 
+PropositonalCompleteness = (S : StoneSpace) → ¬ ¬ ⟨ S ⟩ → ∥ ⟨ S ⟩ ∥₁
 
-module surjectionsAxiomToPropositionalCompleteness 
-  (SD : StoneDualityAxiom) 
+module surjectionsAxiomToPropositionalCompleteness
+  (SD : StoneDualityAxiom)
   (FS : formalSurjectionsAreSurjectionsAxiom)
   (B : Booleω) (SpBnonEmpty : ¬ ¬ Sp B) where
   open BooleanRingStr (snd (fst B))
   0≠1 : ¬ (𝟘 ≡ 𝟙)
-  0≠1 = SpBnonEmpty ∘ TrivialImpliesSpEmpty.spEmpty B 
+  0≠1 = SpBnonEmpty ∘ TrivialImpliesSpEmpty.spEmpty B
   open IsCommRingHom (snd $ BoolBR→ (fst B))
-  isInjective! : isInjectiveBoolHom BoolBR (fst B) (BoolBR→ (fst B)) 
+  isInjective! : isInjectiveBoolHom BoolBR (fst B) (BoolBR→ (fst B))
   isInjective! false false = λ _ → refl
-  isInjective! false true  = ex-falso ∘ 0≠1 
+  isInjective! false true  = ex-falso ∘ 0≠1
   isInjective! true false  = ex-falso ∘ 0≠1 ∘ sym
-  isInjective! true true   = λ _ → refl 
-  
-  isSurjSp! : isSurjection $ SpAction BoolCP B (BoolBR→ (fst B)) 
-  isSurjSp! = FS BoolCP B (BoolBR→ (fst B)) isInjective! 
+  isInjective! true true   = λ _ → refl
+
+  isSurjSp! : isSurjection $ SpAction BoolCP B (BoolBR→ (fst B))
+  isSurjSp! = FS BoolCP B (BoolBR→ (fst B)) isInjective!
 
   spBool : Sp BoolCP
   spBool = BoolBR→ BoolBR
@@ -62,13 +62,12 @@ FormalSurjectionsToPropositionalCompleteness SD FS (S , B , SpB=S) ¬¬S =
   ¬¬SpB = subst (¬_ ∘ ¬_) (sym SpB=S) ¬¬S
   open surjectionsAxiomToPropositionalCompleteness SD FS B ¬¬SpB
 
-module propositionalCompletenessToSurjectionFormalSurjections 
-  (SD : StoneDualityAxiom)  
-  (PC : PropositonalCompleteness) 
-  (B C : Booleω) 
-  (f : BoolHom (fst B) (fst C)) 
+module propositionalCompletenessToSurjectionFormalSurjections
+  (SD : StoneDualityAxiom)
+  (PC : PropositonalCompleteness)
+  (B C : Booleω)
+  (f : BoolHom (fst B) (fst C))
   (finj : isInjectiveBoolHom (fst B) (fst C) f) where
   fiberfBoole : ⟨ fst C ⟩  → Booleω
-  fiberfBoole = {! !} 
-  
+  fiberfBoole = {! !}
 

@@ -1,7 +1,7 @@
 
 module StoneSpaces.Spectrum where
 open import BooleanRing.BooleanRingMaps
-open import CountablyPresentedBooleanRings.Definitions 
+open import CountablyPresentedBooleanRings.Definitions
 open import Cubical.Data.Sigma
 open import Cubical.Foundations.Univalence
 open import Cubical.Data.Sum
@@ -11,7 +11,7 @@ import Cubical.Data.Sum as ⊎
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
 open import Cubical.Data.Empty renaming (rec to ex-falso ; rec* to empty-func)
 open import Cubical.Data.Nat renaming (_+_ to _+ℕ_ ; _·_ to _·ℕ_)
-open import Cubical.Data.Nat.Order 
+open import Cubical.Data.Nat.Order
 open <-Reasoning
 open import Cubical.Data.Nat.Bijections.Sum
 
@@ -42,9 +42,9 @@ open import QuickFixes
 
 open import BooleanRing.BoolRingUnivalence
 
-open import Cubical.Categories.Category.Base 
-open import Cubical.Categories.Category 
-open import Cubical.Categories.Functor 
+open import Cubical.Categories.Category.Base
+open import Cubical.Categories.Category
+open import Cubical.Categories.Functor
 open import Cubical.Categories.NaturalTransformation
 open import Cubical.Categories.Adjoint
 open import Cubical.Categories.Equivalence.AdjointEquivalence hiding (adjunction)
@@ -57,27 +57,27 @@ Booleω : Type (ℓ-suc ℓ-zero)
 Booleω = countablyPresentedBooleanRing
 
 Sp : Booleω → Type ℓ-zero
-Sp = SpGeneralBooleanRing ∘ fst 
+Sp = SpGeneralBooleanRing ∘ fst
 
 isSetBoolHom : {ℓ ℓ' : Level} → (B : BooleanRing ℓ) → (C : BooleanRing ℓ') → isSet $ BoolHom B C
-isSetBoolHom B C = Embedding-into-isSet→isSet 
+isSetBoolHom B C = Embedding-into-isSet→isSet
   (fst , hasPropFibers→isEmbedding propFiber)
   (isSet→ CSet) where
     CSet : isSet ⟨ C ⟩
     CSet = BooleanRingStr.is-set (snd C)
     proj : BoolHom B C → fst B → fst C
-    proj = fst 
+    proj = fst
     propFiber : (f : ⟨ B ⟩ → ⟨ C ⟩) → isProp (Σ[ z ∈ BoolHom B C ] fst z ≡ f)
-    propFiber f ((g , ghom) , g=f) ((h , hhom) , h=f) = Σ≡Prop 
-      (λ f' → isSet→ CSet (fst f') f) (Σ≡Prop 
-      (λ f' → isPropIsBoolRingHom (snd B) f' (snd C)) 
-      (g=f ∙ sym h=f)) 
+    propFiber f ((g , ghom) , g=f) ((h , hhom) , h=f) = Σ≡Prop
+      (λ f' → isSet→ CSet (fst f') f) (Σ≡Prop
+      (λ f' → isPropIsBoolRingHom (snd B) f' (snd C))
+      (g=f ∙ sym h=f))
 
 isSetSp : {ℓ : Level} → (B : BooleanRing ℓ) → isSet (SpGeneralBooleanRing B)
-isSetSp B = isSetBoolHom B BoolBR 
+isSetSp B = isSetBoolHom B BoolBR
 
 ev : (B C : BooleanRing ℓ-zero ) → (b  : ⟨ B ⟩) → BoolHom B C → ⟨ C ⟩
-ev B C b f = f $cr b 
+ev B C b f = f $cr b
 
 evaluationMapGeneralBooleanRing : (B : BooleanRing ℓ-zero ) → (b  : ⟨ B ⟩) → SpGeneralBooleanRing B → Bool
 evaluationMapGeneralBooleanRing B = ev B BoolBR
@@ -86,13 +86,13 @@ evaluationMap : (B : Booleω) → (b : ⟨ fst B ⟩) → Sp B → Bool
 evaluationMap B = evaluationMapGeneralBooleanRing (fst B)
 
 BAstructOnDecidableSubsets : {ℓ : Level} → (S : Type ℓ) → BooleanRingStr (S → Bool)
-BAstructOnDecidableSubsets S = pointWiseStructure S (λ _ → Bool) (λ _ → snd BoolBR) 
+BAstructOnDecidableSubsets S = pointWiseStructure S (λ _ → Bool) (λ _ → snd BoolBR)
 
 2^ : {ℓ : Level} → (S : Type ℓ) → BooleanRing ℓ
 2^ S .fst = S → Bool
-2^ S .snd = BAstructOnDecidableSubsets S 
+2^ S .snd = BAstructOnDecidableSubsets S
 
-hasStoneStr : Type ℓ-zero → Type (ℓ-suc ℓ-zero) 
+hasStoneStr : Type ℓ-zero → Type (ℓ-suc ℓ-zero)
 hasStoneStr S = Σ[ B ∈ Booleω ] Sp B ≡ S
 
 Stone : Type (ℓ-suc ℓ-zero)

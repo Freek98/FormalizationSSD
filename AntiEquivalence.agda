@@ -1,5 +1,5 @@
 module AntiEquivalence where
--- So far, contains Lemma 1.12 of the paper. 
+-- So far, contains Lemma 1.12 of the paper.
 open import Axioms.StoneDuality
 open import StoneSpaces.Spectrum
 open import Cubical.Foundations.Prelude
@@ -31,11 +31,10 @@ module SpectrumEmptyImpliesTrivial (SD : StoneDualityAxiom) (B : Booleω) (spEmp
   0≡1-in-B : 𝟘 ≡ 𝟙
   0≡1-in-B = isContr→isProp B-contr _ _
 
-module TrivialImpliesSpEmpty 
+module TrivialImpliesSpEmpty
   (B : Booleω) (0=1-in-B : BooleanRingStr.𝟘 (snd (fst B)) ≡ BooleanRingStr.𝟙 (snd (fst B))) (f : Sp B) where
   open BooleanRingStr (snd (fst B))
   open IsCommRingHom (snd f)
-  spEmpty : ⊥ 
+  spEmpty : ⊥
   spEmpty = false≢true $ false ≡⟨ sym pres0 ⟩ f $cr 𝟘 ≡⟨ cong (fst f) 0=1-in-B ⟩ f $cr 𝟙 ≡⟨ pres1 ⟩ true ∎
-
 

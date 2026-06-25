@@ -1,7 +1,7 @@
 {-# OPTIONS --lossy-unification #-}
 module Axioms.StoneDuality where
 open import BooleanRing.BooleanRingMaps
-open import CountablyPresentedBooleanRings.Definitions 
+open import CountablyPresentedBooleanRings.Definitions
 open import Cubical.Data.Sigma
 open import Cubical.Foundations.Univalence
 open import Cubical.Data.Sum
@@ -11,7 +11,7 @@ import Cubical.Data.Sum as ⊎
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
 open import Cubical.Data.Empty renaming (rec to ex-falso ; rec* to empty-func)
 open import Cubical.Data.Nat renaming (_+_ to _+ℕ_ ; _·_ to _·ℕ_)
-open import Cubical.Data.Nat.Order 
+open import Cubical.Data.Nat.Order
 open <-Reasoning
 open import Cubical.Data.Nat.Bijections.Sum
 
@@ -43,9 +43,9 @@ open import StoneSpaces.Spectrum
 
 open import BooleanRing.BoolRingUnivalence
 
-open import Cubical.Categories.Category.Base 
-open import Cubical.Categories.Category 
-open import Cubical.Categories.Functor 
+open import Cubical.Categories.Category.Base
+open import Cubical.Categories.Category
+open import Cubical.Categories.Functor
 open import Cubical.Categories.NaturalTransformation
 open import Cubical.Categories.Adjoint
 open import Cubical.Categories.Equivalence.AdjointEquivalence hiding (adjunction)
@@ -68,26 +68,26 @@ module _ (SD : StoneDualityAxiom) where
   SDHomVersion : (B : Booleω) → BooleanRingEquiv (fst B) (2^ (Sp B))
   SDHomVersion B .fst .fst = evaluationMap B
   SDHomVersion B .fst .snd = SD B
-  SDHomVersion B .snd      = evaluationIsHom B 
-  
-  ηIsoOnBooleω : (B : Booleω) → isIso BACat {x = fst B} {y = 2^ (Sp B)} (ηBA' (fst B)) 
-  ηIsoOnBooleω B = subst (isIso BACat {x = fst B} {y = 2^ (Sp B)}) 
-    (sym $ ηBA'Agrees (fst B)) 
-    (snd $ (Iso.inv $ BAIso≅BAEquiv (fst B) (2^ (Sp B))) (SDHomVersion B)) 
+  SDHomVersion B .snd      = evaluationIsHom B
+
+  ηIsoOnBooleω : (B : Booleω) → isIso BACat {x = fst B} {y = 2^ (Sp B)} (ηBA' (fst B))
+  ηIsoOnBooleω B = subst (isIso BACat {x = fst B} {y = 2^ (Sp B)})
+    (sym $ ηBA'Agrees (fst B))
+    (snd $ (Iso.inv $ BAIso≅BAEquiv (fst B) (2^ (Sp B))) (SDHomVersion B))
 
   SpFullyFaithful : isFullyFaithful SpFunctor
-  SpFullyFaithful = adjunctionFact.ηIsoOnImageH→FHFullyFaithful SpGeneralFunctor 2^Functor Sp⊣2^ BooleωEmbedding 
-   BooleωEmbeddingIsFullyFaithful ηIsoOnBooleω 
+  SpFullyFaithful = adjunctionFact.ηIsoOnImageH→FHFullyFaithful SpGeneralFunctor 2^Functor Sp⊣2^ BooleωEmbedding
+   BooleωEmbeddingIsFullyFaithful ηIsoOnBooleω
 
   SpEmbeddingIntoSets : isEmbedding ((SpFunctor .F-ob) :> (Booleω → hSet ℓ-zero))
-  SpEmbeddingIntoSets = isFullyFaithful→isEmbd-ob BooleωUnivalent 
-    (isUnivalentOp (isUnivalentSET {ℓ-zero})) {F = SpFunctor} SpFullyFaithful 
+  SpEmbeddingIntoSets = isFullyFaithful→isEmbd-ob BooleωUnivalent
+    (isUnivalentOp (isUnivalentSET {ℓ-zero})) {F = SpFunctor} SpFullyFaithful
 
-  SpEmbedding : isEmbedding Sp 
-  SpEmbedding = snd $ compEmbedding 
+  SpEmbedding : isEmbedding Sp
+  SpEmbedding = snd $ compEmbedding
                     (ΣpropEmbedding isSet λ A → isPropIsSet {A = A})
-                    (SpFunctor .F-ob , SpEmbeddingIntoSets) 
-  
+                    (SpFunctor .F-ob , SpEmbeddingIntoSets)
+
   isPropHasStoneStr : (S : Type ℓ-zero) → isProp (hasStoneStr S)
-  isPropHasStoneStr = isEmbedding→hasPropFibers SpEmbedding 
+  isPropHasStoneStr = isEmbedding→hasPropFibers SpEmbedding
 

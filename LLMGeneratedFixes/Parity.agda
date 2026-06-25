@@ -1,5 +1,5 @@
 module LLMGeneratedFixes.Parity where
--- AI generated, lightly skimmed. Needed things at the end. 
+-- AI generated, lightly skimmed. Needed things at the end.
 -- ═══════════════════════════════════════════════════════════════
 -- Even/Odd library for natural numbers
 -- Multiple interfaces: Bool-valued, Type-valued, Σ-witness, data

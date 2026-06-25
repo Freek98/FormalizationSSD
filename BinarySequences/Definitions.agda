@@ -1,4 +1,4 @@
-module BinarySequences.Definitions where 
+module BinarySequences.Definitions where
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum as ⊎
@@ -12,11 +12,11 @@ open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Foundations.Isomorphism
 open import Cubical.Relation.Nullary
 
-binarySequence : Type 
+binarySequence : Type
 binarySequence = ℕ → Bool
 
 bitFlip : binarySequence → binarySequence
-bitFlip = not ∘_ 
+bitFlip = not ∘_
 
 tail : binarySequence → binarySequence
 tail α n = α (suc n)
@@ -24,24 +24,24 @@ tail α n = α (suc n)
 δSequence : ℕ → binarySequence
 δSequence = _≡ᵇ_
 
-Σℕ1 : binarySequence → Type 
+Σℕ1 : binarySequence → Type
 Σℕ1 α = Σ[ n ∈ ℕ ] α n ≡ true
 
 ∃ℕ1 : binarySequence → Type
 ∃ℕ1 α = ∥ Σℕ1 α ∥₁
 
-∀ℕ0 : binarySequence → Type 
+∀ℕ0 : binarySequence → Type
 ∀ℕ0 α = (n : ℕ) → α n ≡ false
 
-hits1AtMostOnce : binarySequence → Type 
-hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n ≡ m 
+hits1AtMostOnce : binarySequence → Type
+hits1AtMostOnce α = ∀ (n m : ℕ) → α n ≡ true → α m ≡ true → n ≡ m
 
 ℕ∞ : Type ℓ-zero
 ℕ∞ = Σ[ α ∈ binarySequence ] hits1AtMostOnce α
 
-hits1NotTwice : binarySequence → Type 
+hits1NotTwice : binarySequence → Type
 hits1NotTwice α = ∀ (n m : ℕ) → ¬ (m ≡ n) → α m and α n ≡ false
 
 interleave : binarySequence → binarySequence → binarySequence
-interleave α β = ⊎.rec α β ∘ Iso.inv ℕ⊎ℕ≅ℕ 
+interleave α β = ⊎.rec α β ∘ Iso.inv ℕ⊎ℕ≅ℕ
 

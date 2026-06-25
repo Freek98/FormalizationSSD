@@ -1,13 +1,13 @@
 {-# OPTIONS --lossy-unification #-}
-module CommRingQuotients.TrivialIdeal where 
+module CommRingQuotients.TrivialIdeal where
 {- This file shows for a Ring R and Ideal I, that if R/I is trivial, then 1 ∈ I -}
--- This file is being moved to cubical agda and some names might have changed in the process. When that's done, TODO delete this file and do renamings maybe. 
+-- This file is being moved to cubical agda and some names might have changed in the process. When that's done, TODO delete this file and do renamings maybe.
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Nat
-open import Cubical.Data.Nat.Order 
+open import Cubical.Data.Nat.Order
 open <-Reasoning
 
 open import Cubical.Foundations.Structure
@@ -29,26 +29,26 @@ open import Cubical.Tactics.CommRingSolver
 
 module _ {ℓ : Level} (R : CommRing ℓ) (I : IdealsIn R) where
   open CommRingStr ⦃...⦄
-  instance 
+  instance
     _ = (snd (R / I))
     _ = snd R
-  private 
-    π = quotientHom R I 
+  private
+    π = quotientHom R I
 
-  opaque 
-    unfolding kernel≡I 
-  
-    quotientFiber : (x y : ⟨ R ⟩ ) → π $cr x ≡ π $cr y → (x - y) ∈ fst I 
+  opaque
+    unfolding kernel≡I
+
+    quotientFiber : (x y : ⟨ R ⟩ ) → π $cr x ≡ π $cr y → (x - y) ∈ fst I
     quotientFiber x y p = transport (cong (λ J → (x - y) ∈ (fst J) ) (kernel≡I I))  $ equalIfDiffInKernelπ x y p  where
       equalIfDiffInKernelπ :  (x y : ⟨ R ⟩ ) → π $cr x ≡ π $cr y → x - y ∈ fst (CK.kernelIdeal R (R / I ) π )
-      equalIfDiffInKernelπ x y p = CK.kernelFiber R (R / I)  π  x y p 
+      equalIfDiffInKernelπ x y p = CK.kernelFiber R (R / I)  π  x y p
 
   open IsCommRingHom (snd π)
-  
-  trivialQuotient→1∈I : Path ⟨ R / I ⟩ 1r 0r → 1r ∈ fst I 
-  trivialQuotient→1∈I p = 
+
+  trivialQuotient→1∈I : Path ⟨ R / I ⟩ 1r 0r → 1r ∈ fst I
+  trivialQuotient→1∈I p =
     transport (cong (λ a → a ∈ fst I ) q) (quotientFiber 1r 0r p')  where
       p' : π $cr 1r ≡ π  $cr 0r
-      p' = pres1 ∙ p ∙ sym pres0 
-      q : 1r - 0r ≡ 1r 
-      q = solve! R 
+      p' = pres1 ∙ p ∙ sym pres0
+      q : 1r - 0r ≡ 1r
+      q = solve! R

@@ -1,11 +1,11 @@
 {-# OPTIONS --lossy-unification #-}
--- This file shows algebraically that the spectrum of the product of two Boolean algebras is the sum of the spectra. An LLM wrote the original proof, and I rewrote it in a way I can follow. 
+-- This file shows algebraically that the spectrum of the product of two Boolean algebras is the sum of the spectra. An LLM wrote the original proof, and I rewrote it in a way I can follow.
 --
 -- Note that this file does not depend on Stone duality. Also, the result is not a corollary of the adjunction between Sp and 2^. This I personally found surprising and confusing for some time.
 -- It's an application of an exercise in ring theory. See for example exercise 22 in chapter 1 of Atiyah-MacDonald, or https://stacks.math.columbia.edu/tag/00ED
 --
 -- The main idea is that for a Boolean map f : A × B → Bool, we have f(1,0) = 1 or f(1,0) = 0.
--- Assuming the first case, f (a,b) = f(a,0) for all b and f comes from a map A → Bool already. 
+-- Assuming the first case, f (a,b) = f(a,0) for all b and f comes from a map A → Bool already.
 module StoneSums where
 
 open import Cubical.Foundations.Prelude hiding (_∧_)
@@ -35,7 +35,7 @@ private
 
 module SpectrumProduct (A : BooleanRing ℓ) (B : BooleanRing ℓ') where
   open BRProduct A B
-  open BooleanRingStr ⦃...⦄ 
+  open BooleanRingStr ⦃...⦄
   open BooleanAlgebraStr ⦃...⦄
   instance
     _ = snd A
@@ -157,40 +157,40 @@ module SpectrumProduct (A : BooleanRing ℓ) (B : BooleanRing ℓ') where
 
       restrictionIsRetract : onlyLookAtB restrictToB ≡ f
       restrictionIsRetract = CommRingHom≡ (funExt λ ((a , b)) → sym $ bEyesOnly a b)
-  
-    splitToImportantArg : actsOnlyOnA ⊎ actsOnlyOnB → SpGeneralBooleanRing A ⊎ SpGeneralBooleanRing B
-    splitToImportantArg = ⊎.rec (inl ∘ ACase.restrictToA) (inr ∘ BCase.restrictToB) 
 
-    retractCase : onlyLookAtOneSide (splitToImportantArg actsOnAorB) ≡ f 
-    retractCase = case actsOnAorB return (\d → onlyLookAtOneSide (splitToImportantArg d) ≡ f) of λ 
+    splitToImportantArg : actsOnlyOnA ⊎ actsOnlyOnB → SpGeneralBooleanRing A ⊎ SpGeneralBooleanRing B
+    splitToImportantArg = ⊎.rec (inl ∘ ACase.restrictToA) (inr ∘ BCase.restrictToB)
+
+    retractCase : onlyLookAtOneSide (splitToImportantArg actsOnAorB) ≡ f
+    retractCase = case actsOnAorB return (\d → onlyLookAtOneSide (splitToImportantArg d) ≡ f) of λ
       { (inl x) → ACase.restrictionIsRetract x
-      ; (inr x) → BCase.restrictionIsRetract x } 
-  
+      ; (inr x) → BCase.restrictionIsRetract x }
+
   module Asection (f : SpGeneralBooleanRing A) where
     open splitProductAction (onlyLookAtA f)
     open IsCommRingHom
-    secA : (splitToImportantArg actsOnAorB) ≡ inl f 
-    secA = case actsOnAorB return (λ d → splitToImportantArg d ≡ inl f) of λ 
+    secA : (splitToImportantArg actsOnAorB) ≡ inl f
+    secA = case actsOnAorB return (λ d → splitToImportantArg d ≡ inl f) of λ
       { (inl x) → cong inl (CommRingHom≡ refl)
-      ; (inr ab=0b) → ex-falso (true≢false $ 
-        𝟙                          ≡⟨ sym (pres1 $ snd f) ⟩ 
+      ; (inr ab=0b) → ex-falso (true≢false $
+        𝟙                          ≡⟨ sym (pres1 $ snd f) ⟩
         f $cr 𝟙                    ≡⟨⟩
         onlyLookAtA f $cr (𝟙 , 𝟘)  ≡⟨ ab=0b 𝟙 𝟘 ⟩
         onlyLookAtA f $cr (𝟘 , 𝟘)  ≡⟨ pres0 $ snd (onlyLookAtA f) ⟩
-        𝟘 ∎ ) } 
+        𝟘 ∎ ) }
 
   module Bsection (f : SpGeneralBooleanRing B) where
     open splitProductAction (onlyLookAtB f)
     open IsCommRingHom
-    secB : (splitToImportantArg actsOnAorB) ≡ inr f 
-    secB = case actsOnAorB return (λ d → splitToImportantArg d ≡ inr f) of λ 
+    secB : (splitToImportantArg actsOnAorB) ≡ inr f
+    secB = case actsOnAorB return (λ d → splitToImportantArg d ≡ inr f) of λ
       { (inr x) → cong inr (CommRingHom≡ refl)
-      ; (inl ab=a0) → ex-falso (true≢false $ 
-        𝟙                          ≡⟨ sym (pres1 $ snd f) ⟩ 
+      ; (inl ab=a0) → ex-falso (true≢false $
+        𝟙                          ≡⟨ sym (pres1 $ snd f) ⟩
         f $cr 𝟙                    ≡⟨⟩
         onlyLookAtB f $cr (𝟘 , 𝟙)  ≡⟨ ab=a0 𝟘 𝟙 ⟩
         onlyLookAtB f $cr (𝟘 , 𝟘)  ≡⟨ pres0 $ snd (onlyLookAtB f) ⟩
-        𝟘 ∎ ) } 
+        𝟘 ∎ ) }
 
   conclusion : Iso (SpGeneralBooleanRing (A ×BR B))
                    (SpGeneralBooleanRing A ⊎ SpGeneralBooleanRing B)
@@ -198,10 +198,10 @@ module SpectrumProduct (A : BooleanRing ℓ) (B : BooleanRing ℓ') where
     open splitProductAction f
   conclusion .Iso.inv = onlyLookAtOneSide
   conclusion .Iso.sec (inl Amap) = Asection.secA Amap
-  conclusion .Iso.sec (inr Bmap) = Bsection.secB Bmap 
+  conclusion .Iso.sec (inr Bmap) = Bsection.secB Bmap
   conclusion .Iso.ret = splitProductAction.retractCase
 
-SpProd≅SpSum : (A : BooleanRing ℓ) (B : BooleanRing ℓ') → 
+SpProd≅SpSum : (A : BooleanRing ℓ) (B : BooleanRing ℓ') →
   Iso (SpGeneralBooleanRing (A ×BR B))
       (SpGeneralBooleanRing A ⊎ SpGeneralBooleanRing B)
 SpProd≅SpSum = SpectrumProduct.conclusion

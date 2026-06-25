@@ -33,4 +33,3 @@ module _ {R : CommRing ℓ} (I : IdealsIn R) where
   zeroInQuotient→inIdeal x x≡0 =
     subst (λ P → fst ((fst P) x)) (kernel≡I I) x≡0
 
-

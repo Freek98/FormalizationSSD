@@ -1,5 +1,5 @@
 
--- Note : slight adaptions made, but this is AI generated. For that reason, it might be politically unwise to turn this into a pull request. 
+-- Note : slight adaptions made, but this is AI generated. For that reason, it might be politically unwise to turn this into a pull request.
 module BooleanRing.BoolAlgMorphism where
 
 open import Cubical.Foundations.Prelude hiding (_∧_ ; _∨_)
@@ -15,7 +15,7 @@ private variable ℓ ℓ' : Level
 module _ (A : BooleanRing ℓ) (B : BooleanRing ℓ') (f : ⟨ A ⟩ → ⟨ B ⟩) where
   open BooleanAlgebraStr ⦃...⦄
   open BooleanRingStr ⦃...⦄
-  instance 
+  instance
     _ = snd A
     _ = snd B
 
@@ -100,7 +100,7 @@ module _ (A : BooleanRing ℓ) (B : BooleanRing ℓ') (f : ⟨ A ⟩ → ⟨ B �
 
     asBoolHom : BoolHom A B
     asBoolHom = f , isBoolRingHom
-  
+
   module FromPres¬∨
     (pres¬ : ∀ x → f (¬ x) ≡ ¬ (f x))
     (pres∨ : ∀ x y → f (x ∨ y) ≡ (f x) ∨ (f y))
@@ -160,4 +160,4 @@ module _ (A : BooleanRing ℓ) (B : BooleanRing ℓ') (f : ⟨ A ⟩ → ⟨ B �
 
 module IsBoolAlgHom {A : BooleanRing ℓ} {B : BooleanRing ℓ'} (f : BoolHom A B) where
   open isBoolAlgHom A B (fst f) (snd f) public
- 
+

@@ -1,5 +1,5 @@
 
-module BasicDefinitions where 
+module BasicDefinitions where
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
@@ -20,4 +20,4 @@ has-Countability-structure A = Σ[ α ∈ binarySequence ] Iso A (Σℕ α)
 
 -- Definition 1.2.
 is-countable : {ℓ : Level} → (A : Type ℓ) → Type ℓ
-is-countable A = ∥ has-Countability-structure A ∥₁ 
+is-countable A = ∥ has-Countability-structure A ∥₁

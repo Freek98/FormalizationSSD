@@ -19,8 +19,8 @@ open import AntiEquivalence
 
 EmptyIsStone : hasStoneStr ⊥
 EmptyIsStone .fst = UnitCP
-EmptyIsStone .snd = ua (uninhabEquiv (TrivialImpliesSpEmpty.spEmpty UnitCP (isPropUnit* _ _)) λ x → x) 
+EmptyIsStone .snd = ua (uninhabEquiv (TrivialImpliesSpEmpty.spEmpty UnitCP (isPropUnit* _ _)) λ x → x)
 
 EmptySpace : StoneSpace
 EmptySpace .fst = ⊥
-EmptySpace .snd = EmptyIsStone 
+EmptySpace .snd = EmptyIsStone

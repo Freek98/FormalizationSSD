@@ -1,5 +1,5 @@
 
-module CountablyPresentedBooleanRings.Examples.BoolQuotientByBinarySequence where 
+module CountablyPresentedBooleanRings.Examples.BoolQuotientByBinarySequence where
 
 open import CountablyPresentedBooleanRings.Definitions
 open import CountablyPresentedBooleanRings.Examples.Bool
@@ -30,20 +30,18 @@ module quotientByBinary (α : binarySequence) where
   presentation : has-countable-presentation quotientOf2ByBinary
   presentation = ⊥ , count⊥ , ℕ , countℕ , fst (fst 2≃free⊥) ∘ α , EquivQuotBR 2≃free⊥ α
 
-  total : countablyPresentedBooleanRing 
-  total = quotientOf2ByBinary , ∣ (has-countable-presentation→has-freeℕ-presentation quotientOf2ByBinary presentation) ∣₁ 
+  total : countablyPresentedBooleanRing
+  total = quotientOf2ByBinary , ∣ (has-countable-presentation→has-freeℕ-presentation quotientOf2ByBinary presentation) ∣₁
 
   open BooleanRingStr (snd quotientOf2ByBinary)
   open IsCommRingHom  {S = snd (BooleanRing→CommRing quotientOf2ByBinary)} (snd quotientImageHom)
 
-  max2inQuotient : ∀ (b : ⟨ quotientOf2ByBinary ⟩ ) → ∥ (b ≡ 𝟘) ⊎ (b ≡ 𝟙) ∥₁ 
+  max2inQuotient : ∀ (b : ⟨ quotientOf2ByBinary ⟩ ) → ∥ (b ≡ 𝟘) ⊎ (b ≡ 𝟙) ∥₁
   max2inQuotient b = PT.map fiberb→b=0∨1 (quotientImageHomSurjective b) where
     fiberb→b=0∨1 : fiber (fst quotientImageHom) b → (b ≡ 𝟘) ⊎ (b ≡ 𝟙)
     fiberb→b=0∨1 (false , fc=b) = inl (sym fc=b ∙ pres0)
-    fiberb→b=0∨1 (true  , fc=b) = inr (sym fc=b ∙ pres1) 
+    fiberb→b=0∨1 (true  , fc=b) = inr (sym fc=b ∙ pres1)
 
-2/α : binarySequence → countablyPresentedBooleanRing 
+2/α : binarySequence → countablyPresentedBooleanRing
 2/α = quotientByBinary.total
-
-
 

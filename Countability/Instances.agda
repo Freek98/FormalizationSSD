@@ -12,7 +12,7 @@ open import Cubical.Data.Bool hiding (_≟_)
 open import Cubical.Data.Bool.Properties using (isSetBool ; false≢true)
 open import Cubical.Data.Sigma
 open import Cubical.Data.Sum as ⊎
-open import Cubical.Data.Empty as ⊥ 
+open import Cubical.Data.Empty as ⊥
 
 open import Cubical.Data.Nat.Bijections.Product using (ℕ×ℕ≅ℕ)
 open import Cubical.Data.Nat.Bijections.Sum using (ℕ⊎ℕ≅ℕ)
@@ -27,10 +27,10 @@ open import BinarySequences
 ℕcount .snd .Iso.fun n = n , refl
 ℕcount .snd .Iso.inv (n , _) =  n
 ℕcount .snd .Iso.sec (n , p) = Σ≡Prop (λ _ → isSetBool _ _) refl
-ℕcount .snd .Iso.ret n = refl 
+ℕcount .snd .Iso.ret n = refl
 
 ℕ×ℕCount : has-Countability-structure (ℕ × ℕ)
-ℕ×ℕCount = has-Countability-structure-× ℕcount ℕcount 
+ℕ×ℕCount = has-Countability-structure-× ℕcount ℕcount
 
 ℕ×ℕ-Diag-Count : has-Countability-structure (Σ[ (n , m) ∈ ℕ × ℕ ] ((n ≡ m) → ⊥))
 ℕ×ℕ-Diag-Count = has-Countability-structure-Iso (has-Countability-structure-Σ-Bool P ℕ×ℕCount) (invIso ℕ×ℕ-Diag≃ΣℕP) where
@@ -38,9 +38,9 @@ open import BinarySequences
   P (n , m) = not (n ≡ℕ m)
   ℕ×ℕ-Diag≃ΣℕP : Iso (Σ[ (n , m)  ∈ ℕ × ℕ ] ((n ≡ m) → ⊥)) (Σ[ p ∈ (ℕ × ℕ) ] P p ≡ true)
   ℕ×ℕ-Diag≃ΣℕP .Iso.fun ((n , m) , n≢m) = (n , m) , ¬false→true (not (n ≡ℕ m)) λ n≡ᵇm → n≢m {!   !}
-  ℕ×ℕ-Diag≃ΣℕP .Iso.inv ((n , m) , Pnm=t) = (n , m) , λ n=m → case discreteℕ n m of {! !} 
+  ℕ×ℕ-Diag≃ΣℕP .Iso.inv ((n , m) , Pnm=t) = (n , m) , λ n=m → case discreteℕ n m of {! !}
   ℕ×ℕ-Diag≃ΣℕP .Iso.sec _ = Σ≡Prop (λ _ → isSetBool _ _) refl
-  ℕ×ℕ-Diag≃ΣℕP .Iso.ret _ = Σ≡Prop (λ _ → isPropΠ λ _ → isProp⊥) refl 
+  ℕ×ℕ-Diag≃ΣℕP .Iso.ret _ = Σ≡Prop (λ _ → isPropΠ λ _ → isProp⊥) refl
 --  ℕ×ℕ-Diag≃ΣℕP : Iso ℕ×ℕ-Diag (Σ[ p ∈ (ℕ × ℕ) ] P p ≡ true)
 --  ℕ×ℕ-Diag≃ΣℕP .Iso.fun ((n , m) , n≢m) =
 --    (n , m) , ¬false→true (not (n ≡ᵇ m)) λ not-eq-false →
@@ -49,7 +49,4 @@ open import BinarySequences
 --    (n , m) , λ n=m → true≢false (sym Pnm=t ∙ orig-true→not-false (n ≡ᵇ m) (≡→≡ᵇ-true n m n=m))
 --  ℕ×ℕ-Diag≃ΣℕP .sec _ = Σ≡Prop (λ _ → isSetBool _ _) refl
 --  ℕ×ℕ-Diag≃ΣℕP .ret _ = Σ≡Prop (λ _ → isPropΠ λ _ → isProp⊥) refl
-  
-
-
 

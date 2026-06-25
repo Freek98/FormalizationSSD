@@ -22,28 +22,28 @@ open import StoneSpaces.Spectrum
 
 module _ {ℓ ℓ' : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ') (f : BoolHom B C) where
   open BooleanRingStr ⦃...⦄
-  instance 
+  instance
     _ = snd B
     _ = snd C
   open RingHomTheory
   isInjectiveBoolHom : Type _
-  isInjectiveBoolHom = (x y : ⟨ B ⟩) → (f $cr x) ≡ (f $cr y) → x ≡ y 
-  
-  ker≡0→injBoolHom : 
-    ((b : ⟨ B ⟩) → f $cr b ≡ 𝟘 → b ≡ 𝟘) → 
+  isInjectiveBoolHom = (x y : ⟨ B ⟩) → (f $cr x) ≡ (f $cr y) → x ≡ y
+
+  ker≡0→injBoolHom :
+    ((b : ⟨ B ⟩) → f $cr b ≡ 𝟘 → b ≡ 𝟘) →
     isInjectiveBoolHom
   ker≡0→injBoolHom fb=0→b=0 x y = ker≡0→inj (CommRingHom→RingHom f) (λ {b} → fb=0→b=0 b) {x} {y}
 
   SpGeneralAction : SpGeneralBooleanRing C → SpGeneralBooleanRing B
-  SpGeneralAction = _∘cr f 
+  SpGeneralAction = _∘cr f
 
-SpAction : (B C : Booleω) → BoolHom (fst B) (fst C) → Sp C → Sp B 
+SpAction : (B C : Booleω) → BoolHom (fst B) (fst C) → Sp C → Sp B
 SpAction B C = SpGeneralAction  (fst B) (fst C)
 
 isSurjectiveSpHom : (B C : Booleω) → BoolHom (fst B) (fst C) → Type ℓ-zero
-isSurjectiveSpHom B C f = isSurjection (SpAction B C f) 
+isSurjectiveSpHom B C f = isSurjection (SpAction B C f)
 
 formalSurjectionsAreSurjectionsAxiom : Type (ℓ-suc ℓ-zero)
-formalSurjectionsAreSurjectionsAxiom = 
+formalSurjectionsAreSurjectionsAxiom =
   (B C : Booleω) (g : BoolHom (fst B) (fst C)) →
   isInjectiveBoolHom (fst B) (fst C) g → isSurjectiveSpHom B C g

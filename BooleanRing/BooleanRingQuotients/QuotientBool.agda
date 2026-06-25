@@ -15,7 +15,7 @@ open import Cubical.Algebra.BooleanRing
 open import Cubical.Algebra.CommRing
 
 import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
-open import Cubical.HITs.SetQuotients 
+open import Cubical.HITs.SetQuotients
 open import Cubical.Algebra.CommRing.Quotient.Base
 
 module _ {ℓ : Level} (B : BooleanRing ℓ) {X : Type ℓ} (f : X → ⟨ B ⟩) where
@@ -41,16 +41,16 @@ module _ {ℓ : Level} (B : BooleanRing ℓ) {X : Type ℓ} (f : X → ⟨ B ⟩
           π    = fst (quotientHom R (IQ.genIdeal R f) )
           πHom : IsCommRingHom (snd R) π (snd Q)
           πHom = snd (quotientHom R (IQ.genIdeal R f))
-  opaque 
+  opaque
     _/Im_ : BooleanRing ℓ
-    _/Im_ = idemCommRing→BR Q quotientPreservesIdem  
+    _/Im_ = idemCommRing→BR Q quotientPreservesIdem
 
-opaque 
+opaque
   unfolding _/Im_
-  QuotientBooleanRingAgreesWithCommRing : 
-    {ℓ : Level} {A : BooleanRing ℓ} → {X : Type ℓ} → {f : X → ⟨ A ⟩} → 
+  QuotientBooleanRingAgreesWithCommRing :
+    {ℓ : Level} {A : BooleanRing ℓ} → {X : Type ℓ} → {f : X → ⟨ A ⟩} →
     (BooleanRing→CommRing A) IQ./Im f ≡ BooleanRing→CommRing (A /Im f)
-  QuotientBooleanRingAgreesWithCommRing = refl 
+  QuotientBooleanRingAgreesWithCommRing = refl
 
 
 module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩} where
@@ -61,27 +61,27 @@ module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩
     quotientImageHom : BoolHom B (B /Im f)
     quotientImageHom = IQ.quotientImageHom R f
 
-    quotientImageHomSurjective : isSurjection (fst quotientImageHom) 
-    quotientImageHomSurjective = quotientHomSurjective (BooleanRing→CommRing B) (IQ.genIdeal (BooleanRing→CommRing B) f) 
-   
-    quotientImageHomEpi : {ℓ' : Level} → (S : hSet ℓ') → {f' g' : ⟨ B /Im f ⟩ → ⟨ S ⟩} → 
+    quotientImageHomSurjective : isSurjection (fst quotientImageHom)
+    quotientImageHomSurjective = quotientHomSurjective (BooleanRing→CommRing B) (IQ.genIdeal (BooleanRing→CommRing B) f)
+
+    quotientImageHomEpi : {ℓ' : Level} → (S : hSet ℓ') → {f' g' : ⟨ B /Im f ⟩ → ⟨ S ⟩} →
                           f' ∘ quotientImageHom .fst ≡ g' ∘ quotientImageHom .fst → f' ≡ g'
     quotientImageHomEpi S {f'} {g'} = quotientHomEpi (BooleanRing→CommRing B) (IQ.genIdeal (BooleanRing→CommRing B) f) S f' g'
 
-  
+
     open BooleanRingStr (snd $ B /Im f)
     zeroOnImage : (x : X) → (quotientImageHom $cr (f x)) ≡ 𝟘
-    zeroOnImage = IQ.zeroOnImage R f 
+    zeroOnImage = IQ.zeroOnImage R f
 
-  open BooleanRingStr 
+  open BooleanRingStr
   module _ {ℓ' : Level} (S : BooleanRing ℓ') (g : BoolHom B S)
     (gfx=0 : ∀ (x : X) → g $cr (f x) ≡ 𝟘 (snd S)) where
-      opaque 
-        unfolding _/Im_ 
-        unfolding quotientImageHom 
-  
+      opaque
+        unfolding _/Im_
+        unfolding quotientImageHom
+
         inducedHom : BoolHom (B /Im f) S
-        inducedHom = IQ.inducedHom R f g gfx=0 
+        inducedHom = IQ.inducedHom R f g gfx=0
 
         inducedHomUnique : (h : BoolHom (B /Im f) S) →
                            (p : g ≡ (h ∘cr quotientImageHom)) →
@@ -89,8 +89,8 @@ module _ {ℓ : Level} {B : BooleanRing ℓ} {X : Type ℓ} {f : X → ⟨ B ⟩
         inducedHomUnique = IQ.inducedHomUnique R f g gfx=0
   opaque
     unfolding inducedHom
-    evalInduce : 
+    evalInduce :
        (S : BooleanRing ℓ) {g : BoolHom B S}
-       {gfx=0 : ∀ (x : X) → g $cr (f x) ≡ BooleanRingStr.𝟘 (snd S)} → 
+       {gfx=0 : ∀ (x : X) → g $cr (f x) ≡ BooleanRingStr.𝟘 (snd S)} →
        inducedHom S g gfx=0 ∘cr quotientImageHom ≡ g
     evalInduce S = IQ.evalInduce {ℓ = ℓ} (BooleanRing→CommRing B) {S = BooleanRing→CommRing S}

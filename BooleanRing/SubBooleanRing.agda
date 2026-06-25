@@ -116,11 +116,11 @@ module SubBoolRing
       makeIsCommRing isSetSub +s-assoc +s-idr +s-invr +s-comm ·s-assoc ·s-idr ·s-distrR+ ·s-comm
     subBooleanRing .snd .BooleanRingStr.isBooleanRing .IsBooleanRing.·Idem = ·s-idem
 
-  subRing≡ : {x y : SubType} → fst x ≡ fst y → x ≡ y 
-  subRing≡ = Σ≡Prop isPropP 
+  subRing≡ : {x y : SubType} → fst x ≡ fst y → x ≡ y
+  subRing≡ = Σ≡Prop isPropP
 
 
-module SubBooleanAlgebra (B : BooleanRing ℓ) (P : ⟨ B ⟩ → Type ℓ') (isPropP : ∀ x → isProp (P x)) where 
+module SubBooleanAlgebra (B : BooleanRing ℓ) (P : ⟨ B ⟩ → Type ℓ') (isPropP : ∀ x → isProp (P x)) where
   open BooleanRingStr (snd B)
   open BooleanAlgebraStr (snd B)
   record IsSubBooleanAlgebra : Type (ℓ-max ℓ ℓ') where
@@ -131,30 +131,30 @@ module SubBooleanAlgebra (B : BooleanRing ℓ) (P : ⟨ B ⟩ → Type ℓ') (is
       ∨-cl : ∀ {x y} → P x → P y → P (x ∨ y)
       ¬-cl : ∀ {x} → P x → P (¬ x)
   module DeriveRingClosure (subAlgebraClosure : IsSubBooleanAlgebra) where
-    open IsSubBooleanAlgebra subAlgebraClosure 
+    open IsSubBooleanAlgebra subAlgebraClosure
     +-cl : ∀ {x y} → P x → P y → P (x + y)
-    +-cl px py = subst P (sym (+FromBooleanAlgebraStr B)) 
+    +-cl px py = subst P (sym (+FromBooleanAlgebraStr B))
       (∨-cl (∧-cl px (¬-cl py)) (∧-cl (¬-cl px) py))
-  
+
     ·-cl : ∀ {x y} → P x → P y → P (x · y)
     ·-cl = ∧-cl
-  
+
     neg-cl : ∀ {x} → P x → P (- x)
     neg-cl px = subst P -IsId px
 
     open SubBoolRing
     open IsSubBooleanRing
-  
+
     deriveRing-cl : IsSubBooleanRing B P isPropP
     deriveRing-cl .0-closed = 𝟘-cl
     deriveRing-cl .1-closed = 𝟙-cl
     deriveRing-cl .+-closed = +-cl
     deriveRing-cl .·-closed = ·-cl
-    deriveRing-cl .neg-closed = neg-cl 
-  
-    subBooleanAlgebra : BooleanRing (ℓ-max ℓ ℓ')
-    subBooleanAlgebra = deriveBooleanRing.subBooleanRing B P isPropP deriveRing-cl 
-  
+    deriveRing-cl .neg-closed = neg-cl
 
-mkSubBooleanAlgebra : {B : BooleanRing ℓ} {P : ⟨ B ⟩ → Type ℓ'} {isPropP : ∀ x → isProp (P x)} → (SubBooleanAlgebra.IsSubBooleanAlgebra B P isPropP) → BooleanRing (ℓ-max ℓ ℓ') 
-mkSubBooleanAlgebra {B = B} {P = P} {isPropP = isPropP} = SubBooleanAlgebra.DeriveRingClosure.subBooleanAlgebra B P isPropP 
+    subBooleanAlgebra : BooleanRing (ℓ-max ℓ ℓ')
+    subBooleanAlgebra = deriveBooleanRing.subBooleanRing B P isPropP deriveRing-cl
+
+
+mkSubBooleanAlgebra : {B : BooleanRing ℓ} {P : ⟨ B ⟩ → Type ℓ'} {isPropP : ∀ x → isProp (P x)} → (SubBooleanAlgebra.IsSubBooleanAlgebra B P isPropP) → BooleanRing (ℓ-max ℓ ℓ')
+mkSubBooleanAlgebra {B = B} {P = P} {isPropP = isPropP} = SubBooleanAlgebra.DeriveRingClosure.subBooleanAlgebra B P isPropP

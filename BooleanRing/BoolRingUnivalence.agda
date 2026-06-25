@@ -1,9 +1,9 @@
 
 
 module BooleanRing.BoolRingUnivalence where
-{- 
--- Introduces the proper notions of morphisms and equivalences of Boolean rings. 
--- Uses Evan's cool technology to deduce univalence for this notion of equivalences. 
+{-
+-- Introduces the proper notions of morphisms and equivalences of Boolean rings.
+-- Uses Evan's cool technology to deduce univalence for this notion of equivalences.
 -- -}
 
 
@@ -34,16 +34,16 @@ private
     ℓ  : Level
     ℓ' : Level
 
-IsBoolRingHom : {A : Type ℓ} → {B : Type ℓ'} → (Astr : BooleanRingStr A) → 
-                (f : A → B)   → (Bstr : BooleanRingStr B) → 
+IsBoolRingHom : {A : Type ℓ} → {B : Type ℓ'} → (Astr : BooleanRingStr A) →
+                (f : A → B)   → (Bstr : BooleanRingStr B) →
                 Type _
-IsBoolRingHom Astr f Bstr = IsCommRingHom (BooleanRingStr→CommRingStr Astr) 
+IsBoolRingHom Astr f Bstr = IsCommRingHom (BooleanRingStr→CommRingStr Astr)
                                         f (BooleanRingStr→CommRingStr Bstr)
 
-IsBoolRingEquiv : {A : Type ℓ} → {B : Type ℓ'} → (Astr : BooleanRingStr A) → 
-                  (e : A ≃ B)  → (Bstr : BooleanRingStr B) → 
+IsBoolRingEquiv : {A : Type ℓ} → {B : Type ℓ'} → (Astr : BooleanRingStr A) →
+                  (e : A ≃ B)  → (Bstr : BooleanRingStr B) →
                   Type _
-IsBoolRingEquiv Astr e Bstr = 
+IsBoolRingEquiv Astr e Bstr =
   IsBoolRingHom Astr (fst e) Bstr
 
 BoolRingEquiv : {ℓ ℓ' : Level} (A : BooleanRing ℓ) (B : BooleanRing ℓ') → Type _
@@ -51,14 +51,14 @@ BoolRingEquiv A B = Σ[ e ∈ ⟨ A ⟩ ≃ ⟨ B ⟩ ] IsBoolRingEquiv (snd A) 
 
 unquoteDecl IsBooleanRingIsoΣ = declareRecordIsoΣ IsBooleanRingIsoΣ (quote IsBooleanRing)
 
-isPropIsBooleanRing : {B : Type ℓ} → 
-   {𝟘 𝟙 : B} {_+_ _·_ : B → B → B} { -_ : B → B} → 
+isPropIsBooleanRing : {B : Type ℓ} →
+   {𝟘 𝟙 : B} {_+_ _·_ : B → B → B} { -_ : B → B} →
    isProp (IsBooleanRing 𝟘 𝟙 _+_ _·_ -_)
 
-isPropIsBooleanRing {B = B} {_·_ = _·h_} = isOfHLevelRetractFromIso 1 IsBooleanRingIsoΣ 
-  (isPropΣ (isPropIsCommRing _ _ _ _ _) f) where 
-    open CommRingStr 
-    f : IsCommRing _ _ _ _·h_ _ → isProp ((x : B) → (x ·h x) ≡ x) 
+isPropIsBooleanRing {B = B} {_·_ = _·h_} = isOfHLevelRetractFromIso 1 IsBooleanRingIsoΣ
+  (isPropΣ (isPropIsCommRing _ _ _ _ _) f) where
+    open CommRingStr
+    f : IsCommRing _ _ _ _·h_ _ → isProp ((x : B) → (x ·h x) ≡ x)
     f isCR p q = funExt λ x → is-set CRstr (x ·h x) x (p x) (q x) where
       CRstr : CommRingStr B
       CRstr .0r  = _
@@ -66,7 +66,7 @@ isPropIsBooleanRing {B = B} {_·_ = _·h_} = isOfHLevelRetractFromIso 1 IsBoolea
       CRstr ._+_ = _
       CRstr ._·_ = _
       CRstr .-_  = _
-      CRstr .isCommRing = isCR 
+      CRstr .isCommRing = isCR
 
 𝒮ᴰ-BooleanRing : DUARel (𝒮-Univ ℓ) BooleanRingStr ℓ
 𝒮ᴰ-BooleanRing =
@@ -81,18 +81,17 @@ isPropIsBooleanRing {B = B} {_·_ = _·h_} = isOfHLevelRetractFromIso 1 IsBoolea
  where
   open BooleanRingStr
   open IsCommRingHom
-  
+
   null = autoDUARel (𝒮-Univ _) (λ a → a)
   bin  = autoDUARel (𝒮-Univ _) (λ a → a → a → a)
 
-opaque 
+opaque
   BoolRingPath : (R S : BooleanRing ℓ) → BoolRingEquiv R S ≃ (R ≡ S)
   BoolRingPath = ∫ 𝒮ᴰ-BooleanRing .UARel.ua
-  
-  BoolRingPathInvRefl≡Idfun : (B : BooleanRing ℓ) → fst (fst ((fst $ invEquiv $ BoolRingPath B B) refl)) ≡ idfun ⟨ B ⟩ 
+
+  BoolRingPathInvRefl≡Idfun : (B : BooleanRing ℓ) → fst (fst ((fst $ invEquiv $ BoolRingPath B B) refl)) ≡ idfun ⟨ B ⟩
   BoolRingPathInvRefl≡Idfun B = funExt transportRefl
-  
+
   uaBoolRing : {A B : BooleanRing ℓ} → BoolRingEquiv A B → A ≡ B
   uaBoolRing {A = A} {B = B} = equivFun (BoolRingPath A B)
-
 

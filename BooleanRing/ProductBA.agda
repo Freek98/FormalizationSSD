@@ -1,5 +1,5 @@
 {-# OPTIONS --lossy-unification #-}
-module BooleanRing.ProductBA where 
+module BooleanRing.ProductBA where
 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
@@ -36,22 +36,22 @@ open import CategoryTheory.StuffFromStoneAboutBAs
 open import Cubical.Categories.Limits.BinProduct
 open import Cubical.Categories.Category
 
-private 
+private
   variable ℓ ℓ' ℓ'' : Level
 
 module BRProduct (B : BooleanRing ℓ) (C : BooleanRing ℓ') where
-  instance 
-    _ = snd B 
-    _ = snd C 
+  instance
+    _ = snd B
+    _ = snd C
   product : BooleanRing (ℓ-max ℓ ℓ')
   product = idemCommRing→BR B×C-CR (uncurry ·IdemProd) where
     B×C-CR : CommRing (ℓ-max ℓ ℓ')
     B×C-CR = (DirectProd-CommRing (BooleanRing→CommRing B) (BooleanRing→CommRing C))
     open CommRingStr (snd B×C-CR)
     ·IdemProd : (b : ⟨ B ⟩) (c : ⟨ C ⟩) → (b , c) · (b , c) ≡ (b , c)
-    ·IdemProd b c = cong₂ _,_ 
-      (BooleanRingStr.·Idem (snd B) b) 
-      (BooleanRingStr.·Idem (snd C) c) 
+    ·IdemProd b c = cong₂ _,_
+      (BooleanRingStr.·Idem (snd B) b)
+      (BooleanRingStr.·Idem (snd C) c)
   open IsCommRingHom ⦃...⦄
   fstBA : BoolHom product B
   fstBA .fst = fst
@@ -59,50 +59,50 @@ module BRProduct (B : BooleanRing ℓ) (C : BooleanRing ℓ') where
   fstBA .snd .pres1 = refl
   fstBA .snd .pres+ _ _ = refl
   fstBA .snd .pres· _ _ = refl
-  fstBA .snd .pres- _ = refl 
-  
+  fstBA .snd .pres- _ = refl
+
   sndBA : BoolHom product C
   sndBA .fst = snd
   sndBA .snd .pres0 = refl
   sndBA .snd .pres1 = refl
   sndBA .snd .pres+ _ _ = refl
   sndBA .snd .pres· _ _ = refl
-  sndBA .snd .pres- _ = refl 
-  
+  sndBA .snd .pres- _ = refl
+
   module UP {D : BooleanRing ℓ''} (f : BoolHom D B) (g : BoolHom D C) where
-    instance 
-      _ = snd f 
-      _ = snd g 
-    ⟨f,g⟩ : BoolHom D product 
+    instance
+      _ = snd f
+      _ = snd g
+    ⟨f,g⟩ : BoolHom D product
     ⟨f,g⟩ .fst x = (f $cr x) , (g $cr x)
     ⟨f,g⟩ .snd .pres0     = cong₂ _,_ pres0 pres0
     ⟨f,g⟩ .snd .pres1     = cong₂ _,_ pres1 pres1
     ⟨f,g⟩ .snd .pres+ x y = cong₂ _,_ (pres+ x y) (pres+ x y)
     ⟨f,g⟩ .snd .pres· x y = cong₂ _,_ (pres· x y) (pres· x y)
-    ⟨f,g⟩ .snd .pres- x   = cong₂ _,_ (pres- x) (pres- x) 
+    ⟨f,g⟩ .snd .pres- x   = cong₂ _,_ (pres- x) (pres- x)
 
     extensionfstBA : fstBA ∘cr ⟨f,g⟩ ≡ f
-    extensionfstBA = CommRingHom≡ refl 
+    extensionfstBA = CommRingHom≡ refl
     extensionsndBA : sndBA ∘cr ⟨f,g⟩ ≡ g
-    extensionsndBA = CommRingHom≡ refl 
+    extensionsndBA = CommRingHom≡ refl
 
     uniqueness : (h : BoolHom D product) → (fstBA ∘cr h ≡ f) → (sndBA ∘cr h ≡ g) → ⟨f,g⟩ ≡ h
-    uniqueness h Bh=f Ch=g = CommRingHom≡ (funExt λ d → cong₂ _,_ 
-      (cong (λ k → fst k d) (sym Bh=f)) (cong (λ k → fst k d) (sym Ch=g))) 
+    uniqueness h Bh=f Ch=g = CommRingHom≡ (funExt λ d → cong₂ _,_
+      (cong (λ k → fst k d) (sym Bh=f)) (cong (λ k → fst k d) (sym Ch=g)))
 
 module BACatProduct {ℓ : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ) where
     open BinProduct
-    open BRProduct B C 
+    open BRProduct B C
     open UP
-    open Category 
-    catProduct : BinProduct BACat B C 
+    open Category
+    catProduct : BinProduct BACat B C
     catProduct .binProdOb = product
     catProduct .binProdPr₁ = fstBA
     catProduct .binProdPr₂ = sndBA
     catProduct .univProp f g .fst .fst = ⟨f,g⟩ f g
     catProduct .univProp f g .fst .snd = extensionfstBA f g , extensionsndBA f g
-    catProduct .univProp f g .snd (h , Bh=f , Ch=g) = Σ≡Prop 
-      (λ _ → isProp× (isSetHom BACat _ _) (isSetHom BACat _ _)) 
+    catProduct .univProp f g .snd (h , Bh=f , Ch=g) = Σ≡Prop
+      (λ _ → isProp× (isSetHom BACat _ _) (isSetHom BACat _ _))
       -- Note that this argument works for any category, and always needs to be provided.
       -- So maybe this should be generalized to a smart constructor.
       (uniqueness f g h Bh=f Ch=g)
@@ -110,6 +110,6 @@ module BACatProduct {ℓ : Level} (B : BooleanRing ℓ) (C : BooleanRing ℓ) wh
 _×BR_ : (B : BooleanRing ℓ) (C : BooleanRing ℓ') → BooleanRing (ℓ-max ℓ ℓ')
 _×BR_ = BRProduct.product
 
-induceProdMapBR : {B : BooleanRing ℓ} → {C : BooleanRing ℓ'} → {D : BooleanRing ℓ''} → 
+induceProdMapBR : {B : BooleanRing ℓ} → {C : BooleanRing ℓ'} → {D : BooleanRing ℓ''} →
                    BoolHom D B → BoolHom D C → BoolHom D (B ×BR C)
 induceProdMapBR {B = B} {C = C} = BRProduct.UP.⟨f,g⟩ B C
