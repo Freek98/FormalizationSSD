@@ -1,5 +1,5 @@
 
--- Note : slight adaptions made, but this is AI generated. 
+-- Note : slight adaptions made, but this is AI generated. For that reason, it might be politically unwise to turn this into a pull request. 
 module BooleanRing.BoolAlgMorphism where
 
 open import Cubical.Foundations.Prelude hiding (_∧_ ; _∨_)

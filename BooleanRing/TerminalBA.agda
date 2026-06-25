@@ -1,26 +1,13 @@
 module BooleanRing.TerminalBA where 
 
 open import Cubical.Data.Sigma
-open import Cubical.Data.Bool hiding ( _≤_ ; _≥_)
-open import Cubical.Data.Empty renaming (rec to ex-falso)
-
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
-open import Cubical.Foundations.Powerset
 open import Cubical.Foundations.Equiv
 
 open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.BooleanRing
-open import Cubical.Algebra.BooleanRing.Instances.Bool
-open import Cubical.Relation.Nullary
-
-open import Cubical.HITs.PropositionalTruncation as PT
-
-open import Cubical.Algebra.CommRing.Ideal
-import Cubical.Algebra.CommRing.Kernel as CK
-open import Cubical.Algebra.Ring.Kernel as RK
-open import Cubical.Algebra.CommRing.Quotient.Base
 
 open import Cubical.Tactics.CommRingSolver
 
@@ -83,7 +70,7 @@ module _ where
   UnitBR = Unit , UnitBRStr
   
 -- This module should go into BooleanRing.Terminal  
-module _ { ℓ : Level} (B : BooleanRing ℓ) where
+module _ {ℓ : Level} (B : BooleanRing ℓ) where
   private
     B' = BooleanRing→CommRing B
   open BooleanRingStr (snd B)
