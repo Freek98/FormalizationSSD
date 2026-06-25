@@ -1,3 +1,13 @@
+** CLEANUP
+CategoryTheory is a mess. 
+
+CommRingQuotients and BooleanRing contain some results that should go into the cubical library. Also some LLM-generated things, but that's politcally not the best way to spend your time. I think there should be one folder for all facts on boolean rings and commring quotients and categorytheory fact. However, it's not just moving everything there, we should also clean out stuff that's not actually used (I learened that the terminal BA is not used?). 
+
+
+
+
+
+
 + StoneDuality currently contains a bunch of stuff on the Sp-decidable-subsets adjunction and anti-equivalence. This should move to a seperate file. The whole Category theory folder and everything in it is also in this field. I think it's most convenient to let the AI handle this, while I continue with the examples of countably presented Boolean rings.  
 
 * Re-organizing the repo so the dependency structure (what imports what) makes more sense. 
@@ -5,8 +15,5 @@
 
 + So we should then factor out Sp and put it into a file on Stone spaces, 
 
-+ One of the things that's annoying is that instances for BooleanAlgebraStr don't work well. I think they might work if you derive only the second part (right now both A and the Structure on A are part of the instances), I'll think about why. This is now fixed, waiting for the PR to be accepted in the cubical library. 
-
-+ I completely forgot why there is a guardedness flag. Something breaks if I remove it, don't get why
 * Making LLM generated and old-me generated stuff more now-me readable. 
 + Countability.Properties contains some helper functions I don't trust. 
