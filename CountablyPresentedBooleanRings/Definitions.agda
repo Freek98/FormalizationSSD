@@ -55,7 +55,6 @@ open import BooleanRing.BooleanRingMaps
 -- (which should be the case as our work should work independently from universes.
 --}
 
-
 _is-presented-by_/_ : {ℓ : Level} → (B : BooleanRing ℓ) →
   (A : Type ℓ) → {X : Type ℓ} → (f : X → ⟨ freeBA A ⟩) → Type ℓ
 B is-presented-by A / f = BooleanRingEquiv B (freeBA A /Im f)

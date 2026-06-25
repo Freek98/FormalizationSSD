@@ -1,3 +1,4 @@
+{-# OPTIONS --lossy-unification #-}
 
 module StoneSpaces.Spectrum where
 open import BooleanRing.BooleanRingMaps

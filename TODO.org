@@ -3,6 +3,27 @@ CategoryTheory is a mess.
 
 CommRingQuotients and BooleanRing contain some results that should go into the cubical library. Also some LLM-generated things, but that's politcally not the best way to spend your time. I think there should be one folder for all facts on boolean rings and commring quotients and categorytheory fact. However, it's not just moving everything there, we should also clean out stuff that's not actually used (I learened that the terminal BA is not used?). 
 
+Countability is now defined in BasicDefinitions, and the proof that N is countable is in two places, partly because in countability there are holes about N x N. Countability.Properties has been AI-generated and needs to be cleaned up also. It also doesn't contain everything you want. 
+
+The anti-equivalence is still in the Virtual box, as are the results on odisc. 
+
+* Things that are morally not the main point 
+- countability, which depends on binary sequences. 
+- note that some results on binary sequences are axiom-dependent, these are part of the main point. 
+- the categorical results (I think these are still in the LLM part and not imported yet). 
+- the results on boolean rings and quotients. 
+- the stuff about 2/3 proving (not sure they're even all used). 
+- the stuff about parity (sure this is used, not sure where to put it, as lots of it is LLM generated. Maybe I should check out what is already in the standard library. ). 
+- fact that \Sigma\bN has split support is independent of SSD. 
+
+* What is the main point? 
+- statement of the axioms
+- definition of stone spaces, spectra, countably presented boolean algebras
+- definition and classificiation of overtly discrete spaces. 
+- proofs of the omniscience principles. 
+
+
+
 
 
 
