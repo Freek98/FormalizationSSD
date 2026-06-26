@@ -14,13 +14,6 @@ open import Cubical.Data.Nat.Bijections.Product
 open import BinarySequences.Definitions
 open import Cubical.HITs.PropositionalTruncation as PT
 
-private 
-  and-elim : (a b : Bool) → (a and b ≡ true) → (a ≡ true) × (b ≡ true)
-  and-elim false false x = ex-falso $ false≢true x
-  and-elim false true  x = ex-falso $ false≢true x
-  and-elim true  false x = ex-falso $ false≢true x
-  and-elim true  true  _ = refl , refl 
-
 module ΣℕProdBinarySequence (α β : binarySequence) where
   γ : binarySequence
   γ n = α (fst (inv ℕ×ℕ≅ℕ n)) and β (snd (inv ℕ×ℕ≅ℕ n))
@@ -47,6 +40,12 @@ module ΣℕProdBinarySequence (α β : binarySequence) where
     where
       n = fst (inv ℕ×ℕ≅ℕ k)
       m = snd (inv ℕ×ℕ≅ℕ k)
+      
+      and-elim : (a b : Bool) → (a and b ≡ true) → (a ≡ true) × (b ≡ true)
+      and-elim false false x = ex-falso $ false≢true x
+      and-elim false true  x = ex-falso $ false≢true x
+      and-elim true  false x = ex-falso $ false≢true x
+      and-elim true  true  _ = refl , refl 
 
       αn=βm=1 : (α n ≡ true) × (β m ≡ true)
       αn=βm=1 = and-elim (α n) (β m) r 
