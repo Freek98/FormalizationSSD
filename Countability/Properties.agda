@@ -135,9 +135,6 @@ module CountableSum (α β : binarySequence) where
   ΣℕSum = compIso flattenSum (invIso (Σ-cong-iso-fst (invIso ℕ⊎ℕ≅ℕ)))
 
 module ΣBoolCountable (α : binarySequence) where
-
-  -- Given a predicate P on Σℕ α, define the characteristic function
-  -- for the subtype Σ[ x ∈ Σℕ α ] P x ≡ true
   γΣ : (P : Σℕ α → Bool) → binarySequence
   γΣ P n = boolGuard (α n) (λ q → P (n , q))
 
