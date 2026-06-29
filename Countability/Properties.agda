@@ -1,7 +1,7 @@
 
 -- AI generated, minor edits.
--- actually I'm not sure I like all the names, and whether this contains everything I want. 
--- It should also have countable product of countable sets, countable sums of countable sets. 
+-- actually I'm not sure I like all the names, and whether this contains everything I want.
+-- It should also have countable product of countable sets, countable sums of countable sets.
 --
 -- In instances, we should have N, and every finite set.
 module Countability.Properties where

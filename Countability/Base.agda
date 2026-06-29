@@ -9,7 +9,7 @@ open import Cubical.Foundations.Function
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Foundations.Isomorphism
 
-open import BinarySequences.Definitions 
+open import BinarySequences.Definitions
 
 has-Countability-structure : {ℓ : Level} → (A : Type ℓ) → Type ℓ
 has-Countability-structure A = Σ[ α ∈ binarySequence ] Iso A (Σℕ1 α)

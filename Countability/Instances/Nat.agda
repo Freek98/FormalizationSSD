@@ -1,6 +1,6 @@
 
 module Countability.Instances.Nat where
-open import Countability.Base 
+open import Countability.Base
 
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
