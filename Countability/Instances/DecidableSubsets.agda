@@ -30,21 +30,21 @@ private
   boolGuard-elim false _ p = ex-falso (false≢true p)
 
 module ΣℕSubBinarySequence (α : binarySequence) (P : Σℕ1 α → Bool) where
-  ΣαP : binarySequence
-  ΣαP n = boolGuard (α n) (λ q → P (n , q))
+  ΣαPSequence : binarySequence
+  ΣαPSequence n = boolGuard (α n) (λ q → P (n , q))
 
-  ΣαP-intro : (n : ℕ) (q : α n ≡ true) → P (n , q) ≡ true → ΣαP n ≡ true
-  ΣαP-intro n = boolGuard-intro (α n) (λ q → P (n , q))
+  ΣαPSequence-intro : (n : ℕ) (q : α n ≡ true) → P (n , q) ≡ true → ΣαPSequence n ≡ true
+  ΣαPSequence-intro n = boolGuard-intro (α n) (λ q → P (n , q))
 
-  ΣαP-elim : (n : ℕ) → ΣαP n ≡ true → Σ[ q ∈ α n ≡ true ] P (n , q) ≡ true
-  ΣαP-elim n = boolGuard-elim (α n) (λ q → P (n , q))
+  ΣαPSequence-elim : (n : ℕ) → ΣαPSequence n ≡ true → Σ[ q ∈ α n ≡ true ] P (n , q) ≡ true
+  ΣαPSequence-elim n = boolGuard-elim (α n) (λ q → P (n , q))
 
-  ΣℕαP=ΣℕΣαP : Iso (Σ[ x ∈ Σℕ1 α ] P x ≡ true) (Σℕ1 ΣαP)
-  fun ΣℕαP=ΣℕΣαP ((n , q) , r) = n , ΣαP-intro n q r
-  inv ΣℕαP=ΣℕΣαP (n , r) = (n , fst e) , snd e
-    where e = ΣαP-elim n r
-  sec ΣℕαP=ΣℕΣαP (n , r) = ΣPathP (refl , (isSetBool _ _ _ _))
-  ret ΣℕαP=ΣℕΣαP ((n , q) , r) =
+  ΣℕαP=ΣℕΣαPSequence : Iso (Σ[ x ∈ Σℕ1 α ] P x ≡ true) (Σℕ1 ΣαPSequence)
+  fun ΣℕαP=ΣℕΣαPSequence ((n , q) , r) = n , ΣαPSequence-intro n q r
+  inv ΣℕαP=ΣℕΣαPSequence (n , r) = (n , fst e) , snd e
+    where e = ΣαPSequence-elim n r
+  sec ΣℕαP=ΣℕΣαPSequence (n , r) = ΣPathP (refl , (isSetBool _ _ _ _))
+  ret ΣℕαP=ΣℕΣαPSequence ((n , q) , r) =
     ΣPathP (ΣPathP (refl , (isSetBool _ _ _ _)) ,
             toPathP (isSetBool _ _ _ _))
 
@@ -52,7 +52,7 @@ countabilityStructureDecidableSubset : {ℓ : Level} → (A : Type ℓ) (P : A �
   has-Countability-structure A →
   has-Countability-structure (Σ[ a ∈ A ] P a ≡ true)
 countabilityStructureDecidableSubset A P (α , A=Σα) =
-  ΣαP , compIso (invIso (Σ-cong-iso-fst (invIso A=Σα))) ΣℕαP=ΣℕΣαP
+  ΣαPSequence , compIso (invIso (Σ-cong-iso-fst (invIso A=Σα))) ΣℕαP=ΣℕΣαPSequence
   where
     P' : Σℕ1 α → Bool
     P' x = P (inv A=Σα x)
