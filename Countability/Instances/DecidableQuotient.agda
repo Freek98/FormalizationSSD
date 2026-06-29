@@ -142,21 +142,21 @@ countabilityStructureDecidableQuotient {A = A} {B = B} eqB f fSurj (α , e) =
     open DecQuotientSequence α B eqB (fst qSurj) (snd qSurj)
 
 countabilityStructureDiscreteQuotient :
-  {A : Type ℓ} {B : Type ℓ'} → 
-  hasDecidableEquality B → (f : A ↠ B) → 
+  {A : Type ℓ} {B : Type ℓ'} →
+  hasDecidableEquality B → (f : A ↠ B) →
   has-Countability-structure A → has-Countability-structure B
 countabilityStructureDiscreteQuotient disB (f , fSurj) =
   countabilityStructureDecidableQuotient (hasDecidableEquality→hasBoolEquality disB) f fSurj
 
 is-countable-decidable-quotient :
-  {A : Type ℓ} {B : Type ℓ'} → hasBoolEquality B → (f : A ↠ B) → 
+  {A : Type ℓ} {B : Type ℓ'} → hasBoolEquality B → (f : A ↠ B) →
   is-countable A → is-countable B
 is-countable-decidable-quotient eqB (f , surjf) =
   PT.map (countabilityStructureDecidableQuotient eqB f surjf)
 
 is-countable-discrete-quotient :
-  {A : Type ℓ} {B : Type ℓ'} → 
-  hasDecidableEquality B → A ↠ B → 
+  {A : Type ℓ} {B : Type ℓ'} →
+  hasDecidableEquality B → A ↠ B →
   is-countable A → is-countable B
 is-countable-discrete-quotient disB =
   is-countable-decidable-quotient (hasDecidableEquality→hasBoolEquality disB)
