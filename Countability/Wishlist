@@ -1,0 +1,2 @@
+Assuming countable choice, we have that Countable sets are closed under countable products also. 
+  Combining this with the decidablequotient, we could show that free boolean algebras on countable sets are also countable.
