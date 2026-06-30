@@ -19,7 +19,7 @@ countabilityStructureΣℕ1 α = α , idIso
 is-countable-Σℕ1 : (α : binarySequence) → is-countable (Σℕ1 α)
 is-countable-Σℕ1 α = ∣ countabilityStructureΣℕ1 α ∣₁
 
-countabilityStructureIso : has-Countability-structure A → Iso A B → 
+countabilityStructureIso : has-Countability-structure A → Iso A B →
   has-Countability-structure B
 countabilityStructureIso (α , A≅Σα) A≅B = α , compIso (invIso A≅B) A≅Σα
 

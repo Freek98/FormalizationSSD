@@ -24,8 +24,8 @@ module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  
   idealDecomp .(s · t) (mul {r = s} {x = t} t∈I )    = PT.map  (isMul (s · t) s t refl) (idealDecomp t t∈I)
   idealDecomp r        (squash r∈I r∈I' i)           = ∥∥-isPropDep isInIdeal
                                                        (idealDecomp r r∈I) (idealDecomp r r∈I') refl i
-  
-  private 
+
+  private
     substInIdeal : {r s : ⟨ R ⟩} → s ≡ r → generatedIdeal R f s → generatedIdeal R f r
     substInIdeal = subst (generatedIdeal R f)
 

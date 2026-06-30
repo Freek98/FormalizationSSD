@@ -4,8 +4,8 @@ open import Countability.Base
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
 
-open import Cubical.Data.Nat 
-open import Cubical.Data.Bool 
+open import Cubical.Data.Nat
+open import Cubical.Data.Bool
 open import Cubical.Data.Sigma
 
 open import Cubical.HITs.PropositionalTruncation
