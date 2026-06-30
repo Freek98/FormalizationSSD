@@ -23,13 +23,24 @@ So what about the following file structure
 |  |    |- 2/3 properties
 |  |- Loose files with fixes?
 |
-|- CountablyPresentedBooleanRings
+|  
+|- CountablyPresentedBooleanRings 
+|   |- Instances " critique : instances of Stone spaces is going to be 1-1 instances of countably presented boolean rings
+|   |- Base
+|   |- Proof that ODisc (covered by countable and equality open)
 |
 |- StoneSpaces
+|   |- Instances
+|   |- Base
+|   |- Proof of product closure
+|   |- Proof that equality closed. 
+|   |- Proof that Stone iff profinite
+|   |- Definition profinite sets
 |
 |- Axioms
 |
 |- OvertlyDiscreteSpaces
+|   |- proof that sequential 
 |
 |- Omniscience Priniples
 |
