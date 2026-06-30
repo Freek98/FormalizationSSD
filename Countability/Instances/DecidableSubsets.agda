@@ -5,8 +5,7 @@ open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
 
 open import Cubical.Data.Nat
-open import Cubical.Data.Bool hiding (_≟_)
-open import Cubical.Data.Bool.Properties using (isSetBool ; false≢true)
+open import Cubical.Data.Bool 
 open import Cubical.Data.Sigma
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 
@@ -15,29 +14,29 @@ open import Cubical.HITs.PropositionalTruncation as PT
 open Iso
 
 private
-  boolGuard : (b : Bool) → (b ≡ true → Bool) → Bool
-  boolGuard true  f = f refl
-  boolGuard false _ = false
+  dependentBool : (b : Bool) → (b ≡ true → Bool) → Bool
+  dependentBool true  f = f refl
+  dependentBool false _ = false
 
-  boolGuard-intro : (b : Bool) (f : b ≡ true → Bool) (q : b ≡ true)
-    → f q ≡ true → boolGuard b f ≡ true
-  boolGuard-intro true  f q fq = subst (λ r → f r ≡ true) (isSetBool _ _ q refl) fq
-  boolGuard-intro false f q _  = ex-falso (false≢true q)
+  dependentBool-intro : (b : Bool) (f : b ≡ true → Bool) (q : b ≡ true)
+    → f q ≡ true → dependentBool b f ≡ true
+  dependentBool-intro true  f q fq = subst (λ r → f r ≡ true) (isSetBool _ _ q refl) fq
+  dependentBool-intro false f q _  = ex-falso (false≢true q)
 
-  boolGuard-elim : (b : Bool) (f : b ≡ true → Bool)
-    → boolGuard b f ≡ true → Σ[ q ∈ b ≡ true ] f q ≡ true
-  boolGuard-elim true  f p = refl , p
-  boolGuard-elim false _ p = ex-falso (false≢true p)
+  dependentBool-elim : (b : Bool) (f : b ≡ true → Bool)
+    → dependentBool b f ≡ true → Σ[ q ∈ b ≡ true ] f q ≡ true
+  dependentBool-elim true  f p = refl , p
+  dependentBool-elim false _ p = ex-falso (false≢true p)
 
 module ΣℕSubBinarySequence (α : binarySequence) (P : Σℕ1 α → Bool) where
   ΣαPSequence : binarySequence
-  ΣαPSequence n = boolGuard (α n) (λ q → P (n , q))
+  ΣαPSequence n = dependentBool (α n) (λ q → P (n , q))
 
   ΣαPSequence-intro : (n : ℕ) (q : α n ≡ true) → P (n , q) ≡ true → ΣαPSequence n ≡ true
-  ΣαPSequence-intro n = boolGuard-intro (α n) (λ q → P (n , q))
+  ΣαPSequence-intro n = dependentBool-intro (α n) (λ q → P (n , q))
 
   ΣαPSequence-elim : (n : ℕ) → ΣαPSequence n ≡ true → Σ[ q ∈ α n ≡ true ] P (n , q) ≡ true
-  ΣαPSequence-elim n = boolGuard-elim (α n) (λ q → P (n , q))
+  ΣαPSequence-elim n = dependentBool-elim (α n) (λ q → P (n , q))
 
   ΣℕαP=ΣℕΣαPSequence : Iso (Σ[ x ∈ Σℕ1 α ] P x ≡ true) (Σℕ1 ΣαPSequence)
   fun ΣℕαP=ΣℕΣαPSequence ((n , q) , r) = n , ΣαPSequence-intro n q r
