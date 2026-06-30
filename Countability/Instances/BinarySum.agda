@@ -3,7 +3,6 @@ module Countability.Instances.BinarySum where
 open import Countability.Base
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
-open import Cubical.Foundations.Function
 
 open import Cubical.Data.Nat
 open import Cubical.Data.Bool hiding (_≟_)

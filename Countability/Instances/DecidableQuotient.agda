@@ -9,11 +9,8 @@ open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Isomorphism
 open import Cubical.Foundations.Equiv
 open import Cubical.Foundations.Function
-open import Cubical.Foundations.HLevels
 
-open import Cubical.Data.Nat
 open import Cubical.Data.Bool
-open import Cubical.Data.Bool.Properties
 open import Cubical.Data.Sigma
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 
