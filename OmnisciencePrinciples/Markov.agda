@@ -1,57 +1,34 @@
 module OmnisciencePrinciples.Markov where
 
-open import Axioms.StoneDuality
-open import AntiEquivalence
-open import BinarySequences
-open import BinarySequences.Properties
-
-open import StoneSpaces.Spectrum
-open import StoneSpaces.Examples.ClosedProp
-
-open import CommRingQuotients.TrivialIdeal
-
-open import CountablyPresentedBooleanRings.Examples.BoolQuotientByBinarySequence
-open import CountablyPresentedBooleanRings.Definitions
-
-
-open import Cubical.Functions.Fixpoint
 open import Cubical.Data.Sigma
-open import Cubical.Data.Sum
 open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
 open import Cubical.Data.Empty renaming (rec to ex-falso)
 open import Cubical.Data.Nat renaming (_+_ to _+ℕ_ ; _·_ to _·ℕ_)
-open import Cubical.Data.Nat.Order
-open <-Reasoning
-
-open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.Function
-open import Cubical.Foundations.Powerset
-open import Cubical.Foundations.HLevels
-
 open import Cubical.Algebra.CommRing
 open import Cubical.Algebra.BooleanRing
-open import Cubical.Algebra.CommRing.Quotient.Base
 open import Cubical.Algebra.BooleanRing.Instances.Bool
 open import Cubical.Algebra.CommRing.Instances.Bool
 open import Cubical.Relation.Nullary
-
 open import Cubical.HITs.PropositionalTruncation as PT
-
-open  import BooleanRing.FreeBooleanRing.FreeBool
-open  import BooleanRing.FreeBooleanRing.SurjectiveTerms
-open  import BooleanRing.FreeBooleanRing.freeBATerms
-
-open import BooleanRing.BooleanRingQuotients.QuotientBool as QB
-import Cubical.HITs.SetQuotients as SQ
 import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
 open import Cubical.Algebra.CommRing.Ideal
-import Cubical.Algebra.CommRing.Kernel as CK
-open import Cubical.Algebra.Ring.Kernel as RK
-open import Cubical.Algebra.CommRing.Quotient.Base
-open import Cubical.Tactics.CommRingSolver
+
+open import CommRingQuotients.TrivialIdeal -- currently a PR, should be removed
+open import BooleanRing.BooleanRingQuotients.QuotientBool as QB
 open import CommRingQuotients.IdealTerms
-open import BasicDefinitions
+
+open import CountablyPresentedBooleanRings.Examples.BoolQuotientByBinarySequence
+open import CountablyPresentedBooleanRings.Definitions
+open import Axioms.StoneDuality
+open import AntiEquivalence
+open import BinarySequences.Definitions
+open import BinarySequences.Properties
+
+open import StoneSpaces.Spectrum
+
+
 
 MarkovPrinciple : Type₀
 MarkovPrinciple = (α : binarySequence) → ¬ (∀ n → α n ≡ false) → Σ[ n ∈ ℕ ] α n ≡ true
