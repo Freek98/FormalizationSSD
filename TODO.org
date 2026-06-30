@@ -3,24 +3,54 @@ CategoryTheory is a mess.
 
 CommRingQuotients and BooleanRing contain some results that should go into the cubical library. Also some LLM-generated things, but that's politcally not the best way to spend your time. I think there should be one folder for all facts on boolean rings and commring quotients and categorytheory fact. However, it's not just moving everything there, we should also clean out stuff that's not actually used (I learened that the terminal BA is not used?). 
 
-Countability is now defined in BasicDefinitions, and the proof that N is countable is in two places, partly because in countability there are holes about N x N. Countability.Properties has been AI-generated and needs to be cleaned up also. It also doesn't contain everything you want. 
-
 The anti-equivalence is still in the Virtual box, as are the results on odisc. 
+
+btw we should follow the cubical guidelines (Base instead of Definitions, Instances instead of Examples
+I would like some small script for fixing the imports to be in the order "everything from cubical, everything from this repo" and such that all useless imports are gone. On that note you should also learn working with .org files. One thing at a time.
+
+* Suggestion for new structure
+So what about the following file structure
+
+|- BinarySequences
+|
+|- Countability
+|
+|- Some file name suggesting basic maths (parity, category theory, algebra) Prelude or something. 
+|  |                    "here everything should go that you're planning to move to/source more cleanly from cubical
+|  |- Algebra
+|  |    |- Quotients
+|  |- Category theory
+|  |    |- 2/3 properties
+|  |- Loose files with fixes?
+|
+|- CountablyPresentedBooleanRings
+|
+|- StoneSpaces
+|
+|- Axioms
+|
+|- OvertlyDiscreteSpaces
+|
+|- Omniscience Priniples
+|
+|- Topology
+
 
 * Things that are morally not the main point 
 - countability, which depends on binary sequences. 
 - note that some results on binary sequences are axiom-dependent, these are part of the main point. 
-- the categorical results (I think these are still in the LLM part and not imported yet). 
+- the categorical results (I think these are still in the LLM part and not imported yet). As pointed out by Evan, lots is in Max New's library (see the link he sent you). 
 - the results on boolean rings and quotients. 
 - the stuff about 2/3 proving (not sure they're even all used). 
-- the stuff about parity (sure this is used, not sure where to put it, as lots of it is LLM generated. Maybe I should check out what is already in the standard library. ). 
-- fact that \Sigma\bN has split support is independent of SSD. 
+- the stuff about parity (sure this is used, not sure where to put it, as lots of it is LLM generated. Maybe I should check out what is already in the standard library and refactor using that. ). 
+- fact that \Sigma\bN has split support is independent of SSD. There's some stuff with Least in Nat.Recursive
 
 * What is the main point? 
 - statement of the axioms
 - definition of stone spaces, spectra, countably presented boolean algebras
 - definition and classificiation of overtly discrete spaces. 
 - proofs of the omniscience principles. 
+- synthetic topological statements?
 
 
 
@@ -35,6 +65,3 @@ The anti-equivalence is still in the Virtual box, as are the results on odisc.
 + I made a new directory for Stone spaces. There was a lot more stuff in StoneDuality though, and I split that into two files in CategoryTheory. Might be that I need to come back to it later, but for now it's clean enough. 
 
 + So we should then factor out Sp and put it into a file on Stone spaces, 
-
-* Making LLM generated and old-me generated stuff more now-me readable. 
-+ Countability.Properties contains some helper functions I don't trust. 
