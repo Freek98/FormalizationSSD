@@ -1,36 +1,11 @@
-{-# OPTIONS --lossy-unification #-}
+{- I'm making this into a PR for the cubical library TODO if that's merged fix the references in other files -}
 module CommRingQuotients.IdealTerms where
-
-open import Cubical.Functions.Fixpoint
-
-open import Cubical.Data.Sigma
-open import Cubical.Data.Sum
-open import Cubical.Data.Bool hiding ( _≤_ ; _≥_ ) renaming ( _≟_ to _=B_)
-open import Cubical.Data.Empty renaming (rec to ex-falso)
-open import Cubical.Data.Nat renaming (_+_ to _+ℕ_ ; _·_ to _·ℕ_)
-open import Cubical.Data.Nat.Order
-open <-Reasoning
 
 open import Cubical.Foundations.Structure
 open import Cubical.Foundations.Prelude
-open import Cubical.Foundations.Function
-open import Cubical.Foundations.Powerset
-
 open import Cubical.Algebra.CommRing
-open import Cubical.Algebra.BooleanRing
-open import Cubical.Algebra.BooleanRing.Instances.Bool
-open import Cubical.Algebra.CommRing.Instances.Bool
-open import Cubical.Relation.Nullary
-
+open import Cubical.Algebra.CommRing.Quotient.ImageQuotient
 open import Cubical.HITs.PropositionalTruncation as PT
-
-import Cubical.HITs.SetQuotients as SQ
-import Cubical.Algebra.CommRing.Quotient.ImageQuotient as IQ
-open import Cubical.Algebra.CommRing.Ideal
-import Cubical.Algebra.CommRing.Kernel as CK
-open import Cubical.Algebra.Ring.Kernel as RK
-open import Cubical.Algebra.CommRing.Quotient.Base
-open import Cubical.Tactics.CommRingSolver
 
 module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  where
   open CommRingStr ⦃...⦄
@@ -42,20 +17,21 @@ module _ {ℓ : Level} (R : CommRing ℓ) {X : Type ℓ} (f : X → ⟨ R ⟩)  
         isSum    : (r : ⟨ R ⟩) → (s t : ⟨ R ⟩) → (r ≡ s + t) → isInIdeal s → isInIdeal t → isInIdeal r
         isMul    : (r : ⟨ R ⟩) → (s t : ⟨ R ⟩) → (r ≡ s · t) →               isInIdeal t → isInIdeal r
 
-  idealDecomp : ( r : ⟨ R ⟩ ) → IQ.generatedIdeal R f r → ∥ isInIdeal r ∥₁
-  idealDecomp .(f x)   (IQ.single x)                    = ∣ isImage (f x) x refl ∣₁
-  idealDecomp .(0r)     IQ.zero                         = ∣ iszero 0r refl ∣₁
-  idealDecomp .(s + t) (IQ.add {x = s} {y = t} s∈I t∈I) = PT.map2 (isSum (s + t) s t refl) (idealDecomp s s∈I) (idealDecomp t t∈I)
-  idealDecomp .(s · t) (IQ.mul {r = s} {x = t} t∈I )    = PT.map  (isMul (s · t) s t refl) (idealDecomp t t∈I)
-  idealDecomp r        (IQ.squash r∈I r∈I' i)           = ∥∥-isPropDep isInIdeal
-                                                          (idealDecomp r r∈I) (idealDecomp r r∈I') refl i
+  idealDecomp : ( r : ⟨ R ⟩ ) → generatedIdeal R f r → ∥ isInIdeal r ∥₁
+  idealDecomp .(f x)   (single x)                    = ∣ isImage (f x) x refl ∣₁
+  idealDecomp .(0r)     zero                         = ∣ iszero 0r refl ∣₁
+  idealDecomp .(s + t) (add {x = s} {y = t} s∈I t∈I) = PT.map2 (isSum (s + t) s t refl) (idealDecomp s s∈I) (idealDecomp t t∈I)
+  idealDecomp .(s · t) (mul {r = s} {x = t} t∈I )    = PT.map  (isMul (s · t) s t refl) (idealDecomp t t∈I)
+  idealDecomp r        (squash r∈I r∈I' i)           = ∥∥-isPropDep isInIdeal
+                                                       (idealDecomp r r∈I) (idealDecomp r r∈I') refl i
+  
+  private 
+    substInIdeal : {r s : ⟨ R ⟩} → s ≡ r → generatedIdeal R f s → generatedIdeal R f r
+    substInIdeal = subst (generatedIdeal R f)
 
-  addSquash : (r : ⟨ R ⟩) → isInIdeal r → IQ.generatedIdeal R f r
-  addSquash r (isImage .r x fx=r) = subst (IQ.generatedIdeal R f) fx=r (IQ.single x)
-  addSquash r (iszero .r 0=r) = subst (IQ.generatedIdeal R f) 0=r IQ.zero
-  addSquash r (isSum .r s t r=s+t s∈I t∈I) = subst (IQ.generatedIdeal R f) (sym r=s+t)
-    (IQ.add (addSquash s s∈I) (addSquash t t∈I))
-  addSquash r (isMul .r s t r=s·t t∈I) =
-    subst (IQ.generatedIdeal R f) (sym r=s·t)
-    (IQ.mul (addSquash t t∈I))
+  addSquash : (r : ⟨ R ⟩) → isInIdeal r → generatedIdeal R f r
+  addSquash r (isImage .r x fx=r) = substInIdeal fx=r (single x)
+  addSquash r (iszero .r 0=r) = substInIdeal 0=r zero
+  addSquash r (isSum .r s t r=s+t s∈I t∈I) = substInIdeal (sym r=s+t) (add (addSquash s s∈I) (addSquash t t∈I))
+  addSquash r (isMul .r s t r=s·t t∈I) = substInIdeal (sym r=s·t) (mul (addSquash t t∈I))
 
